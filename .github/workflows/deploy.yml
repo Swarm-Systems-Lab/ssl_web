@@ -1,8 +1,10 @@
 name: Deploy website
 
+# Rebuilds and publishes the site on every push to the default branch.
+# Adding a Markdown file to content/ is enough to trigger a new deployment.
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
@@ -19,24 +21,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
       - run: bun install --frozen-lockfile
-      - run: bun run build
+
+      - name: Build
+        run: bun run build
         env:
-          VITE_BASE_PATH: /
-      - run: cp dist/index.html dist/404.html
+          # Set the repository variables SITE_URL and BASE_PATH under
+          # Settings → Secrets and variables → Actions → Variables to publish
+          # somewhere other than the custom domain.
+          SITE_URL: ${{ vars.SITE_URL || 'https://www.swarmsystemslab.eu' }}
+          BASE_PATH: ${{ vars.BASE_PATH || '/' }}
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4

@@ -1,0 +1,50 @@
+---
+import { render } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import { Image } from "astro:assets";
+import { getNews, formatDate } from "@/lib/collections";
+import { url } from "@/lib/url";
+
+export async function getStaticPaths() {
+  const news = await getNews();
+  return news.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Base title={entry.data.title} description={entry.data.summary} image={entry.data.image?.src}>
+  <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
+    <a href={url("/news")} class="font-display text-[10px] tracking-widest text-accent uppercase">
+      ← All news
+    </a>
+
+    <header class="mt-10 border-b border-border pb-10">
+      <div class="mb-4 flex items-center gap-3 font-display text-[10px] tracking-widest">
+        <time datetime={entry.data.date.toISOString()} class="text-accent">
+          {formatDate(entry.data.date)}
+        </time>
+        {entry.data.tags.map((tag) => <span class="text-muted uppercase">#{tag}</span>)}
+      </div>
+      <h1 class="font-display text-3xl leading-tight font-bold tracking-tighter md:text-4xl">
+        {entry.data.title}
+      </h1>
+      <p class="mt-5 text-lg leading-relaxed text-muted-foreground">{entry.data.summary}</p>
+    </header>
+
+    {
+      entry.data.image && (
+        <Image
+          src={entry.data.image}
+          alt={entry.data.imageAlt ?? entry.data.title}
+          widths={[640, 960, 1280]}
+          sizes="(min-width: 768px) 768px, 100vw"
+          class="mt-10 w-full border border-border"
+        />
+      )
+    }
+
+    <div class="prose-lab mt-10"><Content /></div>
+  </article>
+</Base>

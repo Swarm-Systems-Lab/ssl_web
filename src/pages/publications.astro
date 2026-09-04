@@ -1,0 +1,103 @@
+---
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Rule from "@/components/Rule.astro";
+import { publications, type Publication } from "@/lib/data";
+
+const sections = [
+  { id: "journal", label: "Journal papers", items: publications.journal },
+  { id: "conference", label: "Conference papers", items: publications.conference },
+  { id: "preprint", label: "Preprints", items: publications.preprint },
+].filter((section) => section.items.length > 0);
+
+// Entries without a year (preprints, work in review) are grouped under 0 and
+// rendered first, without a year heading.
+const byYear = (items: Publication[]) => {
+  const groups = new Map<number, Publication[]>();
+  for (const item of items) {
+    const key = item.year ?? 0;
+    const bucket = groups.get(key) ?? [];
+    bucket.push(item);
+    groups.set(key, bucket);
+  }
+  return [...groups.entries()].sort((a, b) => b[0] - a[0]);
+};
+---
+
+<Base
+  title="Publications"
+  description="Journal and conference publications of the Swarm Systems Lab."
+>
+  <PageHeader
+    eyebrow="Archive"
+    title="PUBLI"
+    accent="CATIONS."
+    description="Peer-reviewed work in IEEE Transactions on Automatic Control, Transactions on Robotics, Automatica, ICRA, IROS, CDC, and IFAC."
+  />
+
+  <div class="mx-auto max-w-7xl px-6 pb-16">
+    <nav
+      class="mb-14 flex flex-wrap gap-6 border-y border-border py-4"
+      aria-label="Publication types"
+    >
+      {
+        sections.map((section) => (
+          <a
+            href={`#${section.id}`}
+            class="font-display text-[11px] tracking-widest text-muted-foreground uppercase hover:text-accent"
+          >
+            {section.label}
+            <span class="ml-2 text-muted">[{section.items.length}]</span>
+          </a>
+        ))
+      }
+    </nav>
+
+    {
+      sections.map((section) => (
+        <section id={section.id} class="mb-20 scroll-mt-24">
+          <Rule label={section.label} />
+
+          {byYear(section.items).map(([year, items]) => (
+            <div class="mb-12">
+              {year > 0 && (
+                <div class="mb-6 flex items-baseline gap-4">
+                  <h3 class="font-display text-3xl font-bold tracking-tighter">{year}</h3>
+                  <div class="h-px flex-1 bg-border" />
+                </div>
+              )}
+
+              <ol class="space-y-8">
+                {items.map((pub) => (
+                  <li class="grid grid-cols-[3.5rem_1fr] gap-4">
+                    <span class="pt-1 font-display text-xs text-muted">[{pub.ref}]</span>
+                    <div>
+                      <h4 class="font-display text-base leading-snug font-medium">{pub.title}</h4>
+                      <p class="mt-2 text-sm text-muted-foreground">
+                        {pub.authors} · <span class="text-foreground italic">{pub.venue}</span>
+                      </p>
+                      {pub.note && (
+                        <p class="mt-2 font-display text-[10px] tracking-widest text-accent uppercase">
+                          {pub.note}
+                        </p>
+                      )}
+                      {pub.links.length > 0 && (
+                        <div class="mt-3 flex flex-wrap gap-4 font-display text-[10px] tracking-widest uppercase">
+                          {pub.links.map((l) => (
+                            <a href={l.href} rel="noopener" class="text-accent">
+                              {l.label}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </section>
+      ))
+    }
+  </div>
+</Base>

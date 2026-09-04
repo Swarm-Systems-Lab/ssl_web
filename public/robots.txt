@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://www.swarmsystemslab.eu/sitemap-index.xml

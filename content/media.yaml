@@ -1,0 +1,31 @@
+# The media page.
+#
+# PHOTOS, GIFS AND CLIPS are picked up automatically from content/media/.
+# Just drop a file in there — nothing to add here. Name it as
+#
+#     YYYY-MM-DD_short-caption.jpg
+#
+# and the date and caption are taken from the filename. Supported extensions:
+# .jpg .jpeg .png .webp .avif .gif .mp4 .webm
+#
+# VIDEOS on YouTube are listed below, because they are not files in the repo.
+
+intro: Field tests, prototypes, and life around the lab. Long videos live on our YouTube channel.
+
+# How many photos to show per page. The rest move to /media/2, /media/3, ...
+perPage: 24
+
+videos:
+  - youtube: G_lXujpkPJw
+    title: Fixed-wing aerobatics — fully autonomous, no GPS
+    date: "2026-08-01"
+  - youtube: hCvY2J-lEaM
+    title: Two fixed-wing drones rendezvous, fly in formation, split, and meet again
+    date: "2025-08-12"
+  - youtube: nrnGoiTSqyM
+    title: 3D square formation with four flying wings
+    date: "2025-07-27"
+
+# Optional: override the caption a filename would produce.
+#   "2026-04-17_group-photo.jpg": "Group photo in Granada, April 2026"
+captions: {}

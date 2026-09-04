@@ -1,0 +1,42 @@
+# Site-wide settings. Editing this file changes the header, footer, and the
+# default text search engines and social networks show for the site.
+
+title: Swarm Systems Lab
+shortTitle: Swarm Systems Lab
+tagline: Control theory and emergent behaviour in robot swarms
+description: >-
+  The Swarm Systems Lab at the University of Granada works on swarm robotics and
+  autonomous systems, where control theory and emergent behaviour converge — with
+  swarms of fixed-wing aircraft, rotorcraft, rovers, and other autonomous robots.
+
+institution: University of Granada
+email: swarmsystemslab@gmail.com
+
+# The tabs in the header, in order.
+# To add a new tab: create the page in src/pages/, then add a line here.
+nav:
+  - label: News
+    href: /news
+  - label: Research
+    href: /research
+  - label: Publications
+    href: /publications
+  - label: Team
+    href: /team
+  - label: Positions
+    href: /positions
+  - label: Projects
+    href: /projects
+  - label: Awards
+    href: /awards
+  - label: Media
+    href: /media
+
+# Links shown in the footer.
+social:
+  - label: GitHub
+    href: https://github.com/Swarm-Systems-Lab
+  - label: YouTube
+    href: https://www.youtube.com/@SwarmSystemsLab
+  - label: Discord
+    href: https://discord.gg/peMNWpe4YT

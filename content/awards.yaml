@@ -1,0 +1,49 @@
+# Awards, grants, and distinctions.
+#
+# Add a new entry anywhere in the list — the page sorts by year, newest first.
+#
+#   - title: What was awarded
+#     awarder: Who awarded it
+#     year: 2026
+#     detail: Optional extra sentence.
+
+intro: Grants, prizes, and distinctions received by the lab and its members.
+
+items:
+  - title: ERC Starting Grant
+    awarder: European Research Council
+    year: 2022
+
+  - title: Best conference paper award finalist
+    awarder: IEEE ICRA 2021
+    year: 2021
+    detail: Distributed coordinated path following using guiding vector fields.
+
+  - title: Seal of Excellence
+    awarder: European Commission
+    year: 2020
+    detail: The H2020-MSCA-IF-2019 proposal was recognised as a high-quality project proposal.
+
+  - title: Research fellow — Atracción de Talento
+    awarder: Comunidad de Madrid
+    year: 2020
+    detail: 2nd position in the Engineering field, a competitive personal research funding for 2020/24.
+
+  - title: Best paper award finalist
+    awarder: ICARCV 2018
+    year: 2018
+    detail: >-
+      Multi-robot motion-formation distributed control with sensor
+      self-calibration: experimental validation.
+
+  - title: 1st position, international drone competition
+    awarder: IMAV 2017
+    year: 2017
+    detail: >-
+      Category: drone parade. Circular formation control of fixed-wing UAVs with
+      constant speeds.
+
+  - title: Shortlisted for the best thesis award
+    awarder: Dutch Institute for Systems and Control
+    year: 2016
+    detail: Distributed formation control for autonomous robots.

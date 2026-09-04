@@ -1,0 +1,20 @@
+---
+import Base from "@/layouts/Base.astro";
+import { url } from "@/lib/url";
+---
+
+<Base title="Page not found" description="This page does not exist.">
+  <div class="mx-auto flex max-w-md flex-col items-center px-6 py-32 text-center">
+    <div class="font-display text-xs tracking-[0.3em] text-accent">ERR_NO_ROUTE</div>
+    <h1 class="mt-4 font-display text-6xl font-bold tracking-tighter">404</h1>
+    <p class="mt-4 text-muted-foreground">
+      This page has drifted out of range. It may have moved or never existed.
+    </p>
+    <a
+      href={url("/")}
+      class="mt-8 border border-accent/30 px-4 py-2 font-display text-xs tracking-widest text-accent uppercase transition-colors hover:bg-accent/10"
+    >
+      Return to base
+    </a>
+  </div>
+</Base>

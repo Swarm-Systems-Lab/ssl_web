@@ -1,0 +1,71 @@
+---
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import { positions, site } from "@/lib/data";
+---
+
+<Base
+  title="Open positions"
+  description="Ph.D., postdoctoral, and research positions at the Swarm Systems Lab, University of Granada."
+>
+  <PageHeader
+    eyebrow="Now recruiting"
+    title="JOIN THE"
+    accent="SWARM."
+    description={positions.intro}
+  />
+
+  <div class="mx-auto max-w-7xl px-6 pb-16">
+    <ul class="grid gap-px md:grid-cols-2">
+      {
+        positions.items.map((item) => (
+          <li class="flex flex-col border border-border bg-surface/30 p-8 transition-colors hover:border-accent/50">
+            <div class="mb-6 flex items-center justify-between gap-4">
+              <span class="border border-accent/30 px-2 py-1 font-display text-[10px] tracking-widest text-accent uppercase">
+                {item.type}
+              </span>
+              <span class="font-display text-[10px] tracking-widest text-muted uppercase">
+                Deadline: {item.deadline}
+              </span>
+            </div>
+            <h2 class="font-display text-xl font-bold tracking-tight">{item.title}</h2>
+            <p class="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>
+            {item.details.length > 0 && (
+              <ul class="mt-5 space-y-2 border-t border-border pt-5">
+                {item.details.map((detail) => (
+                  <li class="flex gap-3 text-sm text-muted-foreground">
+                    <span class="text-accent">—</span>
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      positions.aside && (
+        <section class="mt-14 border border-border bg-surface/30 p-10">
+          <h2 class="font-display text-xl font-bold">{positions.aside.title}</h2>
+          <p class="mt-4 max-w-3xl leading-relaxed text-muted-foreground">{positions.aside.body}</p>
+        </section>
+      )
+    }
+
+    <section class="mt-px border border-border p-10 text-center">
+      <div class="font-display text-[10px] tracking-widest text-muted uppercase">How to apply</div>
+      <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+        Send a CV, a research statement, and contact references. If you do not hear back within
+        three weeks, your application has not been considered.
+      </p>
+      <a
+        href={`mailto:${site.email}`}
+        class="mt-6 inline-block bg-accent px-5 py-3 font-display text-xs tracking-widest text-accent-foreground uppercase transition-opacity hover:opacity-90"
+      >
+        {site.email} →
+      </a>
+    </section>
+  </div>
+</Base>

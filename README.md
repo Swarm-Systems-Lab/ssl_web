@@ -1,42 +1,51 @@
 # Swarm Systems Lab
 
-Static website for the Swarm Systems Lab. It is built with Vite, React, and TanStack Router, then deployed to GitHub Pages.
+The website of the [Swarm Systems Lab](https://www.swarmsystemslab.eu), University of Granada.
 
-## Add content
+Everything you can edit lives in [`content/`](content). Push a change there and
+the site rebuilds and republishes itself within a couple of minutes.
 
-Create or copy a Markdown file in [`src/content`](src/content):
+## Adding content
 
-- [`news`](src/content/news) for announcements
-- [`research`](src/content/research) for research areas and notes
-- [`team`](src/content/team) for people and collaborators
+| I want to add…        | Do this                                                                       |
+| --------------------- | ----------------------------------------------------------------------------- |
+| a news post           | copy [`content/news/_template.md`](content/news/_template.md)                 |
+| a research topic      | copy [`content/research/_template.md`](content/research/_template.md)         |
+| a person              | copy [`content/team/_template.md`](content/team/_template.md)                 |
+| a photo, GIF, or clip | drop the file in [`content/media/`](content/media)                            |
+| a paper               | add it at the top of [`content/publications.yaml`](content/publications.yaml) |
+| an open position      | add it to [`content/positions.yaml`](content/positions.yaml)                  |
+| a TFM/TFG project     | add it to [`content/projects.yaml`](content/projects.yaml)                    |
+| an award              | add it to [`content/awards.yaml`](content/awards.yaml)                        |
+| a YouTube video       | add it to [`content/media.yaml`](content/media.yaml)                          |
 
-The filename becomes the page URL. Use the frontmatter shown in [`src/content/README.md`](src/content/README.md), write the page below it, and push the change. The GitHub Actions workflow builds and publishes the site automatically.
+News posts, research topics, and people each get their own page; the file name
+becomes the address. Everything else appears on a single shared page.
 
-News, research, and team entries have their own detail pages. Publications, media, and positions remain collection pages and are edited in their route files until they need the same content workflow.
+Each folder has a `_template.md` with the fields explained, and a `README` next
+to the files. Copy the template, rename it, fill it in — that is the whole job.
 
-## Local development
+**Prefer a form?** Open the repository's **Actions** tab → **Add a post** → **Run
+workflow**. Fill in the fields and the post is written and published for you.
+
+Media files are picked up automatically. Name them `YYYY-MM-DD_short-caption.jpg`
+and the date and caption come from the file name. Keep GIFs and clips small, and
+put long videos on [our YouTube channel](https://www.youtube.com/@SwarmSystemsLab)
+instead.
+
+If you get something wrong — a missing field, a malformed date — the build stops
+and the Actions tab tells you which file and which line to fix. Nothing broken
+reaches the live site.
+
+## Running it locally
 
 Requires [Bun](https://bun.sh).
 
 ```sh
 bun install
-bun run dev
+bun run dev      # http://localhost:4321
 ```
 
-Run the checks before opening a pull request:
+`bun run build` produces the static site in `dist/`.
 
-```sh
-bun run lint
-bunx tsc --noEmit
-bun run build
-```
-
-## Structure
-
-- `src/content/` is editor-facing content.
-- `src/routes/` contains page shells and navigation.
-- `src/components/` contains shared presentation.
-- `public/` contains files copied directly to the published site.
-- `.github/workflows/deploy.yml` builds and deploys GitHub Pages.
-
-Large or fast-growing media should not live in Git. Use YouTube for video, and use an object store or media service for original photos, GIFs, and video files. Keep only small optimized thumbnails in `public/` when a local preview is useful. Git LFS is an option for source archives, but it does not reduce the hosting burden of a public media-heavy website.
+Working on the code rather than the content? See [docs/developing.md](docs/developing.md).

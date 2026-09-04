@@ -1,0 +1,23 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** Rendered in muted type after the title, e.g. "LAB" + "NEWS." */
+  accent?: string;
+  description?: string;
+}
+
+const { eyebrow, title, accent, description } = Astro.props;
+---
+
+<section class="mx-auto max-w-7xl px-6 pt-20 pb-14">
+  <div
+    class="mb-4 flex items-center gap-3 font-display text-xs tracking-widest text-accent uppercase"
+  >
+    <span class="size-1.5 rounded-full bg-accent"></span>{eyebrow}
+  </div>
+  <h1 class="font-display text-4xl leading-[0.95] font-bold tracking-tighter md:text-6xl">
+    {title}{accent && <span class="text-muted"> {accent}</span>}
+  </h1>
+  {description && <p class="mt-6 max-w-2xl leading-relaxed text-muted-foreground">{description}</p>}
+</section>

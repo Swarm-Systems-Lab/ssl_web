@@ -1,0 +1,50 @@
+# Master (TFM) and bachelor (TFG) projects offered to students.
+# Everything on this page lives in this one file.
+
+intro: >-
+  The Swarm Systems Lab at the University of Granada seeks outstanding students
+  to carry out their master's and bachelor's projects (TFM and TFG). If you are
+  a student at the University of Granada, feel free to drop by our lab in room
+  DB-4 at CITIC.
+
+items:
+  - title: Onboard geolocalisation of a fixed-wing aircraft
+    level: TFM
+    summary: >-
+      Within the topic of autonomous navigation for fixed-wing aircraft. The
+      project takes photos from the sky and compares them against a dataset to
+      recover the vehicle's latitude and longitude. Everything runs onboard.
+    requirements:
+      - Python, C and/or C++ for embedded systems — the solution runs on a Jetson coordinating with the autopilot microcontroller.
+      - Real-time image processing.
+      - Comfortable with maths and physics.
+
+  - title: Guiding vector fields
+    level: TFG / TFM
+    summary: >-
+      Coordinating different aerial vehicles through guiding vector fields,
+      within the open-source Paparazzi project. Depending on the candidate this
+      is offered as a bachelor's or a master's project.
+    requirements:
+      - C and/or C++ for embedded systems — the solution must run onboard.
+      - Good skills in differential equations, geometry, and physics.
+
+  - title: Data representation and post-processing tools
+    level: TFG
+    summary: >-
+      Front-end development for the data analysis of our experiments and flights
+      with robot swarms. We generate a lot of data and need automated tools to
+      represent and interact with it. You would contribute to pprz-py-plotter
+      within the open-source Paparazzi project.
+    requirements:
+      - Python (Matplotlib, Qt), focusing on the front end.
+
+  - title: Implementation of distributed algorithms over wireless networks
+    level: TFG
+    summary: >-
+      Coordinating robot swarms over wireless networks. Want to know how the
+      "magic" of networked robot coordination actually works? You will learn both
+      the theoretical foundations and their embedded implementation.
+    requirements:
+      - Comfortable with linear algebra.
+      - C for embedded systems.

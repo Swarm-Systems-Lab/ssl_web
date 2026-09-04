@@ -1,0 +1,144 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Rule from "@/components/Rule.astro";
+import { Image } from "astro:assets";
+import { gallery, type MediaItem } from "@/lib/media";
+import { mediaConfig } from "@/lib/data";
+import { url } from "@/lib/url";
+
+export const getStaticPaths = (({ paginate }) =>
+  paginate(gallery, { pageSize: mediaConfig.perPage })) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: Page<MediaItem> };
+---
+
+<Base
+  title={page.currentPage > 1 ? `Media — page ${page.currentPage}` : "Media"}
+  description="Photos, animations, and videos from the Swarm Systems Lab."
+>
+  <PageHeader
+    eyebrow="Photo & video"
+    title="MEDIA"
+    accent="FEED."
+    description={mediaConfig.intro}
+  />
+
+  <div class="mx-auto max-w-7xl px-6 pb-16">
+    {
+      page.currentPage === 1 && mediaConfig.videos.length > 0 && (
+        <section class="mb-20">
+          <Rule label="Videos" />
+          <ul class="grid gap-px md:grid-cols-2 lg:grid-cols-3">
+            {mediaConfig.videos.map((video) => (
+              <li class="border border-border bg-surface/30">
+                <div class="aspect-video border-b border-border bg-black">
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${video.youtube}`}
+                    title={video.title}
+                    loading="lazy"
+                    allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="h-full w-full"
+                  />
+                </div>
+                <div class="p-5">
+                  {video.date && (
+                    <div class="font-display text-[10px] tracking-widest text-muted">
+                      {video.date}
+                    </div>
+                  )}
+                  <h3 class="mt-2 font-display text-sm font-bold">{video.title}</h3>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section>
+      <Rule label={page.currentPage === 1 ? "Photos" : `Photos — page ${page.currentPage}`} />
+
+      <ul class="grid gap-px sm:grid-cols-2 lg:grid-cols-3">
+        {
+          page.data.map((item) => (
+            <li class="group flex flex-col border border-border bg-surface/30">
+              <div class="aspect-[4/3] overflow-hidden bg-black">
+                {item.kind === "photo" && item.image && (
+                  <a href={item.image.src} target="_blank" rel="noopener">
+                    <Image
+                      src={item.image}
+                      alt={item.caption}
+                      widths={[400, 800]}
+                      sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                      loading="lazy"
+                      class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  </a>
+                )}
+                {item.kind === "animation" && (
+                  <img
+                    src={item.url}
+                    alt={item.caption}
+                    loading="lazy"
+                    class="h-full w-full object-cover"
+                  />
+                )}
+                {item.kind === "video" && (
+                  <video
+                    src={item.url}
+                    muted
+                    loop
+                    playsinline
+                    controls
+                    preload="none"
+                    class="h-full w-full object-cover"
+                  />
+                )}
+              </div>
+              <figcaption class="flex items-baseline justify-between gap-4 border-t border-border p-4">
+                <span class="text-sm text-foreground">{item.caption}</span>
+                {item.date && (
+                  <span class="font-display text-[10px] tracking-widest whitespace-nowrap text-muted">
+                    {item.date}
+                  </span>
+                )}
+              </figcaption>
+            </li>
+          ))
+        }
+      </ul>
+
+      {page.data.length === 0 && <p class="text-muted-foreground">No media yet.</p>}
+
+      {
+        page.lastPage > 1 && (
+          <nav
+            class="mt-12 flex items-center justify-between border-t border-border pt-6 font-display text-[11px] tracking-widest uppercase"
+            aria-label="Media pages"
+          >
+            {page.url.prev ? (
+              <a href={url(page.url.prev)} class="text-accent">
+                ← Newer
+              </a>
+            ) : (
+              <span class="text-muted">← Newer</span>
+            )}
+            <span class="text-muted">
+              Page {page.currentPage} / {page.lastPage}
+            </span>
+            {page.url.next ? (
+              <a href={url(page.url.next)} class="text-accent">
+                Older →
+              </a>
+            ) : (
+              <span class="text-muted">Older →</span>
+            )}
+          </nav>
+        )
+      }
+    </section>
+  </div>
+</Base>

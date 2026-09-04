@@ -1,0 +1,55 @@
+# Open positions. Everything on this page lives in this one file.
+#
+#   - title: What the position is
+#     type: PhD | Postdoc | Engineer | Intern | ...
+#     deadline: "Rolling" or a date
+#     summary: One paragraph.
+#     details:          # optional bullet list
+#       - ...
+
+intro: >-
+  The Swarm Systems Lab at the University of Granada currently has some
+  openings. If your profile does not fit an offer but you think you are a good
+  match, get in touch anyway — we run a lab with diverse but strong theoretical
+  and practical backgrounds.
+
+items:
+  - title: FPU Ph.D. candidate
+    type: PhD
+    deadline: "Applications typically open in January"
+    summary: >-
+      Within the Spanish programme Formación de Profesorado Universitario, we are
+      looking for an applicant who wants to pursue their Ph.D. with us.
+    details:
+      - You choose your Ph.D. topic in control theory and/or robotics, within swarm robotics.
+      - Budget for equipment.
+      - Budget for academic visits during your Ph.D.
+      - Your own RC plane, if you want one.
+
+  - title: Marie Skłodowska-Curie fellowships
+    type: Postdoc / PhD
+    deadline: "Rolling — contact us well before the call"
+    summary: >-
+      If you believe we are a good fit for your Marie Skłodowska-Curie
+      postdoctoral application focusing on multi-robot systems, do not hesitate
+      to contact us. We prefer to start preparing an application several months
+      before the deadline.
+
+  - title: Visiting researchers
+    type: Visitor
+    deadline: "Rolling"
+    summary: >-
+      Visitors whose work matches our activities are welcome, subject to the
+      physical space we have available to host you. Email us your motivation and
+      attach your CV with a contact reference.
+
+aside:
+  title: Why Granada?
+  body: >-
+    Granada is the most popular destination among European exchange students and
+    has a welcoming, cosmopolitan university. It is a safe modern city 40 minutes
+    from the Mediterranean coast and 30 minutes from the Sierra Nevada ski
+    resort. The Alhambra and Generalife palaces, together with the Albaicín
+    quarter, are UNESCO world heritage sites. Housing is affordable, the food is
+    excellent, and Málaga Costa del Sol airport — 100 km away and constantly
+    connected with Granada — flies to over 60 countries.

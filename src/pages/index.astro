@@ -1,0 +1,145 @@
+---
+import { getEntry, render } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import Rule from "@/components/Rule.astro";
+import { Image } from "astro:assets";
+import { getNews, getResearch, formatDate } from "@/lib/collections";
+import { site } from "@/lib/data";
+import { gallery } from "@/lib/media";
+import { url } from "@/lib/url";
+
+const home = await getEntry("pages", "home");
+const { Content } = home ? await render(home) : { Content: null };
+
+const news = (await getNews()).slice(0, 4);
+const research = (await getResearch()).slice(0, 3);
+const cover = gallery.find((item) => item.kind === "photo")?.image;
+---
+
+<Base>
+  <section class="mx-auto max-w-7xl px-6 pt-20 pb-16">
+    <div class="grid items-end gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-7">
+        <div
+          class="mb-4 flex items-center gap-3 font-display text-xs tracking-widest text-accent uppercase"
+        >
+          <span class="size-1.5 rounded-full bg-accent"></span>{site.institution}
+        </div>
+        <h1
+          class="font-display text-4xl leading-[0.92] font-bold tracking-tighter text-balance md:text-6xl"
+        >
+          SWARM SYSTEMS <span class="text-muted">LAB.</span>
+        </h1>
+        {
+          Content && (
+            <div class="prose-lab mt-8 max-w-xl">
+              <Content />
+            </div>
+          )
+        }
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            href={url("/research")}
+            class="bg-accent px-4 py-3 font-display text-xs tracking-widest text-accent-foreground uppercase transition-opacity hover:opacity-90"
+          >
+            Our research →
+          </a>
+          <a
+            href={url("/positions")}
+            class="border border-border px-4 py-3 font-display text-xs tracking-widest uppercase transition-colors hover:border-accent/50 hover:text-accent"
+          >
+            Open positions
+          </a>
+        </div>
+      </div>
+
+      {
+        cover && (
+          <div class="lg:col-span-5">
+            <div class="border border-border bg-surface">
+              <Image
+                src={cover}
+                alt="The Swarm Systems Lab team"
+                widths={[600, 1200]}
+                sizes="(min-width: 1024px) 500px, 100vw"
+                loading="eager"
+                class="aspect-[4/3] w-full object-cover"
+              />
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    research.length > 0 && (
+      <section class="border-y border-border bg-surface/30 py-16">
+        <div class="mx-auto max-w-7xl px-6">
+          <Rule label="Research" />
+          <ul class="grid gap-px md:grid-cols-3">
+            {research.map((topic) => (
+              <li class="border border-border bg-background p-6 transition-colors hover:border-accent/50">
+                <h3 class="font-display text-sm font-bold">
+                  <a
+                    href={url(`/research/${topic.id}`)}
+                    class="transition-colors hover:text-accent"
+                  >
+                    {topic.data.title}
+                  </a>
+                </h3>
+                <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {topic.data.summary}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={url("/research")}
+            class="mt-8 inline-block font-display text-[11px] tracking-widest text-accent uppercase"
+          >
+            All research topics →
+          </a>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    news.length > 0 && (
+      <section class="mx-auto max-w-7xl px-6 py-20">
+        <div class="grid gap-12 lg:grid-cols-12">
+          <div class="lg:col-span-4">
+            <Rule label="Latest news" />
+            <p class="max-w-sm text-sm leading-relaxed text-muted-foreground">
+              Papers, visits, field tests, and milestones from the lab.
+            </p>
+            <a
+              href={url("/news")}
+              class="mt-6 inline-block border-b border-accent/30 pb-1 font-display text-xs tracking-widest text-accent uppercase hover:border-accent"
+            >
+              Read all news →
+            </a>
+          </div>
+
+          <ol class="lg:col-span-8">
+            {news.map((item) => (
+              <li class="grid grid-cols-[6rem_1fr] gap-6 border-b border-border py-5 last:border-0">
+                <time
+                  datetime={item.data.date.toISOString()}
+                  class="pt-1 font-display text-[10px] tracking-widest text-muted"
+                >
+                  {formatDate(item.data.date)}
+                </time>
+                <a href={url(`/news/${item.id}`)} class="transition-colors hover:text-accent">
+                  {item.data.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+</Base>
