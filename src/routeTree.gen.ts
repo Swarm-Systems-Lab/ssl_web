@@ -10,22 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TeamRouteImport } from './routes/team'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ResearchRouteImport } from './routes/research'
 import { Route as PublicationsRouteImport } from './routes/publications'
 import { Route as PositionsRouteImport } from './routes/positions'
-import { Route as NotesRouteImport } from './routes/notes'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as MediaRouteImport } from './routes/media'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TeamSlugRouteImport } from './routes/team/$slug'
+import { Route as ResearchSlugRouteImport } from './routes/research/$slug'
+import { Route as NewsSlugRouteImport } from './routes/news/$slug'
 
 const TeamRoute = TeamRouteImport.update({
   id: '/team',
   path: '/team',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const ResearchRoute = ResearchRouteImport.update({
+  id: '/research',
+  path: '/research',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicationsRoute = PublicationsRouteImport.update({
@@ -36,11 +38,6 @@ const PublicationsRoute = PublicationsRouteImport.update({
 const PositionsRoute = PositionsRouteImport.update({
   id: '/positions',
   path: '/positions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NotesRoute = NotesRouteImport.update({
-  id: '/notes',
-  path: '/notes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewsRoute = NewsRouteImport.update({
@@ -58,37 +55,58 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeamSlugRoute = TeamSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => TeamRoute,
+} as any)
+const ResearchSlugRoute = ResearchSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ResearchRoute,
+} as any)
+const NewsSlugRoute = NewsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => NewsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/media': typeof MediaRoute
-  '/news': typeof NewsRoute
-  '/notes': typeof NotesRoute
+  '/news': typeof NewsRouteWithChildren
   '/positions': typeof PositionsRoute
   '/publications': typeof PublicationsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/team': typeof TeamRoute
+  '/research': typeof ResearchRouteWithChildren
+  '/team': typeof TeamRouteWithChildren
+  '/news/$slug': typeof NewsSlugRoute
+  '/research/$slug': typeof ResearchSlugRoute
+  '/team/$slug': typeof TeamSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/media': typeof MediaRoute
-  '/news': typeof NewsRoute
-  '/notes': typeof NotesRoute
+  '/news': typeof NewsRouteWithChildren
   '/positions': typeof PositionsRoute
   '/publications': typeof PublicationsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/team': typeof TeamRoute
+  '/research': typeof ResearchRouteWithChildren
+  '/team': typeof TeamRouteWithChildren
+  '/news/$slug': typeof NewsSlugRoute
+  '/research/$slug': typeof ResearchSlugRoute
+  '/team/$slug': typeof TeamSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/media': typeof MediaRoute
-  '/news': typeof NewsRoute
-  '/notes': typeof NotesRoute
+  '/news': typeof NewsRouteWithChildren
   '/positions': typeof PositionsRoute
   '/publications': typeof PublicationsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/team': typeof TeamRoute
+  '/research': typeof ResearchRouteWithChildren
+  '/team': typeof TeamRouteWithChildren
+  '/news/$slug': typeof NewsSlugRoute
+  '/research/$slug': typeof ResearchSlugRoute
+  '/team/$slug': typeof TeamSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -96,42 +114,47 @@ export interface FileRouteTypes {
     | '/'
     | '/media'
     | '/news'
-    | '/notes'
     | '/positions'
     | '/publications'
-    | '/sitemap.xml'
+    | '/research'
     | '/team'
+    | '/news/$slug'
+    | '/research/$slug'
+    | '/team/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/media'
     | '/news'
-    | '/notes'
     | '/positions'
     | '/publications'
-    | '/sitemap.xml'
+    | '/research'
     | '/team'
+    | '/news/$slug'
+    | '/research/$slug'
+    | '/team/$slug'
   id:
     | '__root__'
     | '/'
     | '/media'
     | '/news'
-    | '/notes'
     | '/positions'
     | '/publications'
-    | '/sitemap.xml'
+    | '/research'
     | '/team'
+    | '/news/$slug'
+    | '/research/$slug'
+    | '/team/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MediaRoute: typeof MediaRoute
-  NewsRoute: typeof NewsRoute
-  NotesRoute: typeof NotesRoute
+  NewsRoute: typeof NewsRouteWithChildren
   PositionsRoute: typeof PositionsRoute
   PublicationsRoute: typeof PublicationsRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  TeamRoute: typeof TeamRoute
+  ResearchRoute: typeof ResearchRouteWithChildren
+  TeamRoute: typeof TeamRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -143,11 +166,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeamRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
+    '/research': {
+      id: '/research'
+      path: '/research'
+      fullPath: '/research'
+      preLoaderRoute: typeof ResearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/publications': {
@@ -162,13 +185,6 @@ declare module '@tanstack/react-router' {
       path: '/positions'
       fullPath: '/positions'
       preLoaderRoute: typeof PositionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/notes': {
-      id: '/notes'
-      path: '/notes'
-      fullPath: '/notes'
-      preLoaderRoute: typeof NotesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/news': {
@@ -192,29 +208,71 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/team/$slug': {
+      id: '/team/$slug'
+      path: '/$slug'
+      fullPath: '/team/$slug'
+      preLoaderRoute: typeof TeamSlugRouteImport
+      parentRoute: typeof TeamRoute
+    }
+    '/research/$slug': {
+      id: '/research/$slug'
+      path: '/$slug'
+      fullPath: '/research/$slug'
+      preLoaderRoute: typeof ResearchSlugRouteImport
+      parentRoute: typeof ResearchRoute
+    }
+    '/news/$slug': {
+      id: '/news/$slug'
+      path: '/$slug'
+      fullPath: '/news/$slug'
+      preLoaderRoute: typeof NewsSlugRouteImport
+      parentRoute: typeof NewsRoute
+    }
   }
 }
+
+interface NewsRouteChildren {
+  NewsSlugRoute: typeof NewsSlugRoute
+}
+
+const NewsRouteChildren: NewsRouteChildren = {
+  NewsSlugRoute: NewsSlugRoute,
+}
+
+const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
+
+interface ResearchRouteChildren {
+  ResearchSlugRoute: typeof ResearchSlugRoute
+}
+
+const ResearchRouteChildren: ResearchRouteChildren = {
+  ResearchSlugRoute: ResearchSlugRoute,
+}
+
+const ResearchRouteWithChildren = ResearchRoute._addFileChildren(
+  ResearchRouteChildren,
+)
+
+interface TeamRouteChildren {
+  TeamSlugRoute: typeof TeamSlugRoute
+}
+
+const TeamRouteChildren: TeamRouteChildren = {
+  TeamSlugRoute: TeamSlugRoute,
+}
+
+const TeamRouteWithChildren = TeamRoute._addFileChildren(TeamRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MediaRoute: MediaRoute,
-  NewsRoute: NewsRoute,
-  NotesRoute: NotesRoute,
+  NewsRoute: NewsRouteWithChildren,
   PositionsRoute: PositionsRoute,
   PublicationsRoute: PublicationsRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
-  TeamRoute: TeamRoute,
+  ResearchRoute: ResearchRouteWithChildren,
+  TeamRoute: TeamRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

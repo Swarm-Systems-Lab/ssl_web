@@ -8,10 +8,34 @@ export function SiteFooter() {
           © {new Date().getFullYear()} SWARM SYSTEMS LAB • COORDINATED INTELLIGENCE
         </div>
         <div className="flex items-center gap-8 font-display text-[10px] uppercase tracking-widest text-muted">
-          <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
-          <a href="https://youtube.com" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">YouTube</a>
-          <a href="https://x.com" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">X / Twitter</a>
-          <Link to="/positions" className="text-accent border border-accent/20 px-3 py-1 hover:bg-accent/10 transition-colors">
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            YouTube
+          </a>
+          <a
+            href="https://x.com"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            X / Twitter
+          </a>
+          <Link
+            to="/positions"
+            className="text-accent border border-accent/20 px-3 py-1 hover:bg-accent/10 transition-colors"
+          >
             Join the Lab
           </Link>
         </div>

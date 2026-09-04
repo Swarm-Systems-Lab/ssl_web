@@ -9,7 +9,11 @@ export const Route = createFileRoute("/media")({
   head: () => ({
     meta: [
       { title: "Media — Swarm Systems Lab" },
-      { name: "description", content: "Photos and videos from the Swarm Systems Lab — field tests, prototypes, and team moments." },
+      {
+        name: "description",
+        content:
+          "Photos and videos from the Swarm Systems Lab — field tests, prototypes, and team moments.",
+      },
       { property: "og:title", content: "Media — Swarm Systems Lab" },
       { property: "og:description", content: "Photos and videos from the lab." },
     ],
@@ -36,7 +40,11 @@ function MediaPage() {
       <section className="px-6 pt-24 pb-16 max-w-7xl mx-auto">
         <SectionHeading
           eyebrow="Photo & Video"
-          title={<>MEDIA <span className="text-muted">FEED.</span></>}
+          title={
+            <>
+              MEDIA <span className="text-muted">FEED.</span>
+            </>
+          }
           description="Field tests, prototypes, and life around the lab. Videos hosted on YouTube."
         />
       </section>
@@ -52,7 +60,10 @@ function MediaPage() {
 
         <div className="grid md:grid-cols-3 gap-1">
           {videos.map((v, i) => (
-            <article key={i} className="bg-surface border border-border hover:border-accent/50 transition-colors group">
+            <article
+              key={i}
+              className="bg-surface border border-border hover:border-accent/50 transition-colors group"
+            >
               <div className="aspect-video bg-black border-b border-border overflow-hidden">
                 <iframe
                   src={`https://www.youtube-nocookie.com/embed/${v.id}`}
@@ -64,8 +75,12 @@ function MediaPage() {
                 />
               </div>
               <div className="p-5">
-                <div className="font-display text-[10px] text-muted tracking-widest mb-2">VIDEO_{String(i + 1).padStart(3, "0")}</div>
-                <h3 className="font-display text-sm font-bold group-hover:text-accent transition-colors">{v.title}</h3>
+                <div className="font-display text-[10px] text-muted tracking-widest mb-2">
+                  VIDEO_{String(i + 1).padStart(3, "0")}
+                </div>
+                <h3 className="font-display text-sm font-bold group-hover:text-accent transition-colors">
+                  {v.title}
+                </h3>
               </div>
             </article>
           ))}
@@ -85,10 +100,19 @@ function MediaPage() {
           {photos.map((p, i) => (
             <figure key={i} className="group bg-surface border border-border overflow-hidden">
               <div className="aspect-[4/3] overflow-hidden">
-                <img src={p.src} alt={p.caption} loading="lazy" width={1024} height={768} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                <img
+                  src={p.src}
+                  alt={p.caption}
+                  loading="lazy"
+                  width={1024}
+                  height={768}
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                />
               </div>
               <figcaption className="p-4 border-t border-border flex items-center justify-between">
-                <span className="font-display text-[10px] text-muted tracking-widest">IMG_{String(i + 1).padStart(3, "0")}</span>
+                <span className="font-display text-[10px] text-muted tracking-widest">
+                  IMG_{String(i + 1).padStart(3, "0")}
+                </span>
                 <span className="text-sm text-foreground">{p.caption}</span>
               </figcaption>
             </figure>

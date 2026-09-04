@@ -1,8 +1,7 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
-  createRootRouteWithContext,
+  createRootRoute,
   useRouter,
   HeadContent,
   Scripts,
@@ -72,17 +71,24 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Swarm Systems Lab" },
-      { name: "description", content: "Swarm Systems Lab — research on emergent coordination, decentralized control, and swarm robotics." },
+      {
+        name: "description",
+        content:
+          "Swarm Systems Lab — research on emergent coordination, decentralized control, and swarm robotics.",
+      },
       { name: "author", content: "Swarm Systems Lab" },
       { name: "theme-color", content: "#09090b" },
       { property: "og:title", content: "Swarm Systems Lab" },
-      { property: "og:description", content: "Research on emergent coordination, decentralized control, and swarm robotics." },
+      {
+        property: "og:description",
+        content: "Research on emergent coordination, decentralized control, and swarm robotics.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -117,20 +123,16 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-background text-foreground relative">
-        <div className="fixed inset-0 grid-bg opacity-[0.07] pointer-events-none" aria-hidden />
-        <div className="relative z-10 flex min-h-screen flex-col">
-          <SiteNav />
-          <main className="flex-1">
-            <Outlet />
-          </main>
-          <SiteFooter />
-        </div>
+    <div className="min-h-screen bg-background text-foreground relative">
+      <div className="fixed inset-0 grid-bg opacity-[0.07] pointer-events-none" aria-hidden />
+      <div className="relative z-10 flex min-h-screen flex-col">
+        <SiteNav />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <SiteFooter />
       </div>
-    </QueryClientProvider>
+    </div>
   );
 }

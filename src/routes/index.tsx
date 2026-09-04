@@ -8,15 +8,22 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Swarm Systems Lab — Emergent Coordination Research" },
-      { name: "description", content: "We investigate the mathematical principles of collective intelligence and deploy swarm robotics systems that adapt to unpredictable environments." },
+      {
+        name: "description",
+        content:
+          "We investigate the mathematical principles of collective intelligence and deploy swarm robotics systems that adapt to unpredictable environments.",
+      },
       { property: "og:title", content: "Swarm Systems Lab" },
-      { property: "og:description", content: "Research on emergent coordination, decentralized control, and swarm robotics." },
+      {
+        property: "og:description",
+        content: "Research on emergent coordination, decentralized control, and swarm robotics.",
+      },
     ],
   }),
   component: Dashboard,
 });
 
-const notes = [
+const research = [
   {
     img: notePaths,
     ts: "2024.05.12_14:22",
@@ -42,8 +49,16 @@ const notes = [
 
 const news = [
   { date: "MAY 02", tag: "Grant", title: "NSF awards $2.4M for Subterranean Swarm Research." },
-  { date: "APR 18", tag: "Award", title: "Best Paper Award — IEEE ICRA 2024 for adaptive morphologies." },
-  { date: "APR 03", tag: "Talk", title: "Keynote at the International Symposium on Distributed Robotics." },
+  {
+    date: "APR 18",
+    tag: "Award",
+    title: "Best Paper Award — IEEE ICRA 2024 for adaptive morphologies.",
+  },
+  {
+    date: "APR 03",
+    tag: "Talk",
+    title: "Keynote at the International Symposium on Distributed Robotics.",
+  },
 ];
 
 function Dashboard() {
@@ -54,20 +69,29 @@ function Dashboard() {
           <div className="lg:col-span-7">
             <div className="font-display text-accent text-xs mb-4 flex items-center gap-2 uppercase tracking-widest">
               <span className="opacity-50">[00]</span>
-              <span className="animate-[reveal-box_1s_var(--ease-out-expo)]">Emergent Coordination Lab</span>
+              <span className="animate-[reveal-box_1s_var(--ease-out-expo)]">
+                Emergent Coordination Lab
+              </span>
             </div>
             <h1 className="text-5xl md:text-7xl font-display font-bold leading-[0.9] tracking-tighter text-balance mb-8">
               SELF-ORGANIZING <br />
               <span className="text-muted">AUTONOMY.</span>
             </h1>
             <p className="max-w-md text-muted-foreground leading-relaxed text-pretty">
-              We investigate the mathematical principles of collective intelligence and deploy swarm robotics systems that adapt to unpredictable environments.
+              We investigate the mathematical principles of collective intelligence and deploy swarm
+              robotics systems that adapt to unpredictable environments.
             </p>
             <div className="mt-8 flex gap-3 flex-wrap">
-              <Link to="/publications" className="font-display text-xs uppercase tracking-widest px-4 py-3 bg-accent text-accent-foreground hover:opacity-90 transition-opacity">
+              <Link
+                to="/publications"
+                className="font-display text-xs uppercase tracking-widest px-4 py-3 bg-accent text-accent-foreground hover:opacity-90 transition-opacity"
+              >
                 Read Publications →
               </Link>
-              <Link to="/positions" className="font-display text-xs uppercase tracking-widest px-4 py-3 border border-border hover:border-accent/50 hover:text-accent transition-colors">
+              <Link
+                to="/positions"
+                className="font-display text-xs uppercase tracking-widest px-4 py-3 border border-border hover:border-accent/50 hover:text-accent transition-colors"
+              >
                 Open Positions
               </Link>
             </div>
@@ -82,8 +106,12 @@ function Dashboard() {
                 className="w-full aspect-[4/3] object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
               />
               <div className="absolute bottom-0 left-0 w-full p-4 bg-background/90 border-t border-border flex justify-between items-center">
-                <span className="font-display text-[10px] text-accent uppercase tracking-widest">SSL Research Team 2024</span>
-                <span className="font-display text-[10px] text-muted uppercase tracking-widest">[14 Members]</span>
+                <span className="font-display text-[10px] text-accent uppercase tracking-widest">
+                  SSL Research Team 2024
+                </span>
+                <span className="font-display text-[10px] text-muted uppercase tracking-widest">
+                  [14 Members]
+                </span>
               </div>
             </div>
           </div>
@@ -98,17 +126,32 @@ function Dashboard() {
               Research Notes / Live Stream
             </h2>
             <div className="h-px flex-1 bg-border mx-8" />
-            <Link to="/notes" className="font-display text-[10px] uppercase text-muted hover:text-accent tracking-widest">
+            <Link
+              to="/research"
+              className="font-display text-[10px] uppercase text-muted hover:text-accent tracking-widest"
+            >
               View All Log Entries
             </Link>
           </div>
 
           <div className="grid md:grid-cols-3 gap-1">
-            {notes.map((n) => (
-              <article key={n.title} className="group bg-background border border-border p-6 hover:border-accent/50 transition-colors">
-                <div className="font-display text-[9px] text-muted mb-4 tracking-widest">TIMESTAMP: {n.ts}</div>
+            {research.map((n) => (
+              <article
+                key={n.title}
+                className="group bg-background border border-border p-6 hover:border-accent/50 transition-colors"
+              >
+                <div className="font-display text-[9px] text-muted mb-4 tracking-widest">
+                  TIMESTAMP: {n.ts}
+                </div>
                 <div className="w-full aspect-video bg-surface mb-6 overflow-hidden">
-                  <img src={n.img} alt={n.title} loading="lazy" width={800} height={512} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                  <img
+                    src={n.img}
+                    alt={n.title}
+                    loading="lazy"
+                    width={800}
+                    height={512}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
                 </div>
                 <h3 className="font-display text-sm font-bold mb-2">{n.title}</h3>
                 <p className="text-sm text-muted-foreground leading-snug mb-4">{n.body}</p>
@@ -129,15 +172,25 @@ function Dashboard() {
             <p className="text-muted-foreground text-sm leading-relaxed mb-8 max-w-sm">
               Announcements, awards, and milestones from across the lab.
             </p>
-            <Link to="/news" className="font-display text-xs uppercase tracking-widest text-accent border-b border-accent/30 pb-1 hover:border-accent">
+            <Link
+              to="/news"
+              className="font-display text-xs uppercase tracking-widest text-accent border-b border-accent/30 pb-1 hover:border-accent"
+            >
               Read all news →
             </Link>
           </div>
           <div className="lg:col-span-7 space-y-1">
             {news.map((item, idx) => (
-              <div key={idx} className="grid grid-cols-[80px_80px_1fr] gap-6 items-baseline py-5 border-b border-border last:border-0">
-                <span className="font-display text-[10px] text-muted tracking-widest">{item.date}</span>
-                <span className="font-display text-[10px] text-accent tracking-widest uppercase">{item.tag}</span>
+              <div
+                key={idx}
+                className="grid grid-cols-[80px_80px_1fr] gap-6 items-baseline py-5 border-b border-border last:border-0"
+              >
+                <span className="font-display text-[10px] text-muted tracking-widest">
+                  {item.date}
+                </span>
+                <span className="font-display text-[10px] text-accent tracking-widest uppercase">
+                  {item.tag}
+                </span>
                 <p className="text-sm md:text-base text-foreground">{item.title}</p>
               </div>
             ))}

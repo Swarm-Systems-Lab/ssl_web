@@ -2,29 +2,29 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionHeading } from "@/components/section-heading";
 import { getContent } from "@/lib/content";
 
-export const Route = createFileRoute("/team")({
-  head: () => ({ meta: [{ title: "Team — Swarm Systems Lab" }] }),
-  component: TeamPage,
+export const Route = createFileRoute("/research")({
+  head: () => ({ meta: [{ title: "Research — Swarm Systems Lab" }] }),
+  component: ResearchPage,
 });
 
-function TeamPage() {
-  const members = getContent("team");
+function ResearchPage() {
+  const entries = getContent("research");
 
   return (
     <>
       <section className="px-6 pt-24 pb-16 max-w-7xl mx-auto">
         <SectionHeading
-          eyebrow="The Collective"
+          eyebrow="Research"
           title={
             <>
-              THE <span className="text-muted">TEAM.</span>
+              RESEARCH <span className="text-muted">AREAS.</span>
             </>
           }
-          description="People working on swarm robotics and autonomous systems."
+          description="The questions and systems that guide our work."
         />
       </section>
-      <section className="px-6 pb-24 max-w-5xl mx-auto grid md:grid-cols-2 gap-1">
-        {members.map((item) => (
+      <section className="px-6 pb-24 max-w-4xl mx-auto space-y-1">
+        {entries.map((item) => (
           <article
             key={item.slug}
             className="border border-border p-8 hover:border-accent/50 transition-colors"
@@ -34,7 +34,7 @@ function TeamPage() {
             </div>
             <h2 className="font-display text-2xl font-bold mb-3">
               <Link
-                to="/team/$slug"
+                to="/research/$slug"
                 params={{ slug: item.slug }}
                 className="hover:text-accent transition-colors"
               >
