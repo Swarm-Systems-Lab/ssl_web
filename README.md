@@ -31,7 +31,9 @@ workflow**. Fill in the fields and the post is written and published for you.
 Media files are picked up automatically. Name them `YYYY-MM-DD_short-caption.jpg`
 and the date and caption come from the file name. Keep GIFs and clips small, and
 put long videos on [our YouTube channel](https://www.youtube.com/@SwarmSystemsLab)
-instead.
+instead. There is a worked example for every kind of picture (gallery, news,
+research, people) in
+[content/README.md](content/README.md#photos-gifs-and-video).
 
 If you get something wrong — a missing field, a malformed date — the build stops
 and the Actions tab tells you which file and which line to fix. Nothing broken

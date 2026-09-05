@@ -4,8 +4,12 @@ role: "Ph.D. student"
 group: phd
 order: 20
 summary: "Ph.D. student working on robot swarms from a control theory point of view."
-# photo: ./photos/<file>.jpg   # optional, see content/team/README
+photo: ./photos/jesus.jpeg
 links:
+  # - label: Google Scholar
+  #   href: https://scholar.google.com/citations?user=Vh6VjBoAAAAJ
+  # - label: Website
+  #   href: 
   - label: GitHub
     href: https://github.com/JesusBV20
 ---

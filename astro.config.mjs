@@ -16,6 +16,11 @@ export default defineConfig({
   trailingSlash: "ignore",
   build: { format: "directory" },
   integrations: [sitemap()],
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+    // Never inline assets as base64 data URIs. Vite does this by default for
+    // files under 4 kB, which would bury small GIFs and clips inside the HTML.
+    build: { assetsInlineLimit: 0 },
+  },
   image: { responsiveStyles: true },
 });

@@ -11,3 +11,5 @@ Photos are resized automatically. GIFs and clips are served as they are, so
 keep them small — under a few megabytes.
 
 Long videos belong on YouTube; list them in content/media.yaml instead.
+
+Worked examples for every kind of picture: ../README.md#photos-gifs-and-video
