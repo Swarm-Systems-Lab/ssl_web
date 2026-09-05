@@ -1,0 +1,75 @@
+---
+import Picture from "@/components/Picture.astro";
+import { logoFor, type LogoFolder } from "@/lib/logos";
+
+interface Props {
+  /** The label, used to find <folder>/<label>.svg. */
+  label: string;
+  /** Overrides the file name when it differs from the label. */
+  name?: string;
+  folder?: LogoFolder;
+  /**
+   * Flatten the logo to a single white mark. Only safe for artwork on a
+   * transparent background — a logo supplied on an opaque white rectangle
+   * would come out as a white block.
+   */
+  white?: boolean;
+  /** Height class applied to the logo itself. */
+  size?: string;
+  /** Widths to render, for raster logos. Scale these with `size`. */
+  widths?: number[];
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  label,
+  name,
+  folder = "logos",
+  white = false,
+  size = "h-10 w-auto",
+  widths = [80, 160, 320],
+  sizes = "160px",
+  class: className,
+} = Astro.props;
+
+const src = logoFor(label, name, folder);
+---
+
+{
+  src &&
+    (white ? (
+      /*
+       * brightness-0 turns every colour black, invert then turns it white —
+       * which flattens a transparent monochrome mark to a single white shape.
+       */
+      <Picture
+        src={src}
+        alt=""
+        widths={widths}
+        sizes={sizes}
+        class:list={["object-contain brightness-0 invert", size, className]}
+      />
+    ) : (
+      /*
+       * Everything else sits on a white plate. Institutional logos arrive in
+       * every possible form — full colour, transparent, or flattened onto an
+       * opaque white rectangle — and a plate renders all of them correctly on
+       * a dark page without anyone having to check which they have.
+       */
+      <span
+        class:list={[
+          "inline-flex items-center justify-center rounded bg-white px-5 py-4",
+          className,
+        ]}
+      >
+        <Picture
+          src={src}
+          alt=""
+          widths={widths}
+          sizes={sizes}
+          class:list={["object-contain", size]}
+        />
+      </span>
+    ))
+}

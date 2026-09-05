@@ -3,8 +3,11 @@ import { getEntry, render } from "astro:content";
 import Base from "@/layouts/Base.astro";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
-import { getNews, newsPictures, getResearch, formatDate } from "@/lib/collections";
-import { site } from "@/lib/data";
+import Logo from "@/components/Logo.astro";
+import VideoGrid from "@/components/VideoGrid.astro";
+import { logoFor } from "@/lib/logos";
+import { getNews, newsPictures, formatDate } from "@/lib/collections";
+import { site, featuredVideos } from "@/lib/data";
 import { coverFor } from "@/lib/covers";
 import { gallery } from "@/lib/media";
 import { url } from "@/lib/url";
@@ -15,7 +18,6 @@ const { Content } = home ? await render(home) : { Content: null };
 const news = (await getNews())
   .slice(0, 4)
   .map((entry) => ({ entry, thumbnail: newsPictures(entry).header }));
-const research = (await getResearch()).slice(0, 3);
 
 // content/covers/home.*, falling back to the newest photo in the gallery.
 const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
@@ -81,6 +83,54 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
   }
 
   {
+    site.affiliations.length > 0 && (
+      <section class="border-t border-border bg-surface/30 py-14">
+        <div class="mx-auto max-w-7xl px-6">
+          <h2 class="font-display text-[10px] tracking-[0.2em] text-muted uppercase">
+            Our institutions and funders
+          </h2>
+          <ul class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-8">
+            {site.affiliations.map((item) => {
+              const mark = (
+                <Logo
+                  label={item.label}
+                  name={item.logo}
+                  folder="affiliations"
+                  white={item.white}
+                  size="h-20 w-auto max-w-[16rem]"
+                  widths={[240, 480, 640]}
+                  sizes="256px"
+                  class="transition-opacity hover:opacity-80"
+                />
+              );
+              /* Until a logo file exists the name stands in for it, so the
+                 list is useful before anyone has collected the artwork. */
+              const fallback = (
+                <span class="font-display text-xs tracking-wider text-muted-foreground transition-colors hover:text-foreground">
+                  {item.label}
+                </span>
+              );
+              const content = logoFor(item.label, item.logo, "affiliations") ? mark : fallback;
+
+              return (
+                <li>
+                  {item.href ? (
+                    <a href={item.href} rel="noopener" title={item.label}>
+                      {content}
+                    </a>
+                  ) : (
+                    content
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+  
+  {
     site.community.length > 0 && (
       <section class="border-y border-border bg-surface/30 py-16">
         <div class="mx-auto max-w-7xl px-6">
@@ -89,6 +139,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
             {site.community.map((item) => (
               <li class="group border border-border bg-background p-8 transition-colors hover:border-accent/50">
                 <a href={item.href} rel="noopener" class="block">
+                  <Logo label={item.label} name={item.logo} white size="h-9 w-auto" class="mb-5" />
                   <h3 class="font-display text-2xl font-bold tracking-tight transition-colors group-hover:text-accent">
                     {item.label}
                   </h3>
@@ -108,42 +159,15 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
   }
 
   {
-    research.length > 0 && (
+    featuredVideos.length > 0 && (
       <section class="mx-auto max-w-7xl px-6 py-16">
-        <Rule label="Research" />
-        <ul class="grid gap-px md:grid-cols-3">
-          {research.map((topic) => (
-            <li class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
-              {topic.data.image && (
-                <Picture
-                  src={topic.data.image}
-                  alt={topic.data.imageAlt ?? topic.data.title}
-                  widths={[400, 800]}
-                  sizes="(min-width: 768px) 400px, 100vw"
-                  class="aspect-video w-full border-b border-border object-cover"
-                />
-              )}
-              <div class="p-6">
-                <h3 class="font-display text-sm font-bold">
-                  <a
-                    href={url(`/research/${topic.id}`)}
-                    class="transition-colors hover:text-accent"
-                  >
-                    {topic.data.title}
-                  </a>
-                </h3>
-                <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {topic.data.summary}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <Rule label="From the field" />
+        <VideoGrid videos={featuredVideos} />
         <a
-          href={url("/research")}
+          href={url("/media")}
           class="mt-8 inline-block font-display text-[11px] tracking-widest text-accent uppercase"
         >
-          All research topics →
+          All photos and videos →
         </a>
       </section>
     )

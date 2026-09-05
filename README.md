@@ -17,6 +17,8 @@ the site rebuilds and republishes itself within a couple of minutes.
 | an open position      | add it to [`content/positions.yaml`](content/positions.yaml)                             |
 | a TFM/TFG project     | add it to [`content/projects.yaml`](content/projects.yaml)                               |
 | a cover for a page    | drop it in [`content/covers/`](content/covers), named after the page                     |
+| a logo for a link     | drop it in [`content/logos/`](content/logos), named after the link                       |
+| an affiliation logo   | list it in `site.yaml`, drop the file in [`content/affiliations/`](content/affiliations) |
 | an award              | add it to [`content/awards.yaml`](content/awards.yaml)                                   |
 | a YouTube video       | add it to [`content/media.yaml`](content/media.yaml)                                     |
 

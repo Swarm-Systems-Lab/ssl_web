@@ -70,3 +70,30 @@ social:
     href: https://www.youtube.com/@SwarmSystemsLab
   - label: Discord
     href: https://discord.gg/peMNWpe4YT
+
+# The university, institutes, and funders shown at the foot of the front page.
+# Put the logo in content/affiliations/ named after the label — "ERC" looks for
+# erc.svg — and it replaces the text. Without a file the name is shown instead,
+# so this list is useful before any logo has been collected.
+#
+# Logos sit on a white plate, which is what makes a PNG downloaded from an
+# institution look right whether or not it has a transparent background. If you
+# do have a clean transparent file and would rather it appeared as a plain white
+# mark with no plate, add `white: true` to that entry.
+#
+# `href` is optional; check each one before publishing.
+affiliations:
+  - label: Universidad de Granada
+    href: https://www.ugr.es
+    logo: ugr
+  - label: European Research Council
+    href: https://erc.europa.eu
+    logo: erc
+  - label: ICAR
+    # Department of Computer Engineering, Automation and Robotics, UGR
+  - label: IMAG
+    href: https://imag.ugr.es
+    logo: imag
+  - label: Ministerio de Ciencia, Innovación y Universidades
+    href: https://www.ciencia.gob.es
+    logo: spain

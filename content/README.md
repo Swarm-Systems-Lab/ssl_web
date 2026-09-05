@@ -9,6 +9,8 @@ Everything on the website is generated from this folder.
 | `team/`            | one folder per person, by category  | its own page           |
 | `media/`           | photos, GIFs, and short clips       | the media page         |
 | `covers/`          | the picture at the top of a page    | that page              |
+| `logos/`           | marks for GitHub, YouTube, Discord  | front page and footer  |
+| `affiliations/`    | university, institute, funder logos | front page             |
 | `pages/home.md`    | the text on the front page          | the front page         |
 | `publications.yaml`| every paper                         | the publications page  |
 | `positions.yaml`   | open positions                      | the Join us page       |
@@ -199,6 +201,26 @@ keep the interesting part near the middle; around 1600 x 700 is plenty.
 If there is no `home` cover, the front page falls back to the newest photo in
 `media/`.
 
+### 6. A logo for an outside link
+
+The marks beside our GitHub, YouTube, and Discord links come from `logos/`,
+named after the link — `github.svg`, `youtube.svg`, `discord.svg`. Drop a file
+in and it appears; a link with no file just shows its text.
+
+The site renders every one of them **pure white**, so there is no need to hunt
+for a white version — the official file as downloaded is fine. See
+[`logos/README.md`](logos/README.md).
+
+### 7. An affiliation or funder logo
+
+The band at the foot of the front page — the university, the institutes, the
+ERC, the ministry. List it under `affiliations:` in `site.yaml`, then drop the
+file in `affiliations/` named to match.
+
+Until the file is there the institution's name is shown as text instead, so the
+band works before anyone has collected the artwork. See
+[`affiliations/README.md`](affiliations/README.md).
+
 ### A video on YouTube
 
 Long videos do not belong in the repository. Upload them to
@@ -210,7 +232,12 @@ videos:
   - youtube: G_lXujpkPJw
     title: Fixed-wing aerobatics — fully autonomous, no GPS
     date: "2026-08-01"
+    featured: true
 ```
+
+`featured: true` also puts the video on the **front page**, under *From the
+field*. Mark as many as you want to show there; if you mark none, the front page
+falls back to the first three in the list.
 
 ### What to hand over
 

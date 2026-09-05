@@ -9,6 +9,8 @@
 # .jpg .jpeg .png .webp .avif .gif .mp4 .webm
 #
 # VIDEOS on YouTube are listed below, because they are not files in the repo.
+# The front page shows the ones marked `featured: true`; if none are marked it
+# shows the first three in this list.
 
 intro: Field tests, prototypes, and life around the lab. Long videos live on our YouTube channel.
 
@@ -22,6 +24,7 @@ channel:
   description: >-
     Every video we publish, including the long cuts that do not fit on this page.
 
+# Add `featured: true` to a video to pin it to the front page.
 videos:
   - youtube: 55N0cbsjq08
     title: Fixed-wing aerobatics — fully autonomous, no GPS

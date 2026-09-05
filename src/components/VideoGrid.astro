@@ -1,0 +1,48 @@
+---
+/**
+ * A row of YouTube embeds, used on the front page and on the media page.
+ *
+ * The players are lazy: nothing is fetched from YouTube until the grid is
+ * close to the viewport, so a page carrying three of them still costs nothing
+ * to open.
+ */
+
+export interface Video {
+  youtube: string;
+  title: string;
+  date?: string;
+}
+
+interface Props {
+  videos: Video[];
+  columns?: string;
+  class?: string;
+}
+
+const { videos, columns = "md:grid-cols-2 lg:grid-cols-3", class: className } = Astro.props;
+---
+
+<ul class:list={["grid gap-px", columns, className]}>
+  {
+    videos.map((video) => (
+      <li class="border border-border bg-surface/30 transition-colors hover:border-accent/50">
+        <div class="aspect-video border-b border-border bg-black">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${video.youtube}`}
+            title={video.title}
+            loading="lazy"
+            allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            class="h-full w-full"
+          />
+        </div>
+        <div class="p-5">
+          {video.date && (
+            <div class="font-display text-[10px] tracking-widest text-muted">{video.date}</div>
+          )}
+          <h3 class="mt-2 font-display text-sm font-bold">{video.title}</h3>
+        </div>
+      </li>
+    ))
+  }
+</ul>

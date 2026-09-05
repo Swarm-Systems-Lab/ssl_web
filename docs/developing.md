@@ -19,6 +19,7 @@ src/
   lib/folder-pictures.ts  pictures found next to a post or a person
   lib/summary.ts    the fallback summary, derived from a post's own text
   lib/covers.ts     the picture at the top of a page, from content/covers/
+  lib/logos.ts      marks for links and affiliations, by file name
   lib/media.ts      builds the gallery by scanning content/media/
   lib/collections.ts sorting, grouping, and the team category rules
   layouts/Base.astro  <head>, header, footer
@@ -107,6 +108,26 @@ prop and looks the file up, so adding a cover to a new tab means passing that
 prop and nothing else. Captions come from `coverCaptions:` in `site.yaml` and
 double as alt text. The front page renders its cover uncropped; every other page
 crops to a banner.
+
+### Logos
+
+`content/logos/<link>.*` and `content/affiliations/<name>.*` are matched by the
+slugified label, or by an explicit `logo:` in `site.yaml`; `Logo.astro` takes a
+`folder` prop to pick between them. SVGs are served untouched — rasterising a
+vector is pointless — while PNG and JPG go through the image pipeline, since an
+institutional logo often arrives several thousand pixels wide for a 40 px slot.
+`logoFor()` returns a `Picture` either way, so `Picture.astro` handles both.
+
+Two treatments. `white` flattens a logo with `brightness-0 invert`, which suits
+the transparent monochrome marks in `logos/`. Affiliations default instead to a
+white plate keeping their own colours, because institutional logos arrive in
+every form and a logo supplied on an opaque white rectangle would otherwise
+invert into a solid white block. `white: true` per affiliation opts into the
+flat treatment when the artwork really is transparent.
+
+The affiliations band falls back to the institution's name when no file is
+found, which is why `index.astro` calls `logoFor()` directly rather than letting
+`Logo.astro` render nothing.
 
 ### Summaries
 

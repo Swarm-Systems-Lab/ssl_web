@@ -33,7 +33,12 @@ function load<T extends z.ZodTypeAny>(file: string, schema: T): z.infer<T> {
   return result.data;
 }
 
-const link = z.object({ label: z.string(), href: z.string() });
+const link = z.object({
+  label: z.string(),
+  href: z.string(),
+  /** File name in content/logos/, when it differs from the label. */
+  logo: z.string().optional(),
+});
 
 /** A path relative to content/, e.g. "images/granada/alhambra.jpg". */
 const picturePath = z.string();
@@ -62,9 +67,32 @@ const siteSchema = z.object({
   nav: z.array(navItem),
   /** Featured on the front page as well as in the footer. */
   community: z
-    .array(z.object({ label: z.string(), href: z.string(), description: z.string() }))
+    .array(
+      z.object({
+        label: z.string(),
+        href: z.string(),
+        description: z.string(),
+        logo: z.string().optional(),
+      }),
+    )
     .default([]),
   social: z.array(link),
+  /** The university, institutes, and funders shown at the foot of the home page. */
+  affiliations: z
+    .array(
+      z.object({
+        label: z.string(),
+        href: z.string().optional(),
+        /** File name in content/affiliations/, when it differs from the label. */
+        logo: z.string().optional(),
+        /**
+         * Show the logo as a plain white mark instead of on a white plate.
+         * Only for artwork on a transparent background.
+         */
+        white: z.boolean().default(false),
+      }),
+    )
+    .default([]),
 });
 
 export const site = load("site.yaml", siteSchema);
@@ -228,8 +256,19 @@ export const mediaConfig = load(
         youtube: z.string(),
         title: z.string(),
         date: z.string().optional(),
+        /** Pulled out onto the front page. */
+        featured: z.boolean().default(false),
       }),
     ),
     captions: z.record(z.string(), z.string()).default({}),
   }),
 );
+
+/**
+ * The videos shown on the front page: the ones marked `featured: true`, or the
+ * three most recent when nobody has marked any.
+ */
+export const featuredVideos = (() => {
+  const chosen = mediaConfig.videos.filter((video) => video.featured);
+  return chosen.length > 0 ? chosen : mediaConfig.videos.slice(0, 3);
+})();

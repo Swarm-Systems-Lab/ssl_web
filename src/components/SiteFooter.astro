@@ -1,5 +1,6 @@
 ---
 import { site } from "@/lib/data";
+import Logo from "@/components/Logo.astro";
 import { url } from "@/lib/url";
 ---
 
@@ -41,8 +42,15 @@ import { url } from "@/lib/url";
               <a
                 href={item.href}
                 rel="noopener"
-                class="text-sm text-muted-foreground transition-colors hover:text-accent"
+                class="flex items-center gap-2.5 text-sm text-muted-foreground transition-colors hover:text-accent"
               >
+                <Logo
+                  label={item.label}
+                  name={item.logo}
+                  white
+                  size="h-4 w-4"
+                  class="shrink-0 opacity-70"
+                />
                 {item.label}
               </a>
             </li>
