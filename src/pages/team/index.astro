@@ -11,6 +11,13 @@ const groups = TEAM_GROUPS.map((group) => ({
   ...group,
   members: members.filter((m) => m.group === group.key),
 })).filter((group) => group.members.length > 0);
+
+/**
+ * The whole card is the click target, not just the name. The link stretches
+ * over its card with an ::after overlay, which keeps the markup valid — a real
+ * link cannot wrap the other links inside a card.
+ */
+const STRETCH = "after:absolute after:inset-0 after:content-['']";
 ---
 
 <Base title="Team" description="People and visitors of the Swarm Systems Lab.">
@@ -28,14 +35,56 @@ const groups = TEAM_GROUPS.map((group) => ({
         <section class="mb-16">
           <Rule label={group.label} />
 
-          {group.key === "alumni" || group.key === "visitor" ? (
+          {group.key === "visitor" ? (
+            /* Visitors read as a gallery: two columns, pictures shown wide. */
             <ul class="grid gap-px md:grid-cols-2">
               {group.members.map(({ entry, slug, hasPage, photo }) => (
-                <li class="flex items-start gap-5 border border-border p-6">
+                <li class="relative flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
+                  {photo && (
+                    <Picture
+                      src={photo}
+                      alt={entry.data.name}
+                      widths={[640, 1280]}
+                      sizes="(min-width: 768px) 600px, 100vw"
+                      class="aspect-video w-full border-b border-border object-cover"
+                    />
+                  )}
+                  <div class="p-6">
+                    {entry.data.note && (
+                      <div class="font-display text-[10px] tracking-widest text-accent uppercase">
+                        {entry.data.note}
+                      </div>
+                    )}
+                    <h3 class="mt-2 font-display text-lg font-bold tracking-tight">
+                      {hasPage ? (
+                        <a
+                          href={url(`/team/${slug}`)}
+                          class:list={["transition-colors hover:text-accent", STRETCH]}
+                        >
+                          {entry.data.name}
+                        </a>
+                      ) : (
+                        entry.data.name
+                      )}
+                    </h3>
+                    <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+                      {entry.data.summary}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : group.key === "alumni" ? (
+            <ul class="grid gap-px md:grid-cols-2">
+              {group.members.map(({ entry, slug, hasPage, photo }) => (
+                <li class="relative flex items-start gap-5 border border-border bg-surface/30 p-6 transition-colors hover:border-accent/50">
                   <div class="min-w-0 flex-1">
                     <div class="font-display text-sm font-bold">
                       {hasPage ? (
-                        <a href={url(`/team/${slug}`)} class="transition-colors hover:text-accent">
+                        <a
+                          href={url(`/team/${slug}`)}
+                          class:list={["transition-colors hover:text-accent", STRETCH]}
+                        >
                           {entry.data.name}
                         </a>
                       ) : (
@@ -50,7 +99,6 @@ const groups = TEAM_GROUPS.map((group) => ({
                     )}
                   </div>
 
-                  {/* Optional: most alumni and visitors have no picture. */}
                   {photo && (
                     <Picture
                       src={photo}
@@ -66,7 +114,7 @@ const groups = TEAM_GROUPS.map((group) => ({
           ) : (
             <ul class="grid gap-px sm:grid-cols-2 lg:grid-cols-3">
               {group.members.map(({ entry, slug, hasPage, photo }) => (
-                <li class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
+                <li class="relative flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
                   {photo && (
                     <Picture
                       src={photo}
@@ -82,7 +130,10 @@ const groups = TEAM_GROUPS.map((group) => ({
                     </div>
                     <h3 class="mt-2 font-display text-lg font-bold tracking-tight">
                       {hasPage ? (
-                        <a href={url(`/team/${slug}`)} class="transition-colors hover:text-accent">
+                        <a
+                          href={url(`/team/${slug}`)}
+                          class:list={["transition-colors hover:text-accent", STRETCH]}
+                        >
                           {entry.data.name}
                         </a>
                       ) : (
@@ -93,7 +144,8 @@ const groups = TEAM_GROUPS.map((group) => ({
                       {entry.data.summary}
                     </p>
                     {entry.data.links.length > 0 && (
-                      <div class="mt-5 flex flex-wrap gap-4 font-display text-[10px] tracking-widest uppercase">
+                      /* `relative` lifts these above the stretched overlay. */
+                      <div class="relative mt-5 flex flex-wrap gap-4 font-display text-[10px] tracking-widest uppercase">
                         {entry.data.links.map((l) => (
                           <a href={l.href} rel="noopener" class="text-muted hover:text-accent">
                             {l.label}

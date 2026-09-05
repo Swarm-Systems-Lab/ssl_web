@@ -42,7 +42,10 @@ Two mechanisms, chosen by whether an item needs its own page:
   not change any URL.
 
   People go one level deeper — `team/members/`, `team/visitors/`,
-  `team/alumni/`. The folder is the category; `group:` only splits the members
+  `team/alumni/`. Anyone with a photo or body text gets a page; on it,
+  `isPanoramic()` in `lib/images.ts` compares the photo's own width and height
+  against a 1.1 ratio and picks between the portrait-beside-the-name layout and
+  the wide-picture-underneath one. The folder is the category; `group:` only splits the members
   into the PI, postdocs, Ph.D. students, and assistants. `getTeam()` in
   `lib/collections.ts` derives the group, flattens the id to a slug so the URL
   stays `/team/<name>`, and throws with the file path if a member is missing a
@@ -120,10 +123,19 @@ indexes everything under `content/` with `import.meta.glob` and resolves a path
 written relative to `content/`. A miss throws with the closest matching file
 names, which is what an editor needs to see in the build log.
 
-One catch worth knowing: `<Image>` emits its fallback `src` at the picture's own
-resolution unless given a `width`, so `Picture.astro` caps it at the largest
-entry in `widths`. Without that a 7 MB photo ships a 2.5 MB variant nobody
-requests.
+Two catches worth knowing.
+
+`<Image>` emits its fallback `src` at the picture's own resolution unless given
+a `width`, so `Picture.astro` caps it at the largest entry in `widths`. Without
+that a 7 MB photo ships a 2.5 MB variant nobody requests.
+
+And Vite emits a copy of everything imported, so the eager glob puts every
+full-size original in `dist/_astro` beside the variants actually used — 13 MB of
+it once the team photos landed. `tools/prune-assets.mjs` runs on
+`astro:build:done` and deletes any emitted file whose name appears nowhere in
+the built HTML, CSS, JS, or XML. Hashed names make a match a real reference, and
+anything ambiguous is kept. Link previews go through `lib/social-image.ts`
+rather than pointing at an original, for the same reason.
 
 ## Adding a tab
 

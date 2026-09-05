@@ -2,6 +2,7 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
+import pruneUnusedAssets from "./tools/prune-assets.mjs";
 
 // The public URL of the site. Override with SITE_URL when deploying a preview
 // or to a *.github.io/<repo> address instead of the custom domain.
@@ -15,7 +16,7 @@ export default defineConfig({
   base,
   trailingSlash: "ignore",
   build: { format: "directory" },
-  integrations: [sitemap()],
+  integrations: [sitemap(), pruneUnusedAssets()],
   vite: {
     plugins: [tailwindcss()],
     // Never inline assets as base64 data URIs. Vite does this by default for

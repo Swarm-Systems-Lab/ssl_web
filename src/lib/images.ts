@@ -64,6 +64,22 @@ export function optionalPicture(path?: string): Picture | undefined {
   return path ? picture(path) : undefined;
 }
 
+/**
+ * Wider than this and a picture is treated as a wide shot rather than a
+ * head-and-shoulders one, which changes how a person's page is laid out.
+ * Real photos fall well either side of it: portraits sit around 0.7-1.0,
+ * pictures taken in the field from 1.2 upwards.
+ */
+const PANORAMIC_RATIO = 0.8;
+
+/**
+ * True for a wide picture, false for a passport-style one. Formats served
+ * as-is carry no dimensions, so they take the narrow layout.
+ */
+export function isPanoramic(picture: Picture): boolean {
+  return typeof picture === "string" ? false : picture.width / picture.height > PANORAMIC_RATIO;
+}
+
 /** The URL of a picture, for <meta> tags and plain links. */
 export function pictureUrl(value: Picture): string {
   return typeof value === "string" ? value : value.src;

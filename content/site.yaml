@@ -49,18 +49,18 @@ community:
   - label: GitHub
     href: https://github.com/Swarm-Systems-Lab
     description: >-
-      Our code in the open — swarm controllers, guiding vector fields, and the
-      tools we use to fly them.
+      Our code in the open. The Swarm Systems Lab's Python simulation 
+      environment used for the numerical validation of our published work.
   - label: YouTube
     href: https://www.youtube.com/@SwarmSystemsLab
     description: >-
-      Raw footage from the field: formation flights, aerobatics, and rendezvous
-      with our fixed-wing drones.
+      Field footage, conference presentations, and research videos from the lab.
   - label: Discord
     href: https://discord.gg/peMNWpe4YT
     description: >-
-      Come and talk swarm robotics with us, whether you are a researcher or just
-      starting out.
+      Whether you are a seasoned researcher or just starting to explore swarm 
+      robotics, join us on Discord to exchange ideas, discuss research, and share 
+      experiences on autonomous swarms.
 
 # Links shown in the footer.
 social:

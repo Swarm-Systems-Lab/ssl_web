@@ -3,7 +3,8 @@ import Base from "@/layouts/Base.astro";
 import Picture from "@/components/Picture.astro";
 import Text from "@/components/Text.astro";
 import { publications, type Publication } from "@/lib/data";
-import { optionalPicture, pictureUrl } from "@/lib/images";
+import { optionalPicture } from "@/lib/images";
+import { socialImage } from "@/lib/social-image";
 import { url } from "@/lib/url";
 
 export function getStaticPaths() {
@@ -15,7 +16,7 @@ const image = optionalPicture(pub.image);
 const summary = `${pub.authors}. ${pub.venue}${pub.year ? `, ${pub.year}` : ""}.`;
 ---
 
-<Base title={pub.title} description={summary} image={image && pictureUrl(image)}>
+<Base title={pub.title} description={summary} image={await socialImage(image)}>
   <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
     <a
       href={url("/publications")}

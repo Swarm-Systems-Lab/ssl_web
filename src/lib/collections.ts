@@ -51,7 +51,11 @@ export type TeamMember = {
   /** Last path segment, and the address: /team/<slug>. */
   slug: string;
   group: TeamGroup;
-  /** Someone only gets their own page when their file has text in it. */
+  /**
+   * Whether there is a page worth visiting: anyone with a photo or a
+   * description gets one, so alumni and visitors are shown properly rather
+   * than only as a line on the team page.
+   */
   hasPage: boolean;
   photo?: Picture;
 };
@@ -89,13 +93,16 @@ export async function getTeam(): Promise<TeamMember[]> {
   const entries = await getCollection("team", visible);
 
   return entries
-    .map((entry) => ({
-      entry,
-      slug: entry.id.split("/").pop()!,
-      group: groupOf(entry),
-      hasPage: Boolean(entry.body?.trim()),
-      photo: entry.data.photo ?? firstFolderPicture("team", entry.id),
-    }))
+    .map((entry) => {
+      const photo = entry.data.photo ?? firstFolderPicture("team", entry.id);
+      return {
+        entry,
+        slug: entry.id.split("/").pop()!,
+        group: groupOf(entry),
+        hasPage: Boolean(entry.body?.trim()) || Boolean(photo),
+        photo,
+      };
+    })
     .sort(
       (a, b) =>
         a.entry.data.order - b.entry.data.order ||

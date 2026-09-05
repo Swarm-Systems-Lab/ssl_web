@@ -4,7 +4,7 @@ import Base from "@/layouts/Base.astro";
 import Picture from "@/components/Picture.astro";
 import Carousel from "@/components/Carousel.astro";
 import { getNews, newsSummary, newsPictures, formatDate } from "@/lib/collections";
-import { pictureUrl } from "@/lib/images";
+import { socialImage } from "@/lib/social-image";
 import { url } from "@/lib/url";
 
 export async function getStaticPaths() {
@@ -21,7 +21,7 @@ const { header, slides } = newsPictures(entry);
 const summary = newsSummary(entry);
 ---
 
-<Base title={entry.data.title} description={summary} image={header && pictureUrl(header)}>
+<Base title={entry.data.title} description={summary} image={await socialImage(header)}>
   <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
     <a href={url("/news")} class="font-display text-[10px] tracking-widest text-accent uppercase">
       ← All news

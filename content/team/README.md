@@ -43,13 +43,26 @@ This works the same for everyone. Members show theirs large at the top of their
 card; alumni and visitors show a small one beside their name, and simply have no
 picture if the folder holds none.
 
-Square pictures look best.
+On the person's own page the shape of the picture decides the layout, and this
+is worked out automatically — there is nothing to set:
+
+- a **passport-style** picture (square or taller than it is wide) sits to the
+  left of the name, as a neat portrait;
+- a **wide** picture — someone in the field, or a photo with the lab around
+  them — goes underneath the name at full width, because it would be squeezed
+  to nothing in a narrow column.
+
+So a portrait crop is best if you want the compact layout, and a wide shot is
+best if the surroundings are part of the picture. Either works.
 
 ## Pages
 
-Someone gets their own page only if their file has text below the frontmatter.
-Alumni and visitors are usually a single line with no text, so they stay on the
-team page.
+Anyone with a photo or some text below the frontmatter gets their own page, so
+alumni and visitors are shown properly rather than only as a line on the team
+page. Someone with neither simply has no page, and their name is not a link.
+
+Write as much or as little below the frontmatter as you like — the page works
+either way.
 
 ## When things change
 
