@@ -6,6 +6,10 @@
 #     summary: One paragraph.
 #     details:          # optional bullet list
 #       - ...
+#     image: images/positions/fpu.jpg   # optional, relative to content/
+#     imageAlt: "What the picture shows"
+#
+# Any text field accepts inline links: [Paparazzi](https://paparazziuav.org).
 
 intro: >-
   The Swarm Systems Lab at the University of Granada currently has some
@@ -45,6 +49,13 @@ items:
 
 aside:
   title: Why Granada?
+  # Photos shown as a carousel next to the text. Drop the files in
+  # content/images/granada/ and list them here.
+  photos: []
+  # photos:
+  #   - images/granada/alhambra.jpg
+  #   - images/granada/albaicin.jpg
+  #   - images/granada/sierra-nevada.jpg
   body: >-
     Granada is the most popular destination among European exchange students and
     has a welcoming, cosmopolitan university. It is a safe modern city 40 minutes

@@ -13,20 +13,48 @@ const here = Astro.url.pathname;
 
     <nav class="no-scrollbar ml-auto flex items-center gap-5 overflow-x-auto" aria-label="Main">
       {
-        site.nav.map((item) => (
-          <a
-            href={url(item.href)}
-            aria-current={isActive(here, item.href) ? "page" : undefined}
-            class:list={[
-              "font-display text-[11px] tracking-widest whitespace-nowrap uppercase transition-colors",
-              isActive(here, item.href)
-                ? "text-accent"
-                : "text-muted-foreground hover:text-foreground",
-            ]}
-          >
-            {item.label}
-          </a>
-        ))
+        site.nav.map((item) => {
+          const active = isActive(here, item.href);
+          const linkClass = [
+            "font-display text-[11px] tracking-widest whitespace-nowrap uppercase transition-colors",
+            active ? "text-accent" : "text-muted-foreground hover:text-foreground",
+          ];
+
+          // A tab with children keeps its own link and reveals the list on
+          // hover or keyboard focus, so it works without JavaScript.
+          return item.children.length > 0 ? (
+            <div class="group relative">
+              <a
+                href={url(item.href)}
+                aria-current={active ? "page" : undefined}
+                class:list={linkClass}
+              >
+                {item.label}
+                <span class="ml-1 opacity-60">▾</span>
+              </a>
+              <ul class="invisible absolute top-full right-0 z-10 min-w-max border border-border bg-background py-2 opacity-0 shadow-lg transition-[opacity,visibility] group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+                {item.children.map((child) => (
+                  <li>
+                    <a
+                      href={url(child.href)}
+                      class="block px-4 py-2 font-display text-[11px] tracking-widest whitespace-nowrap text-muted-foreground uppercase transition-colors hover:text-accent"
+                    >
+                      {child.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <a
+              href={url(item.href)}
+              aria-current={active ? "page" : undefined}
+              class:list={linkClass}
+            >
+              {item.label}
+            </a>
+          );
+        })
       }
     </nav>
   </div>

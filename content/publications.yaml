@@ -1,21 +1,44 @@
 # Publications.
 #
-# Add a new paper at the TOP of its list and give it the next reference number
-# (J.. for journals, C.. for conferences, U.. for preprints).
+# Papers live in four lists — `journal:`, `conference:`, `preprint:`, and
+# `technote:`. Add a new paper at the TOP of its list and give it the next
+# reference number (J.. for journals, C.. for conferences, U.. for preprints,
+# T.. for tech notes).
 #
 #   - ref: J28
 #     authors: "A. Author, B. Author, HG de Marina"
 #     title: "The title of the paper"
 #     venue: "IEEE Transactions on Automatic Control"
-#     year: 2026
+#     year: 2026                   # leave out for something still in review
 #     note: "Optional line shown in accent type, e.g. an award"
-#     links:                       # optional
+#     abstract: "Shown on the paper's own page. Links work here."
+#     image: images/publications/j28.jpg    # thumbnail, relative to content/
+#     imageAlt: "What the picture shows"
+#     links:
 #       - label: PDF
 #         href: https://...
 #       - label: DOI
 #         href: https://doi.org/...
+#     bibtex: |
+#       @article{author2026title,
+#         title = {The title of the paper},
+#       }
 #
-# Papers are grouped by year automatically; do not repeat the year in `venue`.
+# Every paper also gets its own page at /publications/<title-as-a-slug>.
+# The page groups by year; the buttons at the top filter by list, so do not
+# repeat the year inside `venue`.
+
+# Preprints (arXiv)
+preprint:
+  - ref: U2
+    authors: "J. Bautista, HG de Marina"
+    title: "SO(3) attitude controllers and the alignment of robots with non-constant 3D vector fields"
+    venue: "arXiv"
+    image: images/publications/test.png
+  - ref: U1
+    authors: "N Chan, B Jayawardhana, HG de Marina"
+    title: "Securing Isosceles Triangular Formations under Heterogeneous Sensing and Mixed Constraints"
+    venue: "arXiv"
 
 # Journal papers
 journal:
@@ -370,13 +393,5 @@ conference:
     venue: "11th International Conference on Control Automation Robotics & Vision"
     year: 2010
 
-# Preprints (arXiv)
-preprint:
-  - ref: U2
-    authors: "J. Bautista, HG de Marina"
-    title: "SO(3) attitude controllers and the alignment of robots with non-constant 3D vector fields"
-    venue: "arXiv"
-  - ref: U1
-    authors: "N Chan, B Jayawardhana, HG de Marina"
-    title: "Securing Isosceles Triangular Formations under Heterogeneous Sensing and Mixed Constraints"
-    venue: "arXiv"
+# Tech notes and other write-ups
+technote: []

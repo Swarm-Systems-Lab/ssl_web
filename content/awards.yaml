@@ -5,7 +5,13 @@
 #   - title: What was awarded
 #     awarder: Who awarded it
 #     year: 2026
-#     detail: Optional extra sentence.
+#     detail: Optional extra sentence. Links work here — [like this](https://…).
+#     members: [hector-garcia-de-marina]   # file names from content/team/
+#     image: images/awards/erc.jpg         # optional thumbnail, relative to content/
+#     imageAlt: "What the picture shows"
+#
+# A name in `members` that matches a file in content/team/ becomes a link to
+# that person; anything else is shown as plain text.
 
 intro: Grants, prizes, and distinctions received by the lab and its members.
 
@@ -13,25 +19,31 @@ items:
   - title: ERC Starting Grant
     awarder: European Research Council
     year: 2022
+    members: [hector-garcia-de-marina]
+    image: images/awards/test.png
 
   - title: Best conference paper award finalist
     awarder: IEEE ICRA 2021
     year: 2021
+    members: [weijia-yao, hector-garcia-de-marina]
     detail: Distributed coordinated path following using guiding vector fields.
 
   - title: Seal of Excellence
     awarder: European Commission
     year: 2020
+    members: [hector-garcia-de-marina]
     detail: The H2020-MSCA-IF-2019 proposal was recognised as a high-quality project proposal.
 
   - title: Research fellow — Atracción de Talento
     awarder: Comunidad de Madrid
     year: 2020
+    members: [hector-garcia-de-marina]
     detail: 2nd position in the Engineering field, a competitive personal research funding for 2020/24.
 
   - title: Best paper award finalist
     awarder: ICARCV 2018
     year: 2018
+    members: [hector-garcia-de-marina]
     detail: >-
       Multi-robot motion-formation distributed control with sensor
       self-calibration: experimental validation.
@@ -46,4 +58,5 @@ items:
   - title: Shortlisted for the best thesis award
     awarder: Dutch Institute for Systems and Control
     year: 2016
+    members: [hector-garcia-de-marina]
     detail: Distributed formation control for autonomous robots.

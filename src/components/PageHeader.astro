@@ -1,13 +1,22 @@
 ---
+import Picture from "@/components/Picture.astro";
+import { coverFor } from "@/lib/covers";
+
 interface Props {
   eyebrow: string;
   title: string;
   /** Rendered in muted type after the title, e.g. "LAB" + "NEWS." */
   accent?: string;
   description?: string;
+  /**
+   * Name of the page, used to look up content/covers/<page>.jpg. Leave it out,
+   * or leave the folder empty, and no picture is shown.
+   */
+  page?: string;
 }
 
-const { eyebrow, title, accent, description } = Astro.props;
+const { eyebrow, title, accent, description, page } = Astro.props;
+const cover = page ? coverFor(page) : undefined;
 ---
 
 <section class="mx-auto max-w-7xl px-6 pt-20 pb-14">
@@ -19,5 +28,25 @@ const { eyebrow, title, accent, description } = Astro.props;
   <h1 class="font-display text-4xl leading-[0.95] font-bold tracking-tighter md:text-6xl">
     {title}{accent && <span class="text-muted"> {accent}</span>}
   </h1>
-  {description && <p class="mt-6 max-w-2xl leading-relaxed text-muted-foreground">{description}</p>}
+  {description && <p class="mt-6 max-w-3xl leading-relaxed text-muted-foreground">{description}</p>}
+
+  {
+    cover && (
+      <figure class="mt-10 border border-border bg-surface">
+        <Picture
+          src={cover.src}
+          alt={cover.caption ?? title}
+          widths={[720, 1080, 1440, 1920]}
+          sizes="(min-width: 1280px) 1216px, 100vw"
+          loading="eager"
+          class="aspect-[3/2] w-full object-cover sm:aspect-[21/9]"
+        />
+        {cover.caption && (
+          <figcaption class="border-t border-border p-4 font-display text-[10px] tracking-widest text-muted uppercase">
+            {cover.caption}
+          </figcaption>
+        )}
+      </figure>
+    )
+  }
 </section>

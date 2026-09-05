@@ -1,5 +1,13 @@
 # Master (TFM) and bachelor (TFG) projects offered to students.
-# Everything on this page lives in this one file.
+# These appear on the "Join us" page, under the open positions.
+#
+#   - title: What the project is
+#     level: TFM | TFG | TFG / TFM
+#     summary: One paragraph. Links work — [Paparazzi](https://paparazziuav.org).
+#     requirements:
+#       - ...
+#     image: images/projects/geolocalisation.jpg   # optional, relative to content/
+#     imageAlt: "What the picture shows"
 
 intro: >-
   The Swarm Systems Lab at the University of Granada seeks outstanding students

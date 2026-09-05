@@ -1,0 +1,97 @@
+---
+import Base from "@/layouts/Base.astro";
+import Picture from "@/components/Picture.astro";
+import Text from "@/components/Text.astro";
+import { publications, type Publication } from "@/lib/data";
+import { optionalPicture, pictureUrl } from "@/lib/images";
+import { url } from "@/lib/url";
+
+export function getStaticPaths() {
+  return publications.map((pub) => ({ params: { slug: pub.slug }, props: { pub } }));
+}
+
+const { pub } = Astro.props as { pub: Publication };
+const image = optionalPicture(pub.image);
+const summary = `${pub.authors}. ${pub.venue}${pub.year ? `, ${pub.year}` : ""}.`;
+---
+
+<Base title={pub.title} description={summary} image={image && pictureUrl(image)}>
+  <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
+    <a
+      href={url("/publications")}
+      class="font-display text-[10px] tracking-widest text-accent uppercase"
+    >
+      ← All publications
+    </a>
+
+    <header class="mt-10 border-b border-border pb-10">
+      <div
+        class="mb-4 flex flex-wrap items-center gap-3 font-display text-[10px] tracking-widest uppercase"
+      >
+        <span class="border border-accent/30 px-2 py-1 text-accent">{pub.kindLabel}</span>
+        {pub.year && <span class="text-muted">{pub.year}</span>}
+        <span class="text-muted">Ref {pub.ref}</span>
+      </div>
+      <h1 class="font-display text-2xl leading-tight font-bold tracking-tight md:text-3xl">
+        {pub.title}
+      </h1>
+      <p class="mt-5 text-muted-foreground">{pub.authors}</p>
+      <p class="mt-1 text-foreground italic">{pub.venue}</p>
+      {
+        pub.note && (
+          <p class="mt-4 font-display text-[10px] tracking-widest text-accent uppercase">
+            {pub.note}
+          </p>
+        )
+      }
+      {
+        pub.links.length > 0 && (
+          <div class="mt-6 flex flex-wrap gap-3">
+            {pub.links.map((l) => (
+              <a
+                href={l.href}
+                rel="noopener"
+                class="border border-border px-4 py-2 font-display text-[10px] tracking-widest uppercase transition-colors hover:border-accent hover:text-accent"
+              >
+                {l.label} →
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    {
+      image && (
+        <Picture
+          src={image}
+          alt={pub.imageAlt ?? pub.title}
+          widths={[640, 960, 1280]}
+          sizes="(min-width: 768px) 768px, 100vw"
+          loading="eager"
+          class="mt-10 w-full border border-border"
+        />
+      )
+    }
+
+    {
+      pub.abstract && (
+        <section class="mt-10">
+          <h2 class="font-display text-xs tracking-[0.2em] text-muted uppercase">Abstract</h2>
+          <Text text={pub.abstract} class="mt-4 leading-relaxed text-muted-foreground" />
+        </section>
+      )
+    }
+
+    {
+      pub.bibtex && (
+        <section class="mt-10">
+          <h2 class="font-display text-xs tracking-[0.2em] text-muted uppercase">BibTeX</h2>
+          <pre class="mt-4 overflow-x-auto border border-border bg-surface p-4 font-mono text-xs text-muted-foreground">
+            {pub.bibtex}
+          </pre>
+        </section>
+      )
+    }
+  </article>
+</Base>

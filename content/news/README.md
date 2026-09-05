@@ -1,9 +1,22 @@
 # News
 
-One file per post. Copy `_template.md`, rename it to
-`YYYY-MM-DD-a-few-words.md`, and fill it in. The name becomes the address:
-`2026-09-04-new-paper.md` → `/news/2026-09-04-new-paper`.
+One folder per post. Copy `_template.md` into a new folder named
+`YYYY-MM-DD-a-few-words`, save it as `index.md`, and fill it in. The folder name
+becomes the address:
+
+```
+content/news/2026-09-04-new-paper/
+  index.md                     ← the post
+  01-first-photo.jpg           ← pictures live next to it
+  02-second-photo.jpg
+```
+
+→ `/news/2026-09-04-new-paper`
+
+Every picture in the folder except the one used as `image:` is shown as a
+carousel at the end of the post, in file-name order — hence the `01-`, `02-`
+prefixes. Nothing to list.
+
+A post with no pictures can also be a plain file, `2026-09-04-new-paper.md`.
 
 Newest posts appear first, sorted by the `date` field.
-
-Pictures used inside a post go in `images/`.

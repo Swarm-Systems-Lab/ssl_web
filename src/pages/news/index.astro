@@ -1,10 +1,16 @@
 ---
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
-import { getNews, formatDate } from "@/lib/collections";
+import Picture from "@/components/Picture.astro";
+import { getNews, newsSummary, newsPictures, formatDate } from "@/lib/collections";
 import { url } from "@/lib/url";
 
-const news = await getNews();
+const news = (await getNews()).map((entry) => ({
+  entry,
+  summary: newsSummary(entry),
+  // Falls back to the first picture in the post's folder.
+  thumbnail: newsPictures(entry).header,
+}));
 ---
 
 <Base
@@ -12,6 +18,7 @@ const news = await getNews();
   description="Announcements, papers, visits, and field tests from the Swarm Systems Lab."
 >
   <PageHeader
+    page="news"
     eyebrow="News"
     title="LAB"
     accent="NEWS."
@@ -21,22 +28,36 @@ const news = await getNews();
   <section class="mx-auto max-w-4xl px-6 pb-16">
     <ol class="border-t border-border">
       {
-        news.map((item) => (
-          <li class="border-b border-border py-9">
-            <div class="mb-3 flex items-center gap-3 font-display text-[10px] tracking-widest">
-              <time datetime={item.data.date.toISOString()} class="text-accent">
-                {formatDate(item.data.date)}
-              </time>
-              {item.data.tags.map((tag) => (
-                <span class="text-muted uppercase">#{tag}</span>
-              ))}
+        news.map(({ entry, summary, thumbnail }) => (
+          <li class="grid gap-6 border-b border-border py-9 sm:grid-cols-[1fr_15rem]">
+            <div>
+              <div class="mb-3 flex items-center gap-3 font-display text-[10px] tracking-widest">
+                <time datetime={entry.data.date.toISOString()} class="text-accent">
+                  {formatDate(entry.data.date)}
+                </time>
+                {entry.data.tags.map((tag) => (
+                  <span class="text-muted uppercase">#{tag}</span>
+                ))}
+              </div>
+              <h2 class="font-display text-xl leading-snug font-bold tracking-tight">
+                <a href={url(`/news/${entry.id}`)} class="transition-colors hover:text-accent">
+                  {entry.data.title}
+                </a>
+              </h2>
+              <p class="mt-3 leading-relaxed text-muted-foreground">{summary}</p>
             </div>
-            <h2 class="font-display text-xl leading-snug font-bold tracking-tight">
-              <a href={url(`/news/${item.id}`)} class="transition-colors hover:text-accent">
-                {item.data.title}
+
+            {thumbnail && (
+              <a href={url(`/news/${entry.id}`)} class="block">
+                <Picture
+                  src={thumbnail}
+                  alt={entry.data.imageAlt ?? entry.data.title}
+                  widths={[320, 640]}
+                  sizes="(min-width: 640px) 240px, 100vw"
+                  class="aspect-[4/3] w-full border border-border object-cover transition-colors hover:border-accent/50"
+                />
               </a>
-            </h2>
-            <p class="mt-3 leading-relaxed text-muted-foreground">{item.data.summary}</p>
+            )}
           </li>
         ))
       }

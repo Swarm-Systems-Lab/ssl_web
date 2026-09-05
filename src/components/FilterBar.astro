@@ -1,0 +1,79 @@
+---
+/**
+ * Generic client-side filter for a list that is already fully rendered.
+ *
+ * Wrap the list in an element with `data-filterable`, tag each entry with
+ * `data-kind="…"`, and optionally wrap sections in `data-filter-group` so a
+ * heading disappears when nothing under it survives the filter.
+ *
+ * The bar is hidden until the script runs, so a visitor without JavaScript
+ * sees the complete list rather than controls that do nothing.
+ */
+
+export interface FilterOption {
+  value: string;
+  label: string;
+  count: number;
+}
+
+interface Props {
+  options: FilterOption[];
+  allLabel?: string;
+  class?: string;
+}
+
+const { options, allLabel = "All", class: className } = Astro.props;
+const total = options.reduce((sum, option) => sum + option.count, 0);
+const chips = [{ value: "all", label: allLabel, count: total }, ...options];
+---
+
+<div
+  class:list={["flex flex-wrap items-center gap-2", className]}
+  data-filter-bar
+  hidden
+  role="group"
+  aria-label="Filter the list"
+>
+  {
+    chips.map((chip) => (
+      <button
+        type="button"
+        data-filter={chip.value}
+        aria-pressed={chip.value === "all" ? "true" : "false"}
+        class="border border-border px-3 py-2 font-display text-[11px] tracking-widest uppercase transition-colors hover:border-accent hover:text-accent aria-pressed:border-accent aria-pressed:bg-accent aria-pressed:text-accent-foreground"
+      >
+        {chip.label}
+        <span class="ml-2 opacity-60">{chip.count}</span>
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>("[data-filterable]")) {
+    const bar = root.querySelector<HTMLElement>("[data-filter-bar]");
+    if (!bar) continue;
+
+    const chips = [...bar.querySelectorAll<HTMLButtonElement>("[data-filter]")];
+    const items = [...root.querySelectorAll<HTMLElement>("[data-kind]")];
+    const groups = [...root.querySelectorAll<HTMLElement>("[data-filter-group]")];
+
+    const apply = (value: string) => {
+      for (const item of items) {
+        item.hidden = value !== "all" && item.dataset.kind !== value;
+      }
+      for (const group of groups) {
+        group.hidden = !group.querySelector<HTMLElement>("[data-kind]:not([hidden])");
+      }
+      for (const chip of chips) {
+        chip.setAttribute("aria-pressed", String(chip.dataset.filter === value));
+      }
+    };
+
+    for (const chip of chips) {
+      chip.addEventListener("click", () => apply(chip.dataset.filter ?? "all"));
+    }
+
+    bar.hidden = false;
+  }
+</script>

@@ -2,23 +2,20 @@
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
 import Rule from "@/components/Rule.astro";
-import { Image } from "astro:assets";
+import Picture from "@/components/Picture.astro";
 import { getTeam, TEAM_GROUPS } from "@/lib/collections";
 import { url } from "@/lib/url";
 
 const members = await getTeam();
 const groups = TEAM_GROUPS.map((group) => ({
   ...group,
-  members: members.filter((m) => m.data.group === group.key),
+  members: members.filter((m) => m.group === group.key),
 })).filter((group) => group.members.length > 0);
-
-// A member only gets their own page when their file has text under the
-// frontmatter. One-line alumni and visitor entries stay on this page.
-const hasPage = (body?: string) => Boolean(body?.trim());
 ---
 
 <Base title="Team" description="People and visitors of the Swarm Systems Lab.">
   <PageHeader
+    page="team"
     eyebrow="Team & visitors"
     title="THE"
     accent="LAB."
@@ -33,34 +30,47 @@ const hasPage = (body?: string) => Boolean(body?.trim());
 
           {group.key === "alumni" || group.key === "visitor" ? (
             <ul class="grid gap-px md:grid-cols-2">
-              {group.members.map((m) => (
-                <li class="border border-border p-6">
-                  <div class="font-display text-sm font-bold">
-                    {hasPage(m.body) ? (
-                      <a href={url(`/team/${m.id}`)} class="transition-colors hover:text-accent">
-                        {m.data.name}
-                      </a>
-                    ) : (
-                      m.data.name
+              {group.members.map(({ entry, slug, hasPage, photo }) => (
+                <li class="flex items-start gap-5 border border-border p-6">
+                  <div class="min-w-0 flex-1">
+                    <div class="font-display text-sm font-bold">
+                      {hasPage ? (
+                        <a href={url(`/team/${slug}`)} class="transition-colors hover:text-accent">
+                          {entry.data.name}
+                        </a>
+                      ) : (
+                        entry.data.name
+                      )}
+                    </div>
+                    <p class="mt-2 text-sm text-muted-foreground">{entry.data.summary}</p>
+                    {entry.data.note && (
+                      <p class="mt-2 font-display text-[10px] tracking-widest text-muted uppercase">
+                        {entry.data.note}
+                      </p>
                     )}
                   </div>
-                  <p class="mt-2 text-sm text-muted-foreground">{m.data.summary}</p>
-                  {m.data.note && (
-                    <p class="mt-2 font-display text-[10px] tracking-widest text-muted uppercase">
-                      {m.data.note}
-                    </p>
+
+                  {/* Optional: most alumni and visitors have no picture. */}
+                  {photo && (
+                    <Picture
+                      src={photo}
+                      alt={entry.data.name}
+                      widths={[160, 320]}
+                      sizes="80px"
+                      class="size-20 shrink-0 border border-border object-cover"
+                    />
                   )}
                 </li>
               ))}
             </ul>
           ) : (
             <ul class="grid gap-px sm:grid-cols-2 lg:grid-cols-3">
-              {group.members.map((m) => (
+              {group.members.map(({ entry, slug, hasPage, photo }) => (
                 <li class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
-                  {m.data.photo && (
-                    <Image
-                      src={m.data.photo}
-                      alt={m.data.name}
+                  {photo && (
+                    <Picture
+                      src={photo}
+                      alt={entry.data.name}
                       widths={[300, 600]}
                       sizes="(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw"
                       class="aspect-square w-full border-b border-border object-cover"
@@ -68,23 +78,23 @@ const hasPage = (body?: string) => Boolean(body?.trim());
                   )}
                   <div class="flex flex-1 flex-col p-6">
                     <div class="font-display text-[10px] tracking-widest text-accent uppercase">
-                      {m.data.role}
+                      {entry.data.role}
                     </div>
                     <h3 class="mt-2 font-display text-lg font-bold tracking-tight">
-                      {hasPage(m.body) ? (
-                        <a href={url(`/team/${m.id}`)} class="transition-colors hover:text-accent">
-                          {m.data.name}
+                      {hasPage ? (
+                        <a href={url(`/team/${slug}`)} class="transition-colors hover:text-accent">
+                          {entry.data.name}
                         </a>
                       ) : (
-                        m.data.name
+                        entry.data.name
                       )}
                     </h3>
                     <p class="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-                      {m.data.summary}
+                      {entry.data.summary}
                     </p>
-                    {m.data.links.length > 0 && (
+                    {entry.data.links.length > 0 && (
                       <div class="mt-5 flex flex-wrap gap-4 font-display text-[10px] tracking-widest uppercase">
-                        {m.data.links.map((l) => (
+                        {entry.data.links.map((l) => (
                           <a href={l.href} rel="noopener" class="text-muted hover:text-accent">
                             {l.label}
                           </a>

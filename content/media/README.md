@@ -10,6 +10,9 @@ Accepted: .jpg .jpeg .png .webp .avif .gif .mp4 .webm
 Photos are resized automatically. GIFs and clips are served as they are, so
 keep them small — under a few megabytes.
 
+A file whose name starts with "_" is kept out of the gallery. That is how the
+front-page cover (_cover.png) lives here without being listed twice.
+
 Long videos belong on YouTube; list them in content/media.yaml instead.
 
 Worked examples for every kind of picture: ../README.md#photos-gifs-and-video

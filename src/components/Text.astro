@@ -1,0 +1,18 @@
+---
+import { inlineMarkdown } from "@/lib/inline-markdown";
+
+// Renders a line of text from a YAML file, turning [label](url), **bold**,
+// *italics*, and `code` into real markup.
+export interface Props {
+  text: string;
+  /** The element to render into. */
+  as?: "p" | "span" | "div" | "li";
+  class?: string;
+}
+
+const { text, as: Tag = "p", class: className } = Astro.props;
+---
+
+<Tag class:list={["[&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2", className]}>
+  <Fragment set:html={inlineMarkdown(text)} />
+</Tag>

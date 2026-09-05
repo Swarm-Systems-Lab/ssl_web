@@ -16,6 +16,13 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @utility grid-bg {
   background-image:
     linear-gradient(to right, var(--color-border) 1px, transparent 1px),

@@ -3,15 +3,30 @@ import type { GetStaticPaths, Page } from "astro";
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
 import Rule from "@/components/Rule.astro";
-import { Image } from "astro:assets";
+import Picture from "@/components/Picture.astro";
+import { getImage } from "astro:assets";
 import { gallery, type MediaItem } from "@/lib/media";
 import { mediaConfig } from "@/lib/data";
+import { pictureUrl } from "@/lib/images";
 import { url } from "@/lib/url";
 
 export const getStaticPaths = (({ paginate }) =>
   paginate(gallery, { pageSize: mediaConfig.perPage })) satisfies GetStaticPaths;
 
 const { page } = Astro.props as { page: Page<MediaItem> };
+const { channel } = mediaConfig;
+
+// "View full size" points at a large WebP rather than the file as uploaded, so
+// a 7 MB photo straight from a camera never has to travel down the wire.
+const items = await Promise.all(
+  page.data.map(async (item) => ({
+    item,
+    full:
+      item.kind === "photo" && typeof item.src !== "string"
+        ? (await getImage({ src: item.src, width: 1600, format: "webp" })).src
+        : pictureUrl(item.src),
+  })),
+);
 ---
 
 <Base
@@ -19,6 +34,7 @@ const { page } = Astro.props as { page: Page<MediaItem> };
   description="Photos, animations, and videos from the Swarm Systems Lab."
 >
   <PageHeader
+    page="media"
     eyebrow="Photo & video"
     title="MEDIA"
     accent="FEED."
@@ -26,6 +42,31 @@ const { page } = Astro.props as { page: Page<MediaItem> };
   />
 
   <div class="mx-auto max-w-7xl px-6 pb-16">
+    {
+      page.currentPage === 1 && channel && (
+        <a
+          href={channel.href}
+          rel="noopener"
+          class="group mb-16 flex flex-wrap items-center justify-between gap-6 border border-border bg-surface/30 p-8 transition-colors hover:border-accent/50"
+        >
+          <div>
+            <div class="font-display text-[10px] tracking-widest text-accent uppercase">
+              YouTube channel
+            </div>
+            <div class="mt-2 font-display text-2xl font-bold tracking-tight transition-colors group-hover:text-accent">
+              {channel.label}
+            </div>
+            <p class="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
+              {channel.description}
+            </p>
+          </div>
+          <span class="font-display text-[11px] tracking-widest text-accent uppercase">
+            Watch more →
+          </span>
+        </a>
+      )
+    }
+
     {
       page.currentPage === 1 && mediaConfig.videos.length > 0 && (
         <section class="mb-20">
@@ -63,39 +104,21 @@ const { page } = Astro.props as { page: Page<MediaItem> };
 
       <ul class="grid gap-px sm:grid-cols-2 lg:grid-cols-3">
         {
-          page.data.map((item) => (
+          items.map(({ item, full }) => (
             <li class="group flex flex-col border border-border bg-surface/30">
               <div class="aspect-[4/3] overflow-hidden bg-black">
-                {item.kind === "photo" && item.image && (
-                  <a href={item.image.src} target="_blank" rel="noopener">
-                    <Image
-                      src={item.image}
+                {item.kind === "photo" ? (
+                  <a href={full} target="_blank" rel="noopener">
+                    <Picture
+                      src={item.src}
                       alt={item.caption}
                       widths={[400, 800]}
                       sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
-                      loading="lazy"
                       class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     />
                   </a>
-                )}
-                {item.kind === "animation" && (
-                  <img
-                    src={item.url}
-                    alt={item.caption}
-                    loading="lazy"
-                    class="h-full w-full object-cover"
-                  />
-                )}
-                {item.kind === "video" && (
-                  <video
-                    src={item.url}
-                    muted
-                    loop
-                    playsinline
-                    controls
-                    preload="none"
-                    class="h-full w-full object-cover"
-                  />
+                ) : (
+                  <Picture src={item.src} alt={item.caption} class="h-full w-full object-cover" />
                 )}
               </div>
               <figcaption class="flex items-baseline justify-between gap-4 border-t border-border p-4">

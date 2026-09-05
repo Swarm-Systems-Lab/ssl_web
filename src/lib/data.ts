@@ -10,6 +10,10 @@ import { z } from "astro:content";
  * under content/. Each file is parsed and validated at build time, so a typo
  * stops the build with a message naming the file and the field instead of
  * silently publishing a broken page.
+ *
+ * Text fields may contain inline Markdown — `[label](https://…)`, **bold**,
+ * *italics*, `code` — rendered by the <Text> component. Picture fields hold a
+ * path relative to content/, resolved by src/lib/images.ts.
  */
 
 const contentDir = new URL("../../content/", import.meta.url);
@@ -31,7 +35,17 @@ function load<T extends z.ZodTypeAny>(file: string, schema: T): z.infer<T> {
 
 const link = z.object({ label: z.string(), href: z.string() });
 
+/** A path relative to content/, e.g. "images/granada/alhambra.jpg". */
+const picturePath = z.string();
+
 // -- site.yaml ---------------------------------------------------------------
+
+const navItem = z.object({
+  label: z.string(),
+  href: z.string(),
+  /** Renders as a drop-down under the tab. */
+  children: z.array(z.object({ label: z.string(), href: z.string() })).default([]),
+});
 
 const siteSchema = z.object({
   title: z.string(),
@@ -40,7 +54,16 @@ const siteSchema = z.object({
   description: z.string(),
   institution: z.string(),
   email: z.string(),
-  nav: z.array(z.object({ label: z.string(), href: z.string() })),
+  /**
+   * Captions for the pictures in content/covers/, keyed by page —
+   * "home", "news", "join-us", and so on. Optional; the picture shows either way.
+   */
+  coverCaptions: z.record(z.string(), z.string()).default({}),
+  nav: z.array(navItem),
+  /** Featured on the front page as well as in the footer. */
+  community: z
+    .array(z.object({ label: z.string(), href: z.string(), description: z.string() }))
+    .default([]),
   social: z.array(link),
 });
 
@@ -56,18 +79,67 @@ const publication = z.object({
   /** Omit for preprints and anything not yet published. */
   year: z.number().optional(),
   note: z.string().optional(),
+  /** Shown as a thumbnail in the list and full width on the paper's page. */
+  image: picturePath.optional(),
+  imageAlt: z.string().optional(),
+  /** Free text shown on the paper's own page. */
+  abstract: z.string().optional(),
+  bibtex: z.string().optional(),
   links: z.array(link).default([]),
 });
 
-export type Publication = z.infer<typeof publication>;
+const PUBLICATION_KINDS = [
+  { key: "journal", label: "Journal" },
+  { key: "conference", label: "Conference" },
+  { key: "preprint", label: "Preprint" },
+  { key: "technote", label: "Tech note" },
+] as const;
 
-export const publications = load(
+export type PublicationKind = (typeof PUBLICATION_KINDS)[number]["key"];
+
+const publicationsFile = load(
   "publications.yaml",
   z.object({
     journal: z.array(publication).default([]),
     conference: z.array(publication).default([]),
     preprint: z.array(publication).default([]),
+    technote: z.array(publication).default([]),
   }),
+);
+
+export type Publication = z.infer<typeof publication> & {
+  kind: PublicationKind;
+  kindLabel: string;
+  slug: string;
+};
+
+function slugify(text: string): string {
+  return text
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .split("-")
+    .slice(0, 10)
+    .join("-");
+}
+
+/** Every paper, flattened, tagged with its kind, and given a stable address. */
+export const publications: Publication[] = (() => {
+  const seen = new Set<string>();
+  return PUBLICATION_KINDS.flatMap(({ key, label }) =>
+    publicationsFile[key].map((entry) => {
+      let slug = slugify(entry.title) || entry.ref.toLowerCase();
+      if (seen.has(slug)) slug = `${slug}-${entry.ref.toLowerCase()}`;
+      seen.add(slug);
+      return { ...entry, kind: key, kindLabel: label, slug };
+    }),
+  );
+})();
+
+export const publicationKinds = PUBLICATION_KINDS.filter(({ key }) =>
+  publications.some((entry) => entry.kind === key),
 );
 
 // -- awards.yaml -------------------------------------------------------------
@@ -82,6 +154,14 @@ export const awards = load(
         awarder: z.string(),
         year: z.number(),
         detail: z.string().optional(),
+        image: picturePath.optional(),
+        imageAlt: z.string().optional(),
+        /**
+         * Who received it. Use the file name of a person in content/team to
+         * link to them, e.g. "hector-garcia-de-marina"; anything else is shown
+         * as plain text.
+         */
+        members: z.array(z.string()).default([]),
       }),
     ),
   }),
@@ -100,9 +180,18 @@ export const positions = load(
         deadline: z.string().default("Rolling"),
         summary: z.string(),
         details: z.array(z.string()).default([]),
+        image: picturePath.optional(),
+        imageAlt: z.string().optional(),
       }),
     ),
-    aside: z.object({ title: z.string(), body: z.string() }).optional(),
+    aside: z
+      .object({
+        title: z.string(),
+        body: z.string(),
+        /** Shown as a carousel beside the text. */
+        photos: z.array(picturePath).default([]),
+      })
+      .optional(),
   }),
 );
 
@@ -118,6 +207,8 @@ export const projects = load(
         level: z.string(),
         summary: z.string(),
         requirements: z.array(z.string()).default([]),
+        image: picturePath.optional(),
+        imageAlt: z.string().optional(),
       }),
     ),
   }),
@@ -130,6 +221,8 @@ export const mediaConfig = load(
   z.object({
     intro: z.string().optional(),
     perPage: z.number().default(24),
+    /** The YouTube channel, linked from the top of the media page. */
+    channel: z.object({ href: z.string(), label: z.string(), description: z.string() }).optional(),
     videos: z.array(
       z.object({
         youtube: z.string(),

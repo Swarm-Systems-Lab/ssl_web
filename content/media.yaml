@@ -15,6 +15,13 @@ intro: Field tests, prototypes, and life around the lab. Long videos live on our
 # How many photos to show per page. The rest move to /media/2, /media/3, ...
 perPage: 24
 
+# Our YouTube channel, linked at the top of the media page.
+channel:
+  href: https://www.youtube.com/@SwarmSystemsLab
+  label: "@SwarmSystemsLab"
+  description: >-
+    Every video we publish, including the long cuts that do not fit on this page.
+
 videos:
   - youtube: 55N0cbsjq08
     title: Fixed-wing aerobatics — fully autonomous, no GPS

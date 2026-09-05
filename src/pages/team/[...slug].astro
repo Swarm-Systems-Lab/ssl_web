@@ -1,22 +1,24 @@
 ---
 import { render } from "astro:content";
 import Base from "@/layouts/Base.astro";
-import { Image } from "astro:assets";
+import Picture from "@/components/Picture.astro";
 import { getTeam } from "@/lib/collections";
+import { pictureUrl } from "@/lib/images";
 import { url } from "@/lib/url";
 
 export async function getStaticPaths() {
   const members = await getTeam();
   return members
-    .filter((entry) => entry.body?.trim())
-    .map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+    .filter((member) => member.hasPage)
+    .map((member) => ({ params: { slug: member.slug }, props: { member } }));
 }
 
-const { entry } = Astro.props;
+const { member } = Astro.props;
+const { entry, photo } = member;
 const { Content } = await render(entry);
 ---
 
-<Base title={entry.data.name} description={entry.data.summary} image={entry.data.photo?.src}>
+<Base title={entry.data.name} description={entry.data.summary} image={photo && pictureUrl(photo)}>
   <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
     <a href={url("/team")} class="font-display text-[10px] tracking-widest text-accent uppercase">
       ← All team
@@ -26,12 +28,13 @@ const { Content } = await render(entry);
       class="mt-10 flex flex-col gap-8 border-b border-border pb-10 sm:flex-row sm:items-start"
     >
       {
-        entry.data.photo && (
-          <Image
-            src={entry.data.photo}
+        photo && (
+          <Picture
+            src={photo}
             alt={entry.data.name}
             widths={[200, 400]}
             sizes="200px"
+            loading="eager"
             class="w-40 shrink-0 border border-border object-cover"
           />
         )

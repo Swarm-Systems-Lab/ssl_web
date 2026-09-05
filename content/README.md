@@ -4,23 +4,42 @@ Everything on the website is generated from this folder.
 
 | Folder / file      | What it is                          | Where it shows up      |
 | ------------------ | ----------------------------------- | ---------------------- |
-| `news/`            | one Markdown file per post          | its own page           |
-| `research/`        | one Markdown file per topic         | its own page           |
-| `team/`            | one Markdown file per person        | its own page           |
+| `news/`            | one folder per post                 | its own page           |
+| `research/`        | one folder per topic                | its own page           |
+| `team/`            | one folder per person, by category  | its own page           |
 | `media/`           | photos, GIFs, and short clips       | the media page         |
+| `covers/`          | the picture at the top of a page    | that page              |
 | `pages/home.md`    | the text on the front page          | the front page         |
 | `publications.yaml`| every paper                         | the publications page  |
-| `positions.yaml`   | open positions                      | the positions page     |
-| `projects.yaml`    | TFM / TFG offers                    | the projects page      |
+| `positions.yaml`   | open positions                      | the Join us page       |
+| `projects.yaml`    | TFM / TFG offers                    | the Join us page       |
+| `images/`          | pictures used by the `.yaml` pages  | wherever they are used |
 | `awards.yaml`      | awards and grants                   | the awards page        |
 | `media.yaml`       | YouTube videos and gallery settings | the media page         |
 | `site.yaml`        | site title, tabs, footer links      | everywhere             |
 
 ## Adding something
 
-Copy the `_template.md` in the relevant folder, rename it, and fill it in. The
-new name becomes the address of the page, so keep it lowercase with dashes:
-`2026-09-04-new-paper.md` becomes `/news/2026-09-04-new-paper`.
+Everything with its own page — a news post, a research topic, a person — gets
+its **own folder**, holding the text as `index.md` and any pictures next to it:
+
+```
+content/news/2026-09-04-new-paper/
+  index.md
+  01-first-photo.jpg
+  02-second-photo.jpg
+```
+
+Copy the `_template.md` from the relevant folder into your new folder, save it
+as `index.md`, and fill it in. The folder name becomes the address, so keep it
+lowercase with dashes: the example above is at `/news/2026-09-04-new-paper`.
+
+People are filed one level deeper, by what they are to the lab —
+`team/members/`, `team/visitors/`, `team/alumni/`. See
+[`team/README.md`](team/README.md).
+
+A post with no pictures can also be a single file, `2026-09-04-new-paper.md`,
+with no folder around it.
 
 Files starting with `_` are templates and never appear on the site.
 
@@ -30,20 +49,77 @@ Markdown.
 
 ## Photos, GIFs, and video
 
-Pictures are never pasted into the site — you put the file somewhere and write
-one line that points at it. There are five places a picture can go.
+For anything with its own folder — a news post, a research topic, a person —
+**just put the picture in the folder**. It is picked up automatically.
 
-### 1. A photo in the gallery
+Everywhere else you write a one-line path. There are five cases.
 
-Drop the file in `media/`. Nothing else. Name it `YYYY-MM-DD_a-short-caption.jpg`
-and the date and caption are read from the name:
+### 1. Pictures on a post or a research topic
+
+Drop them in the post's folder, named so they sort the way you want them read:
+
+```
+content/news/2026-09-03-time-to-go-home/
+  index.md
+  01-shanghai-jiao-tong.jpg
+  02-university-of-hunan.jpg
+  03-ifac-busan.jpg
+```
+
+That is the whole job. The first picture becomes the big one at the top of the
+post and the thumbnail in the news list; the rest become a carousel at the end,
+with captions taken from the file names — `02-university-of-hunan.jpg` reads as
+*"University of hunan"*. A file named like `IMG_4231.jpg` gets no caption,
+because the name says nothing worth showing.
+
+To pick a different picture for the top, name it:
+
+```yaml
+image: ./03-ifac-busan.jpg
+imageAlt: "The lab presenting at the IFAC World Congress"
+```
+
+To take control of the carousel — a different order, or captions you write
+yourself — list it instead, and the folder is no longer scanned:
+
+```yaml
+gallery:
+  - src: ./03-ifac-busan.jpg
+    caption: "IFAC World Congress, Busan"
+  - src: ./01-shanghai-jiao-tong.jpg
+    caption: "Shanghai Jiao Tong University"
+```
+
+A picture in the middle of the text is ordinary Markdown:
+
+```md
+![Eight drones spiralling towards a source](./02-university-of-hunan.jpg)
+```
+
+### 2. A person's photo
+
+Put it in their folder. Nothing to write:
+
+```
+content/team/members/diego-vela/
+  index.md
+  diego.jpg
+```
+
+Only add `photo: ./diego.jpg` if the folder holds more than one picture. Square
+pictures look best.
+
+### 3. A photo in the gallery
+
+Drop the file in `media/`. Name it `YYYY-MM-DD_a-short-caption.jpg` and the date
+and caption are read from the name:
 
 ```
 content/media/2026-04-17_group-photo-in-granada.jpg
 ```
 
-shows up on the media page as **"Group photo in granada"**, dated 17 April 2026,
-in the right place in the timeline.
+shows on the media page as **"Group photo in granada"**, dated 17 April 2026, in
+the right place in the timeline.
 
 GIFs and short clips work exactly the same way — same folder, same naming:
 
@@ -60,67 +136,68 @@ captions:
   "2026-04-17_group-photo-in-granada.jpg": "Group photo, Granada, April 2026"
 ```
 
-### 2. The big photo at the top of a news post
+### 4. A thumbnail on a publication, an award, a position, or a project
 
-Put the file in `news/images/`, then add one line to the frontmatter:
-
-```yaml
----
-title: "Workshop on Guiding Vector Fields at IROS 2025"
-date: 2025-05-09
-summary: "A four-hour deep dive into recent developments."
-image: ./images/gvf-workshop.jpg
-imageAlt: "A guiding vector field around a self-intersecting path"
----
-```
-
-`./images/` is relative to the post itself. This picture is also what appears
-when someone shares the post on Bluesky, WhatsApp, or Slack.
-
-### 3. A photo inside the text of a post
-
-Same folder, but written in the body as normal Markdown. The text in square
-brackets describes the picture for screen readers:
-
-```md
-Here is the swarm converging on the source:
-
-![Eight drones spiralling towards a source](./images/source-seeking.jpg)
-```
-
-### 4. A photo on a research topic
-
-Identical to a news post, with the file in `research/images/`:
+Those four pages are built from `.yaml` files rather than folders, so their
+pictures live in `content/images/` and the path is written relative to
+`content/`:
 
 ```yaml
----
-title: "Resilient source seeking"
-summary: "Robot swarms that locate a source through emergent behaviour."
-order: 2
-image: ./images/source-seeking.jpg
-imageAlt: "A swarm converging on a source"
----
+  - ref: J27
+    authors: "J. Bautista, A. Acuaviva, … HG de Marina"
+    title: "Fully distributed and resilient source seeking for robot swarms"
+    venue: "IEEE Transactions on Automatic Control"
+    year: 2026
+    image: images/publications/j27-source-seeking.jpg
+    imageAlt: "Eight drones spiralling towards a source"
 ```
 
-### 5. A person's photo
+Small pictures are enough — they are shown at about 96 px in the list, and full
+width on the paper's own page.
 
-Put it in `team/photos/` and name it after the person. Square pictures look best:
+The Granada photos on the Join us page work the same way. Put them in
+`images/granada/` and list them under `aside.photos` in `positions.yaml`:
 
 ```yaml
----
-name: "Héctor García de Marina"
-role: "Principal investigator"
-group: lead
-order: 1
-summary: "Runs the Swarm Systems Lab."
-photo: ./photos/hector-garcia-de-marina.jpg
----
+aside:
+  title: Why Granada?
+  photos:
+    - images/granada/alhambra.jpg
+    - images/granada/albaicin.jpg
+  body: >-
+    Granada is the most popular destination among European exchange students…
 ```
 
-### The front page
+### 5. A cover across the top of a page
 
-The picture on the front page is the newest photo in `media/`. To change it, add
-a newer one.
+Every page can have one. Drop a file in `covers/` named after the page and it
+appears — there is nothing to switch on:
+
+```
+content/covers/
+  home.png          the front page
+  news.jpg          /news
+  team.jpg          /team
+  join-us.jpg       /join-us
+```
+
+Pages without a file here simply have no cover; none of them are required. The
+full list of names is in [`covers/README.md`](covers/README.md).
+
+Captions are optional and live in `site.yaml`, keyed by the same page name:
+
+```yaml
+coverCaptions:
+  home: "The Swarm Systems Lab"
+  news: "Field testing near Granada"
+```
+
+`home.png` is shown whole and never cropped — it is the team photo, and nothing
+should be cut off. Covers on the other pages are cropped to a wide banner, so
+keep the interesting part near the middle; around 1600 x 700 is plenty.
+
+If there is no `home` cover, the front page falls back to the newest photo in
+`media/`.
 
 ### A video on YouTube
 
@@ -137,12 +214,12 @@ videos:
 
 ### What to hand over
 
-| Format                            | Use it for                        |
-| --------------------------------- | --------------------------------- |
-| `.jpg`                            | photographs                       |
-| `.png`                            | plots, diagrams, screenshots      |
-| `.gif`                            | short silent loops                |
-| `.mp4`                            | clips with sound, up to ~20 s     |
+| Format | Use it for                   |
+| ------ | ---------------------------- |
+| `.jpg` | photographs                  |
+| `.png` | plots, diagrams, screenshots |
+| `.gif` | short silent loops           |
+| `.mp4` | clips with sound, up to ~20 s |
 
 Photos are resized and converted automatically, so hand over the original
 straight from the camera — no need to shrink anything first. GIFs and clips are
@@ -150,7 +227,35 @@ served exactly as given, because compressing them would destroy the animation:
 keep those under a few megabytes, and put anything longer on YouTube.
 
 Use lowercase names with dashes and no spaces or accents:
-`2026-04-17_group-photo.jpg`, not `Group Photo (Granada).JPG`.
+`01-group-photo.jpg`, not `Group Photo (Granada).JPG`.
+
+## Links and emphasis inside a `.yaml` file
+
+YAML has no way of marking up a link, so the text fields understand a little
+Markdown:
+
+```yaml
+intro: >-
+  We build on [Paparazzi](https://paparazziuav.org), the open-source autopilot.
+  Applications are **due in January**.
+```
+
+`[label](address)`, `**bold**`, `*italics*`, and `` `code` `` all work. Anything
+that needs paragraphs, headings, or lists belongs in a Markdown file instead —
+those fields are single blocks of text by design.
+
+## Summaries
+
+News posts show a short summary in the list. Write one if you want to control
+it:
+
+```yaml
+summary: "One or two sentences shown on the news list page."
+```
+
+Leave it out and the opening of the post is used instead, trimmed to about 220
+characters at a sentence boundary. That is usually fine; write your own when the
+post opens with something that does not stand alone.
 
 ## Dates
 

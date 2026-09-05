@@ -1,8 +1,10 @@
 ---
 import { render } from "astro:content";
 import Base from "@/layouts/Base.astro";
-import { Image } from "astro:assets";
-import { getResearch } from "@/lib/collections";
+import Picture from "@/components/Picture.astro";
+import Carousel from "@/components/Carousel.astro";
+import { getResearch, researchPictures } from "@/lib/collections";
+import { pictureUrl } from "@/lib/images";
 import { url } from "@/lib/url";
 
 export async function getStaticPaths() {
@@ -12,9 +14,15 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+
+const { header, slides } = researchPictures(entry);
 ---
 
-<Base title={entry.data.title} description={entry.data.summary} image={entry.data.image?.src}>
+<Base
+  title={entry.data.title}
+  description={entry.data.summary}
+  image={header && pictureUrl(header)}
+>
   <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
     <a
       href={url("/research")}
@@ -38,17 +46,29 @@ const { Content } = await render(entry);
     </header>
 
     {
-      entry.data.image && (
-        <Image
-          src={entry.data.image}
+      header && (
+        <Picture
+          src={header}
           alt={entry.data.imageAlt ?? entry.data.title}
           widths={[640, 960, 1280]}
           sizes="(min-width: 768px) 768px, 100vw"
+          loading="eager"
           class="mt-10 w-full border border-border"
         />
       )
     }
 
     <div class="prose-lab mt-10"><Content /></div>
+
+    {
+      slides.length > 0 && (
+        <Carousel
+          slides={slides}
+          label={`Pictures for ${entry.data.title}`}
+          class="mt-12"
+          sizes="(min-width: 768px) 768px, 100vw"
+        />
+      )
+    }
   </article>
 </Base>

@@ -1,27 +1,30 @@
 ---
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
-import Rule from "@/components/Rule.astro";
-import { publications, type Publication } from "@/lib/data";
+import Picture from "@/components/Picture.astro";
+import FilterBar from "@/components/FilterBar.astro";
+import { publications, publicationKinds, type Publication } from "@/lib/data";
+import { optionalPicture } from "@/lib/images";
+import { url } from "@/lib/url";
 
-const sections = [
-  { id: "journal", label: "Journal papers", items: publications.journal },
-  { id: "conference", label: "Conference papers", items: publications.conference },
-  { id: "preprint", label: "Preprints", items: publications.preprint },
-].filter((section) => section.items.length > 0);
-
-// Entries without a year (preprints, work in review) are grouped under 0 and
-// rendered first, without a year heading.
-const byYear = (items: Publication[]) => {
-  const groups = new Map<number, Publication[]>();
-  for (const item of items) {
-    const key = item.year ?? 0;
-    const bucket = groups.get(key) ?? [];
-    bucket.push(item);
-    groups.set(key, bucket);
+// Primary grouping is the year; the kind is a filter on top of it.
+// Papers with no year (preprints, work in review) sort to the front.
+const groups = (() => {
+  const byYear = new Map<number, Publication[]>();
+  for (const entry of publications) {
+    const key = entry.year ?? 0;
+    byYear.set(key, [...(byYear.get(key) ?? []), entry]);
   }
-  return [...groups.entries()].sort((a, b) => b[0] - a[0]);
-};
+  // Work still in review sits above the published years, not below 2010.
+  const rank = (year: number) => (year === 0 ? Infinity : year);
+  return [...byYear.entries()].sort((a, b) => rank(b[0]) - rank(a[0]));
+})();
+
+const options = publicationKinds.map(({ key, label }) => ({
+  value: key,
+  label,
+  count: publications.filter((entry) => entry.kind === key).length,
+}));
 ---
 
 <Base
@@ -29,73 +32,80 @@ const byYear = (items: Publication[]) => {
   description="Journal and conference publications of the Swarm Systems Lab."
 >
   <PageHeader
+    page="publications"
     eyebrow="Archive"
-    title="PUBLICATIONS."
-    accent=""
+    title="PUBLI"
+    accent="CATIONS."
     description="Peer-reviewed work in IEEE Transactions on Automatic Control, Transactions on Robotics, Automatica, ICRA, IROS, CDC, and IFAC."
   />
 
-  <div class="mx-auto max-w-7xl px-6 pb-16">
-    <nav
-      class="mb-14 flex flex-wrap gap-6 border-y border-border py-4"
-      aria-label="Publication types"
-    >
-      {
-        sections.map((section) => (
-          <a
-            href={`#${section.id}`}
-            class="font-display text-[11px] tracking-widest text-muted-foreground uppercase hover:text-accent"
-          >
-            {section.label}
-            <span class="ml-2 text-muted">[{section.items.length}]</span>
-          </a>
-        ))
-      }
-    </nav>
+  <div class="mx-auto max-w-7xl px-6 pb-16" data-filterable>
+    <FilterBar options={options} allLabel="Everything" class="mb-14 border-y border-border py-4" />
 
     {
-      sections.map((section) => (
-        <section id={section.id} class="mb-20 scroll-mt-24">
-          <Rule label={section.label} />
+      groups.map(([year, items]) => (
+        <section class="mb-16" data-filter-group>
+          <div class="mb-8 flex items-baseline gap-4">
+            <h2 class="font-display text-3xl font-bold tracking-tighter">
+              {year > 0 ? year : "In review"}
+            </h2>
+            <div class="h-px flex-1 bg-border" />
+          </div>
 
-          {byYear(section.items).map(([year, items]) => (
-            <div class="mb-12">
-              {year > 0 && (
-                <div class="mb-6 flex items-baseline gap-4">
-                  <h3 class="font-display text-3xl font-bold tracking-tighter">{year}</h3>
-                  <div class="h-px flex-1 bg-border" />
-                </div>
-              )}
+          <ol class="space-y-8">
+            {items.map((pub) => {
+              const thumb = optionalPicture(pub.image);
+              return (
+                <li class="flex gap-5" data-kind={pub.kind}>
+                  {/* The reference number always stays on the left. */}
+                  <span class="w-12 shrink-0 pt-1 font-display text-xs text-muted">
+                    [{pub.ref}]
+                  </span>
 
-              <ol class="space-y-8">
-                {items.map((pub) => (
-                  <li class="grid grid-cols-[3.5rem_1fr] gap-4">
-                    <span class="pt-1 font-display text-xs text-muted">[{pub.ref}]</span>
-                    <div>
-                      <h4 class="font-display text-base leading-snug font-medium">{pub.title}</h4>
-                      <p class="mt-2 text-sm text-muted-foreground">
-                        {pub.authors} · <span class="text-foreground italic">{pub.venue}</span>
-                      </p>
-                      {pub.note && (
-                        <p class="mt-2 font-display text-[10px] tracking-widest text-accent uppercase">
-                          {pub.note}
-                        </p>
-                      )}
-                      {pub.links.length > 0 && (
-                        <div class="mt-3 flex flex-wrap gap-4 font-display text-[10px] tracking-widest uppercase">
-                          {pub.links.map((l) => (
-                            <a href={l.href} rel="noopener" class="text-accent">
-                              {l.label}
-                            </a>
-                          ))}
-                        </div>
-                      )}
+                  <div class="min-w-0 flex-1">
+                    <h3 class="font-display text-base leading-snug font-medium">
+                      <a
+                        href={url(`/publications/${pub.slug}`)}
+                        class="transition-colors hover:text-accent"
+                      >
+                        {pub.title}
+                      </a>
+                    </h3>
+                    <p class="mt-2 text-sm text-muted-foreground">
+                      {pub.authors} · <span class="text-foreground italic">{pub.venue}</span>
+                    </p>
+                    <div class="mt-3 flex flex-wrap items-center gap-4 font-display text-[10px] tracking-widest uppercase">
+                      <span class="border border-border px-2 py-0.5 text-muted">
+                        {pub.kindLabel}
+                      </span>
+                      {pub.links.map((l) => (
+                        <a href={l.href} rel="noopener" class="text-accent">
+                          {l.label}
+                        </a>
+                      ))}
                     </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          ))}
+                    {pub.note && (
+                      <p class="mt-3 font-display text-[10px] tracking-widest text-accent uppercase">
+                        {pub.note}
+                      </p>
+                    )}
+                  </div>
+
+                  {thumb && (
+                    <a href={url(`/publications/${pub.slug}`)} class="shrink-0">
+                      <Picture
+                        src={thumb}
+                        alt={pub.imageAlt ?? pub.title}
+                        widths={[160, 320]}
+                        sizes="96px"
+                        class="size-24 border border-border object-cover transition-colors hover:border-accent/50"
+                      />
+                    </a>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
         </section>
       ))
     }

@@ -1,19 +1,27 @@
 ---
-# Copy this file, rename it to firstname-lastname.md, and fill it in.
-# The filename becomes the address:  jane-doe.md  →  /team/jane-doe
+# HOW TO ADD SOMEONE
+#
+# Make a folder for them inside the right category and put this file in it as
+# index.md, with their photo next to it:
+#
+#   content/team/members/jane-doe/index.md     ← this file, renamed
+#   content/team/members/jane-doe/jane.jpg     ← picked up automatically
+#
+# Categories: members/ (current), visitors/, alumni/
+# The folder name becomes the address: /team/jane-doe
 
 name: "Jane Doe"
 role: "Ph.D. student"        # free text, shown above the name
-
-# One of: lead, postdoc, phd, assistant, alumni, visitor
-group: phd
-
-order: 20                    # lower numbers appear first inside the group
+order: 20                    # lower numbers appear first inside the block
 summary: "One sentence shown on the team page card."
 
+# Only for people in members/ — which block they belong in.
+# One of: lead, postdoc, phd, assistant
+group: phd
+
 # Optional ------------------------------------------------------------------
-# photo: ./photos/jane-doe.jpg   # put the file in content/team/photos/
-# note: "Now: engineer at ..."   # used for alumni and visitors
+# photo: ./jane.jpg              # only needed if the folder has several pictures
+# note: "After: engineer at ..."   # used for alumni and visitors
 # links:
 #   - label: Google Scholar
 #     href: https://...

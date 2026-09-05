@@ -1,5 +1,6 @@
-import type { ImageMetadata } from "astro";
 import { mediaConfig } from "./data";
+import { describeFile } from "./filenames";
+import { photoEntries, assetEntries, type Picture } from "./images";
 
 /**
  * The media gallery is built by scanning content/media/ at build time.
@@ -8,58 +9,42 @@ import { mediaConfig } from "./data";
  * Filename convention: YYYY-MM-DD_short-caption.jpg
  *   - the date prefix sets the ordering (newest first) and the shown date
  *   - the rest becomes the caption, unless overridden in content/media.yaml
- * A file without a date prefix still works; it just sorts last.
+ * A file without a date prefix still works; it just sorts last. A file whose
+ * name starts with "_" is kept out of the gallery — use that for pictures the
+ * site needs but should not list, such as the front-page cover.
  */
+
+const FOLDER = "/content/media/";
 
 export type MediaItem = {
   file: string;
   caption: string;
   date?: string;
-  /** Photos are optimised by Astro; animations are served as-is. */
+  /** Photos are optimised; animations and clips are served as they are. */
   kind: "photo" | "animation" | "video";
-  image?: ImageMetadata;
-  url?: string;
+  src: Picture;
 };
 
-// Photos go through Astro's image pipeline (resized, converted, hashed).
-const photos = import.meta.glob<{ default: ImageMetadata }>(
-  "/content/media/**/*.{jpg,jpeg,png,webp,avif}",
-  { eager: true },
-);
-
-// GIFs and clips are copied verbatim: optimising an animation would flatten it.
-const animations = import.meta.glob<string>("/content/media/**/*.{gif,mp4,webm}", {
-  eager: true,
-  query: "?url",
-  import: "default",
-});
-
-const DATED = /^(\d{4}-\d{2}-\d{2})[_-](.*)$/;
-
 function describe(path: string) {
-  const file = path.split("/").pop() ?? path;
-  const stem = file.replace(/\.[^.]+$/, "");
-  const match = DATED.exec(stem);
-  const date = match?.[1];
-  const words = (match?.[2] ?? stem).replace(/[_-]+/g, " ").trim();
-  const auto = words.charAt(0).toUpperCase() + words.slice(1);
-
-  return { file, date, caption: mediaConfig.captions[file] ?? auto };
+  const { file, date, caption } = describeFile(path, mediaConfig.captions);
+  return { file, date, caption: caption ?? file };
 }
 
-function byDateDesc(a: MediaItem, b: MediaItem) {
-  return (b.date ?? "").localeCompare(a.date ?? "");
-}
+const listed = (path: string) =>
+  path.startsWith(FOLDER) && !(path.split("/").pop() ?? "").startsWith("_");
+
+const inFolder = <T>(entries: readonly (readonly [string, T])[]) =>
+  entries.filter(([path]) => listed(path));
 
 export const gallery: MediaItem[] = [
-  ...Object.entries(photos).map(([path, mod]) => ({
+  ...inFolder(photoEntries).map(([path, image]) => ({
     ...describe(path),
     kind: "photo" as const,
-    image: mod.default,
+    src: image as Picture,
   })),
-  ...Object.entries(animations).map(([path, url]) => ({
+  ...inFolder(assetEntries).map(([path, url]) => ({
     ...describe(path),
     kind: (path.endsWith(".gif") ? "animation" : "video") as "animation" | "video",
-    url,
+    src: url as Picture,
   })),
-].sort(byDateDesc);
+].sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));

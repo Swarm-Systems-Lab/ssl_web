@@ -1,5 +1,5 @@
-# Site-wide settings. Editing this file changes the header, footer, and the
-# default text search engines and social networks show for the site.
+# Site-wide settings. Editing this file changes the header, footer, the front
+# page, and the default text search engines and social networks show.
 
 title: Swarm Systems Lab
 shortTitle: Swarm Systems Lab
@@ -12,8 +12,17 @@ description: >-
 institution: University of Granada
 email: swarmsystemslab@gmail.com
 
+# Every page can have a picture across the top. Drop a file in content/covers/
+# named after the page — home.png, news.jpg, team.jpg, join-us.jpg — and it
+# appears. Captions are optional; without one the picture still shows.
+coverCaptions:
+  home: "The Swarm Systems Lab"
+  # news: "Field testing near Granada"
+
 # The tabs in the header, in order.
 # To add a new tab: create the page in src/pages/, then add a line here.
+# A tab with `children` becomes a drop-down; the tab itself still links to
+# `href`, so it keeps working without JavaScript.
 nav:
   - label: News
     href: /news
@@ -23,14 +32,35 @@ nav:
     href: /publications
   - label: Team
     href: /team
-  - label: Positions
-    href: /positions
-  - label: Master/Bachelord Projects
-    href: /projects
+  - label: Join us
+    href: /join-us
+    children:
+      - label: Open positions
+        href: /join-us#positions
+      - label: Student projects
+        href: /join-us#projects
   - label: Awards
     href: /awards
   - label: Media
     href: /media
+
+# Featured on the front page with a description, and in the footer.
+community:
+  - label: GitHub
+    href: https://github.com/Swarm-Systems-Lab
+    description: >-
+      Our code in the open — swarm controllers, guiding vector fields, and the
+      tools we use to fly them.
+  - label: YouTube
+    href: https://www.youtube.com/@SwarmSystemsLab
+    description: >-
+      Raw footage from the field: formation flights, aerobatics, and rendezvous
+      with our fixed-wing drones.
+  - label: Discord
+    href: https://discord.gg/peMNWpe4YT
+    description: >-
+      Come and talk swarm robotics with us, whether you are a researcher or just
+      starting out.
 
 # Links shown in the footer.
 social:

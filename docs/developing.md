@@ -1,7 +1,8 @@
 # Developing
 
-Astro, static output, no client-side JavaScript. Tailwind v4 for styling, Bun as
-the package manager and runtime.
+Astro, static output, Tailwind v4, Bun as the package manager and runtime.
+Two small scripts ship, both progressive enhancements loaded only on the pages
+that use them: the carousel and the publications filter.
 
 ## Layout
 
@@ -12,10 +13,16 @@ public/             copied verbatim into the site root (robots.txt, .nojekyll)
 src/
   content.config.ts collections + schemas for the Markdown in content/
   lib/data.ts       loads and validates the YAML in content/
+  lib/images.ts     resolves picture paths written in YAML
+  lib/inline-markdown.ts  links and emphasis inside YAML text
+  lib/filenames.ts  file name -> caption and date, shared by both galleries
+  lib/folder-pictures.ts  pictures found next to a post or a person
+  lib/summary.ts    the fallback summary, derived from a post's own text
+  lib/covers.ts     the picture at the top of a page, from content/covers/
   lib/media.ts      builds the gallery by scanning content/media/
-  lib/collections.ts sorting, grouping, and draft filtering helpers
+  lib/collections.ts sorting, grouping, and the team category rules
   layouts/Base.astro  <head>, header, footer
-  components/       SiteNav, SiteFooter, PageHeader, Rule
+  components/       shared building blocks — see below
   pages/            one file per route
   styles/global.css theme tokens and the `prose-lab` Markdown styles
 ```
@@ -28,6 +35,19 @@ Two mechanisms, chosen by whether an item needs its own page:
   `content/pages` → Astro content collections, declared in
   `src/content.config.ts`. Each entry becomes a route. Files starting with `_`
   are templates and are skipped by the glob.
+
+  An entry is either one file (`a-post.md`) or a folder holding `index.md`
+  beside its pictures (`a-post/index.md`). A custom `generateId` strips the
+  trailing `/index`, so both land on the same address and the folder move did
+  not change any URL.
+
+  People go one level deeper — `team/members/`, `team/visitors/`,
+  `team/alumni/`. The folder is the category; `group:` only splits the members
+  into the PI, postdocs, Ph.D. students, and assistants. `getTeam()` in
+  `lib/collections.ts` derives the group, flattens the id to a slug so the URL
+  stays `/team/<name>`, and throws with the file path if a member is missing a
+  `group:`.
+
 - **YAML** in `content/*.yaml` → loaded and validated in `src/lib/data.ts`.
   These render onto a single shared page (publications, positions, projects,
   awards, media).
@@ -38,6 +58,73 @@ names the file and field, so bad content cannot reach production.
 `draft: true` hides an entry from `bun run build` while keeping it visible in
 `bun run dev`.
 
+## Shared components
+
+| Component          | What it does                                                                                                                       |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `Picture.astro`    | one way to render any picture: optimises `ImageMetadata`, passes GIFs and clips through, renders `<video>` for `.mp4`/`.webm`      |
+| `Carousel.astro`   | scroll-snapping strip of pictures; arrows and dots appear only once its script runs, and a single slide degrades to a plain figure |
+| `FilterBar.astro`  | client-side filter over an already-rendered list                                                                                   |
+| `Text.astro`       | renders one line of YAML text through the inline Markdown parser                                                                   |
+| `PageHeader.astro` | the eyebrow + big title block at the top of a page                                                                                 |
+| `Rule.astro`       | section heading with a hairline                                                                                                    |
+
+Prefer these over one-off markup — every one of them is used by at least two
+pages, and the carousel and filter are meant to absorb the next few features.
+
+### Carousel
+
+Takes `slides: { src, alt, caption? }[]` and a `label` for screen readers. The
+markup is a horizontal scroll container with snap points, so it works with a
+swipe or a trackpad before any JavaScript loads; the script only adds the arrows
+and dots and keeps them in sync.
+
+### FilterBar
+
+Wrap the list in `data-filterable`, tag each entry with `data-kind="…"`, and
+optionally wrap sections in `data-filter-group` so a heading disappears when
+everything under it is filtered out. The bar itself is `hidden` until the script
+runs, so nobody is shown controls that cannot work.
+
+### Pictures next to content
+
+`lib/folder-pictures.ts` scans an entry's own folder and works out the header
+picture and the carousel. The rules, in order: `image:` wins if set, otherwise
+the first picture is promoted to header; `gallery:` replaces the folder scan
+when the order or the captions matter; and the header never repeats inside the
+carousel. Captions come from file names via `lib/filenames.ts`, which returns
+nothing for camera names like `IMG_4231.jpg` rather than inventing a caption.
+
+The same helper gives a person their photo when they have not named one.
+
+### Page covers
+
+`content/covers/<page>.<ext>` is picked up by name — `PageHeader` takes a `page`
+prop and looks the file up, so adding a cover to a new tab means passing that
+prop and nothing else. Captions come from `coverCaptions:` in `site.yaml` and
+double as alt text. The front page renders its cover uncropped; every other page
+crops to a banner.
+
+### Summaries
+
+`summary:` is optional on news. `lib/summary.ts` strips the Markdown and takes
+whole sentences up to about 220 characters, falling back to a word boundary. It
+is intentionally blunt — anything that needs to read better deserves a
+hand-written summary.
+
+### Pictures in YAML
+
+Markdown frontmatter uses Astro's `image()` schema, which only exists inside a
+content collection. The YAML files are not collections, so `src/lib/images.ts`
+indexes everything under `content/` with `import.meta.glob` and resolves a path
+written relative to `content/`. A miss throws with the closest matching file
+names, which is what an editor needs to see in the build log.
+
+One catch worth knowing: `<Image>` emits its fallback `src` at the picture's own
+resolution unless given a `width`, so `Picture.astro` caps it at the largest
+entry in `widths`. Without that a 7 MB photo ships a 2.5 MB variant nobody
+requests.
+
 ## Adding a tab
 
 1. Create `src/pages/<name>.astro`. Start from `src/pages/awards.astro` — it is
@@ -47,15 +134,20 @@ names the file and field, so bad content cannot reach production.
 3. Add the tab to `nav:` in `content/site.yaml`. Header and footer both read
    from there.
 
-For a "Projects" tab that points at documentation hosted elsewhere, a plain
-external entry in `nav:` works — `href` is used as given when it starts with
-`http`.
+A tab with `children` in `site.yaml` renders as a drop-down. The parent keeps
+its own `href`, and the list opens on hover or keyboard focus with CSS only, so
+it works without JavaScript. That is how **Join us** holds open positions and
+student projects.
+
+For a tab pointing at documentation hosted elsewhere, a plain external entry in
+`nav:` works — `href` is used as given when it starts with `http`.
 
 ## Images
 
 Astro optimises images imported through the content pipeline: it emits WebP at
 several widths and writes the `srcset`. Reference them from frontmatter with a
-relative path (`./images/foo.jpg`) and render with `<Image>`.
+relative path (`./01-photo.jpg`, i.e. next to `index.md`) and render with
+`<Picture>`.
 
 Animated GIFs and video are deliberately _not_ optimised — `src/lib/media.ts`
 passes them through as URLs, because Sharp would flatten an animation to its

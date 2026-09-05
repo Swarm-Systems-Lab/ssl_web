@@ -1,5 +1,6 @@
 dist
 node_modules
 .astro
+.mypy_cache
 bun.lock
 content
