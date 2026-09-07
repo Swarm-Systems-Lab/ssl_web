@@ -15,7 +15,7 @@ role: "Ph.D. student"        # free text, shown above the name
 order: 20                    # lower numbers appear first inside the block
 summary: "One sentence shown on the team page card."
 
-# Only for people in members/ — which block they belong in.
+# Only for people in members/ - which block they belong in.
 # One of: lead, postdoc, phd, assistant
 group: phd
 
@@ -31,5 +31,5 @@ group: phd
 ---
 
 Write the longer description here. Anything below the `---` becomes the person's
-own page. Leave this part empty and no page is created — the card on the team
+own page. Leave this part empty and no page is created - the card on the team
 page just won't link anywhere, which is what we do for most alumni and visitors.

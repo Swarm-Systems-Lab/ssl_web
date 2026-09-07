@@ -14,7 +14,7 @@ content/news/2026-09-04-new-paper/
 → `/news/2026-09-04-new-paper`
 
 Every picture in the folder except the one used as `image:` is shown as a
-carousel at the end of the post, in file-name order — hence the `01-`, `02-`
+carousel at the end of the post, in file-name order - hence the `01-`, `02-`
 prefixes. Nothing to list.
 
 A post with no pictures can also be a plain file, `2026-09-04-new-paper.md`.

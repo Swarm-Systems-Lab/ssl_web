@@ -14,5 +14,5 @@ organised the first workshop dedicated to them at IROS 2025.
 
 ## Selected papers
 
-- W. Yao, HG de Marina, Z. Sun, M. Cao. *Distributed coordinated path following using guiding vector fields*. IEEE ICRA 2021. Nominated for Best Paper Award — top 4 among 1946 accepted works out of 4005 submissions.
+- W. Yao, HG de Marina, Z. Sun, M. Cao. *Distributed coordinated path following using guiding vector fields*. IEEE ICRA 2021. Nominated for Best Paper Award - top 4 among 1946 accepted works out of 4005 submissions.
 - W. Yao, HG de Marina, B. Lin, M. Cao. *Singularity-free guiding vector field for robot navigation*. IEEE Transactions on Robotics, 2021.

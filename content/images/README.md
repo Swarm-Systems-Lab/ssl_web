@@ -18,7 +18,7 @@ photos:
 ```
 
 Pictures that belong to a news post, a research topic, or a person do **not**
-go here — they live next to that content, in `news/images/`, `research/images/`,
+go here - they live next to that content, in `news/images/`, `research/images/`,
 and `team/photos/`.
 
 If a path is wrong, the build stops and tells you which file it could not find

@@ -3,7 +3,7 @@
 #
 #   - title: What the project is
 #     level: TFM | TFG | TFG / TFM
-#     summary: One paragraph. Links work — [Paparazzi](https://paparazziuav.org).
+#     summary: One paragraph. Links work - [Paparazzi](https://paparazziuav.org).
 #     requirements:
 #       - ...
 #     image: images/projects/geolocalisation.jpg   # optional, relative to content/
@@ -22,7 +22,7 @@ items:
       project takes photos from the sky and compares them against a dataset to
       recover the vehicle's latitude and longitude. Everything runs onboard.
     requirements:
-      - Python, C and/or C++ for embedded systems — the solution runs on a Jetson coordinating with the autopilot microcontroller.
+      - Python, C and/or C++ for embedded systems - the solution runs on a Jetson coordinating with the autopilot microcontroller.
       - Real-time image processing.
       - Comfortable with maths and physics.
 
@@ -33,7 +33,7 @@ items:
       within the open-source Paparazzi project. Depending on the candidate this
       is offered as a bachelor's or a master's project.
     requirements:
-      - C and/or C++ for embedded systems — the solution must run onboard.
+      - C and/or C++ for embedded systems - the solution must run onboard.
       - Good skills in differential equations, geometry, and physics.
 
   - title: Data representation and post-processing tools

@@ -4,13 +4,13 @@ import type { Picture } from "./images";
 /**
  * Logos, kept in two folders:
  *
- *   content/logos/         GitHub, YouTube, Discord — our outside links
+ *   content/logos/         GitHub, YouTube, Discord - our outside links
  *   content/affiliations/  the university, institutes, and funders
  *
  * Drop the official file in, named after the label it belongs to, and it is
  * used.
  *
- * SVGs are served untouched — resizing a vector is meaningless, and the image
+ * SVGs are served untouched - resizing a vector is meaningless, and the image
  * pipeline would rasterise it. Everything else goes through the pipeline like
  * any other picture, because an institution's logo often arrives as a PNG far
  * larger than the 40 px it is shown at.
@@ -72,10 +72,10 @@ function build(folder: LogoFolder): Map<string, Picture> {
   const seen = new Map<string, string>();
 
   // Full paths first, so a file sitting at the top level always owns its own
-  // bare name — "ugr.png" stays `ugr` even with a ugr/ folder beside it.
+  // bare name - "ugr.png" stays `ugr` even with a ugr/ folder beside it.
   for (const [relative, picture] of paths) {
     const id = key(relative);
-    // Two files can normalise to one name — "LOGO CE.svg" and "LOGO_CE.svg".
+    // Two files can normalise to one name - "LOGO CE.svg" and "LOGO_CE.svg".
     // Say so rather than letting one quietly shadow the other.
     const clash = seen.get(id);
     if (clash) {

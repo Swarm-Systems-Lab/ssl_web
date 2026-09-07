@@ -30,7 +30,7 @@ Leave a blank line between paragraphs. You can use **bold**, *italics*, and
 - second point
 
 Every other picture in the folder is shown as a carousel at the end of the post,
-in file-name order — that is why the example above starts with `01-`. You do not
+in file-name order - that is why the example above starts with `01-`. You do not
 have to list them anywhere.
 
 To put a picture in the middle of the text instead, write:

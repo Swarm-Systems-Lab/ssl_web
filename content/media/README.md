@@ -8,7 +8,7 @@ for example  2026-04-17_group-photo-in-granada.jpg  which shows as
 
 Accepted: .jpg .jpeg .png .webp .avif .gif .mp4 .webm
 Photos are resized automatically. GIFs and clips are served as they are, so
-keep them small — under a few megabytes.
+keep them small - under a few megabytes.
 
 A file whose name starts with "_" is kept out of the gallery. That is how the
 front-page cover (_cover.png) lives here without being listed twice.

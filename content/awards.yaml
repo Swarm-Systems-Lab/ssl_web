@@ -1,11 +1,11 @@
 # Awards, grants, and distinctions.
 #
-# Add a new entry anywhere in the list — the page sorts by year, newest first.
+# Add a new entry anywhere in the list - the page sorts by year, newest first.
 #
 #   - title: What was awarded
 #     awarder: Who awarded it
 #     year: 2026
-#     detail: Optional extra sentence. Links work here — [like this](https://…).
+#     detail: Optional extra sentence. Links work here - [like this](https://…).
 #     members: [hector-garcia-de-marina]   # file names from content/team/
 #     image: images/awards/erc.jpg         # optional thumbnail, relative to content/
 #     imageAlt: "What the picture shows"
@@ -34,7 +34,7 @@ items:
     members: [hector-garcia-de-marina]
     detail: The H2020-MSCA-IF-2019 proposal was recognised as a high-quality project proposal.
 
-  - title: Research fellow — Atracción de Talento
+  - title: Research fellow - Atracción de Talento
     awarder: Comunidad de Madrid
     year: 2020
     members: [hector-garcia-de-marina]

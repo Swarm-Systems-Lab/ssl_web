@@ -15,4 +15,4 @@ content/research/guiding-vector-fields/
 Every picture in the folder except the one used as `image:` is shown as a
 carousel at the end of the page, in file-name order.
 
-Topics are ordered by the `order` field — lower numbers first.
+Topics are ordered by the `order` field - lower numbers first.

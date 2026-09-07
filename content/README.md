@@ -22,7 +22,7 @@ Everything on the website is generated from this folder.
 
 ## Adding something
 
-Everything with its own page — a news post, a research topic, a person — gets
+Everything with its own page - a news post, a research topic, a person - gets
 its **own folder**, holding the text as `index.md` and any pictures next to it:
 
 ```
@@ -36,7 +36,7 @@ Copy the `_template.md` from the relevant folder into your new folder, save it
 as `index.md`, and fill it in. The folder name becomes the address, so keep it
 lowercase with dashes: the example above is at `/news/2026-09-04-new-paper`.
 
-People are filed one level deeper, by what they are to the lab —
+People are filed one level deeper, by what they are to the lab -
 `team/members/`, `team/visitors/`, `team/alumni/`. See
 [`team/README.md`](team/README.md).
 
@@ -51,7 +51,7 @@ Markdown.
 
 ## Photos, GIFs, and video
 
-For anything with its own folder — a news post, a research topic, a person —
+For anything with its own folder - a news post, a research topic, a person -
 **just put the picture in the folder**. It is picked up automatically.
 
 Everywhere else you write a one-line path. There are five cases.
@@ -70,7 +70,7 @@ content/news/2026-09-03-time-to-go-home/
 
 That is the whole job. The first picture becomes the big one at the top of the
 post and the thumbnail in the news list; the rest become a carousel at the end,
-with captions taken from the file names — `02-university-of-hunan.jpg` reads as
+with captions taken from the file names - `02-university-of-hunan.jpg` reads as
 *"University of hunan"*. A file named like `IMG_4231.jpg` gets no caption,
 because the name says nothing worth showing.
 
@@ -81,8 +81,8 @@ image: ./03-ifac-busan.jpg
 imageAlt: "The lab presenting at the IFAC World Congress"
 ```
 
-To take control of the carousel — a different order, or captions you write
-yourself — list it instead, and the folder is no longer scanned:
+To take control of the carousel - a different order, or captions you write
+yourself - list it instead, and the folder is no longer scanned:
 
 ```yaml
 gallery:
@@ -123,7 +123,7 @@ content/media/2026-04-17_group-photo-in-granada.jpg
 shows on the media page as **"Group photo in granada"**, dated 17 April 2026, in
 the right place in the timeline.
 
-GIFs and short clips work exactly the same way — same folder, same naming:
+GIFs and short clips work exactly the same way - same folder, same naming:
 
 ```
 content/media/2026-07-27_four-flying-wings-in-formation.gif
@@ -154,7 +154,7 @@ pictures live in `content/images/` and the path is written relative to
     imageAlt: "Eight drones spiralling towards a source"
 ```
 
-Small pictures are enough — they are shown at about 96 px in the list, and full
+Small pictures are enough - they are shown at about 96 px in the list, and full
 width on the paper's own page.
 
 The Granada photos on the Join us page work the same way. Put them in
@@ -173,7 +173,7 @@ aside:
 ### 5. A cover across the top of a page
 
 Every page can have one. Drop a file in `covers/` named after the page and it
-appears — there is nothing to switch on:
+appears - there is nothing to switch on:
 
 ```
 content/covers/
@@ -194,7 +194,7 @@ coverCaptions:
   news: "Field testing near Granada"
 ```
 
-`home.png` is shown whole and never cropped — it is the team photo, and nothing
+`home.png` is shown whole and never cropped - it is the team photo, and nothing
 should be cut off. Covers on the other pages are cropped to a wide banner, so
 keep the interesting part near the middle; around 1600 x 700 is plenty.
 
@@ -204,16 +204,16 @@ If there is no `home` cover, the front page falls back to the newest photo in
 ### 6. A logo for an outside link
 
 The marks beside our GitHub, YouTube, and Discord links come from `logos/`,
-named after the link — `github.svg`, `youtube.svg`, `discord.svg`. Drop a file
+named after the link - `github.svg`, `youtube.svg`, `discord.svg`. Drop a file
 in and it appears; a link with no file just shows its text.
 
 The site renders every one of them **pure white**, so there is no need to hunt
-for a white version — the official file as downloaded is fine. See
+for a white version - the official file as downloaded is fine. See
 [`logos/README.md`](logos/README.md).
 
 ### 7. An affiliation or funder logo
 
-The band at the foot of the front page — the university, the institutes, the
+The band at the foot of the front page - the university, the institutes, the
 ERC, the ministry. List it under `affiliations:` in `site.yaml`, then drop the
 file in `affiliations/` named to match.
 
@@ -224,13 +224,13 @@ band works before anyone has collected the artwork. See
 ### A video on YouTube
 
 Long videos do not belong in the repository. Upload them to
-[our channel](https://www.youtube.com/@SwarmSystemsLab) and add the id — the part
-of the address after `v=` — to `media.yaml`:
+[our channel](https://www.youtube.com/@SwarmSystemsLab) and add the id - the part
+of the address after `v=` - to `media.yaml`:
 
 ```yaml
 videos:
   - youtube: G_lXujpkPJw
-    title: Fixed-wing aerobatics — fully autonomous, no GPS
+    title: Fixed-wing aerobatics - fully autonomous, no GPS
     date: "2026-08-01"
     featured: true
 ```
@@ -249,7 +249,7 @@ falls back to the first three in the list.
 | `.mp4` | clips with sound, up to ~20 s |
 
 Photos are resized and converted automatically, so hand over the original
-straight from the camera — no need to shrink anything first. GIFs and clips are
+straight from the camera - no need to shrink anything first. GIFs and clips are
 served exactly as given, because compressing them would destroy the animation:
 keep those under a few megabytes, and put anything longer on YouTube.
 
@@ -268,7 +268,7 @@ intro: >-
 ```
 
 `[label](address)`, `**bold**`, `*italics*`, and `` `code` `` all work. Anything
-that needs paragraphs, headings, or lists belongs in a Markdown file instead —
+that needs paragraphs, headings, or lists belongs in a Markdown file instead -
 those fields are single blocks of text by design.
 
 ## Summaries

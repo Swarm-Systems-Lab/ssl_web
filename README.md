@@ -11,7 +11,7 @@ the site rebuilds and republishes itself within a couple of minutes.
 | --------------------- | ---------------------------------------------------------------------------------------- |
 | a news post           | new folder in [`content/news/`](content/news), from its `_template.md`                   |
 | a research topic      | new folder in [`content/research/`](content/research), from its `_template.md`           |
-| a person              | new folder under [`content/team/`](content/team) — `members/`, `visitors/`, or `alumni/` |
+| a person              | new folder under [`content/team/`](content/team) - `members/`, `visitors/`, or `alumni/` |
 | a photo, GIF, or clip | drop the file in [`content/media/`](content/media)                                       |
 | a paper               | add it at the top of [`content/publications.yaml`](content/publications.yaml)            |
 | an open position      | add it to [`content/positions.yaml`](content/positions.yaml)                             |
@@ -36,7 +36,7 @@ content/news/2026-09-04-new-paper/
   01-first-photo.jpg
 ```
 
-Pictures in the folder are used automatically — the first as the header and the
+Pictures in the folder are used automatically - the first as the header and the
 thumbnail, the rest as a carousel. Nothing to list. Each folder has a
 `_template.md` with the fields explained, and a `README` next to the files.
 
@@ -50,7 +50,7 @@ instead. There is a worked example for every kind of picture (gallery, news,
 research, people) in
 [content/README.md](content/README.md#photos-gifs-and-video).
 
-If you get something wrong — a missing field, a malformed date — the build stops
+If you get something wrong - a missing field, a malformed date - the build stops
 and the Actions tab tells you which file and which line to fix. Nothing broken
 reaches the live site.
 

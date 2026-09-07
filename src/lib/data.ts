@@ -11,8 +11,8 @@ import { z } from "astro:content";
  * stops the build with a message naming the file and the field instead of
  * silently publishing a broken page.
  *
- * Text fields may contain inline Markdown — `[label](https://…)`, **bold**,
- * *italics*, `code` — rendered by the <Text> component. Picture fields hold a
+ * Text fields may contain inline Markdown - `[label](https://…)`, **bold**,
+ * *italics*, `code` - rendered by the <Text> component. Picture fields hold a
  * path relative to content/, resolved by src/lib/images.ts.
  */
 
@@ -61,7 +61,7 @@ const siteSchema = z.object({
   institution: z.string(),
   email: z.string(),
   /**
-   * Captions for the pictures in content/covers/, keyed by page —
+   * Captions for the pictures in content/covers/, keyed by page -
    * "home", "news", "join-us", and so on. Optional; the picture shows either way.
    */
   coverCaptions: z.record(z.string(), z.string()).default({}),

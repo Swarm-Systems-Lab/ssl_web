@@ -14,7 +14,7 @@ import { photoEntries, assetEntries, type Picture } from "./images";
  *
  * Everything in that folder is picked up automatically, in file-name order, so
  * there is nothing to list. Files starting with "_" are skipped, and a nested
- * folder is ignored — somewhere to stash originals.
+ * folder is ignored - somewhere to stash originals.
  */
 
 const samePicture = (a: Picture, b: Picture) =>

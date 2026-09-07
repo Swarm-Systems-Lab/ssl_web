@@ -3,7 +3,7 @@
  *
  * YAML has no way to mark up a link, so fields such as an intro paragraph or a
  * position summary accept the familiar `[label](https://…)` and `**bold**`.
- * Only inline marks are supported — anything needing paragraphs, lists, or
+ * Only inline marks are supported - anything needing paragraphs, lists, or
  * headings belongs in a Markdown file instead.
  */
 

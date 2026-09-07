@@ -78,7 +78,7 @@ function groupOf(entry: CollectionEntry<"team">): TeamGroup {
   if (folder === "members") {
     if (entry.data.group) return entry.data.group;
     throw new Error(
-      `content/team/members/${entry.id.split("/").pop()}/index.md needs a "group:" line — ` +
+      `content/team/members/${entry.id.split("/").pop()}/index.md needs a "group:" line - ` +
         `one of lead, postdoc, phd, assistant.`,
     );
   }

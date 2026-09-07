@@ -7,7 +7,7 @@ that use them: the carousel and the publications filter.
 ## Layout
 
 ```
-content/            everything an editor touches — see the top-level README
+content/            everything an editor touches - see the top-level README
 docs/               this file
 public/             copied verbatim into the site root (robots.txt, .nojekyll)
 src/
@@ -23,7 +23,7 @@ src/
   lib/media.ts      builds the gallery by scanning content/media/
   lib/collections.ts sorting, grouping, and the team category rules
   layouts/Base.astro  <head>, header, footer
-  components/       shared building blocks — see below
+  components/       shared building blocks - see below
   pages/            one file per route
   styles/global.css theme tokens and the `prose-lab` Markdown styles
 ```
@@ -42,7 +42,7 @@ Two mechanisms, chosen by whether an item needs its own page:
   trailing `/index`, so both land on the same address and the folder move did
   not change any URL.
 
-  People go one level deeper — `team/members/`, `team/visitors/`,
+  People go one level deeper - `team/members/`, `team/visitors/`,
   `team/alumni/`. Anyone with a photo or body text gets a page; on it,
   `isPanoramic()` in `lib/images.ts` compares the photo's own width and height
   against a 1.1 ratio and picks between the portrait-beside-the-name layout and
@@ -73,7 +73,7 @@ names the file and field, so bad content cannot reach production.
 | `PageHeader.astro` | the eyebrow + big title block at the top of a page                                                                                 |
 | `Rule.astro`       | section heading with a hairline                                                                                                    |
 
-Prefer these over one-off markup — every one of them is used by at least two
+Prefer these over one-off markup - every one of them is used by at least two
 pages, and the carousel and filter are meant to absorb the next few features.
 
 ### Carousel
@@ -103,7 +103,7 @@ The same helper gives a person their photo when they have not named one.
 
 ### Page covers
 
-`content/covers/<page>.<ext>` is picked up by name — `PageHeader` takes a `page`
+`content/covers/<page>.<ext>` is picked up by name - `PageHeader` takes a `page`
 prop and looks the file up, so adding a cover to a new tab means passing that
 prop and nothing else. Captions come from `coverCaptions:` in `site.yaml` and
 double as alt text. The front page renders its cover uncropped; every other page
@@ -117,8 +117,8 @@ indexed too, so a downloaded brand pack can be kept intact and referenced by
 path (`ugr/vertical/UGR-MARCA-01-color`); each file also gets a bare-name alias
 where that name is still free, and the build warns when two files normalise to
 one key. `Logo.astro` takes a
-`folder` prop to pick between them. SVGs are served untouched — rasterising a
-vector is pointless — while PNG and JPG go through the image pipeline, since an
+`folder` prop to pick between them. SVGs are served untouched - rasterising a
+vector is pointless - while PNG and JPG go through the image pipeline, since an
 institutional logo often arrives several thousand pixels wide for a 40 px slot.
 `logoFor()` returns a `Picture` either way, so `Picture.astro` handles both.
 
@@ -137,7 +137,7 @@ found, which is why `index.astro` calls `logoFor()` directly rather than letting
 
 `summary:` is optional on news. `lib/summary.ts` strips the Markdown and takes
 whole sentences up to about 220 characters, falling back to a word boundary. It
-is intentionally blunt — anything that needs to read better deserves a
+is intentionally blunt - anything that needs to read better deserves a
 hand-written summary.
 
 ### Pictures in YAML
@@ -155,7 +155,7 @@ a `width`, so `Picture.astro` caps it at the largest entry in `widths`. Without
 that a 7 MB photo ships a 2.5 MB variant nobody requests.
 
 And Vite emits a copy of everything imported, so the eager glob puts every
-full-size original in `dist/_astro` beside the variants actually used — 13 MB of
+full-size original in `dist/_astro` beside the variants actually used - 13 MB of
 it once the team photos landed. `tools/prune-assets.mjs` runs on
 `astro:build:done` and deletes any emitted file whose name appears nowhere in
 the built HTML, CSS, JS, or XML. Hashed names make a match a real reference, and
@@ -164,7 +164,7 @@ rather than pointing at an original, for the same reason.
 
 ## Adding a tab
 
-1. Create `src/pages/<name>.astro`. Start from `src/pages/awards.astro` — it is
+1. Create `src/pages/<name>.astro`. Start from `src/pages/awards.astro` - it is
    the smallest complete page.
 2. If it needs its own content file, add a schema to `src/lib/data.ts` (single
    page) or a collection to `src/content.config.ts` (one page per entry).
@@ -181,7 +181,7 @@ so each can be linked to on its own. The shared "how to apply" panel is
 `ApplyBox.astro`.
 
 For a tab pointing at documentation hosted elsewhere, a plain external entry in
-`nav:` works — `href` is used as given when it starts with `http`.
+`nav:` works - `href` is used as given when it starts with `http`.
 
 ## Images
 
@@ -190,7 +190,7 @@ several widths and writes the `srcset`. Reference them from frontmatter with a
 relative path (`./01-photo.jpg`, i.e. next to `index.md`) and render with
 `<Picture>`.
 
-Animated GIFs and video are deliberately _not_ optimised — `src/lib/media.ts`
+Animated GIFs and video are deliberately _not_ optimised - `src/lib/media.ts`
 passes them through as URLs, because Sharp would flatten an animation to its
 first frame.
 
@@ -202,9 +202,9 @@ site must stay under 1 GB, and Git stores every version of a binary forever, so
 a repeatedly replaced 20 MB video is expensive.
 
 When that starts to bite, the move is small: `src/lib/media.ts` is the only file
-that knows where media lives. Point it at a base URL — a second repository
+that knows where media lives. Point it at a base URL - a second repository
 served through jsDelivr, or a Cloudflare R2 bucket behind
-`media.swarmsystemslab.eu` — and keep the same filename convention. Until then,
+`media.swarmsystemslab.eu` - and keep the same filename convention. Until then,
 compress before committing and keep long video on YouTube.
 
 ## Deployment

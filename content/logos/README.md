@@ -1,6 +1,6 @@
 # Logos
 
-The small marks beside our outside links — on the front page under **Find us
+The small marks beside our outside links - on the front page under **Find us
 elsewhere**, and in the **Elsewhere** column of the footer.
 
 ## Adding one
@@ -30,7 +30,7 @@ before any of these existed.
 
 ## Colour does not matter
 
-Whatever colour the brand publishes, the site renders the mark **pure white** —
+Whatever colour the brand publishes, the site renders the mark **pure white** -
 there is no need to find or make a white version. Hand over the official file as
 downloaded.
 
@@ -41,5 +41,5 @@ use one with a transparent background.
 
 The three above are the official marks from
 [Simple Icons](https://simpleicons.org), which publishes them under CC0. The
-logos themselves remain the trademarks of their owners — fine for linking to our
+logos themselves remain the trademarks of their owners - fine for linking to our
 own profiles, which is all we do with them.

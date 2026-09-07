@@ -13,7 +13,7 @@ const posts = (base: string) =>
 /**
  * Markdown collections. Every entry here gets its own page on the site.
  *
- * A post is either a single file — 2026-09-04-a-post.md — or, when it has
+ * A post is either a single file - 2026-09-04-a-post.md - or, when it has
  * pictures of its own, a folder holding index.md next to them:
  *
  *   content/news/2026-09-04-a-post/index.md
@@ -22,7 +22,7 @@ const posts = (base: string) =>
  * Both produce the same address, /news/2026-09-04-a-post.
  * Files whose name starts with "_" are templates and are never published.
  * Anything that lives on a shared page (publications, positions, awards,
- * projects, media) is YAML instead — see src/lib/data.ts.
+ * projects, media) is YAML instead - see src/lib/data.ts.
  */
 
 const link = z.object({ label: z.string(), href: z.string() });

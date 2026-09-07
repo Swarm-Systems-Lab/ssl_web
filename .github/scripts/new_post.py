@@ -33,7 +33,7 @@ else:
 
 path = f"{folder}/index.md"
 if os.path.exists(folder) or os.path.exists(f"{folder}.md"):
-    sys.exit(f"{folder} already exists — pick a different title or date.")
+    sys.exit(f"{folder} already exists - pick a different title or date.")
 os.makedirs(folder)
 
 front += f"summary: {json.dumps(summary, ensure_ascii=False)}\n"

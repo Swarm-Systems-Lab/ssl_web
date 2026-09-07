@@ -1,13 +1,13 @@
 ---
 title: "Exploiting imperfect sensing"
-summary: "Formal guarantees on what imperfect sensing does to a swarm — and how to turn those imperfections into a control input for complex synchronised motions."
+summary: "Formal guarantees on what imperfect sensing does to a swarm - and how to turn those imperfections into a control input for complex synchronised motions."
 order: 4
 tags: ["theory", "control"]
 ---
 
 Different imperfect sensors give robots different perceptions of their
 surroundings. These disagreements have an impact on the stability of formations.
-We developed distributed adaptive controllers to fix the problem — and then went
+We developed distributed adaptive controllers to fix the problem - and then went
 further, exploiting the disagreements as control inputs to manoeuvre the
 formation.
 

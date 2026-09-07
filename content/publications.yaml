@@ -1,6 +1,6 @@
 # Publications.
 #
-# Papers live in four lists — `journal:`, `conference:`, `preprint:`, and
+# Papers live in four lists - `journal:`, `conference:`, `preprint:`, and
 # `technote:`. Add a new paper at the TOP of its list and give it the next
 # reference number (J.. for journals, C.. for conferences, U.. for preprints,
 # T.. for tech notes).

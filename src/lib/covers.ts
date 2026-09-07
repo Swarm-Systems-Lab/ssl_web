@@ -4,7 +4,7 @@ import { photoEntries, assetEntries, type Picture } from "./images";
 /**
  * The picture across the top of a page.
  *
- * Drop a file in content/covers/ named after the page and it appears — there is
+ * Drop a file in content/covers/ named after the page and it appears - there is
  * nothing to configure:
  *
  *   content/covers/home.png      the front page

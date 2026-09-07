@@ -4,13 +4,13 @@ import { photoEntries, assetEntries, type Picture } from "./images";
 
 /**
  * The media gallery is built by scanning content/media/ at build time.
- * Dropping a file into that folder is enough to publish it — no list to edit.
+ * Dropping a file into that folder is enough to publish it - no list to edit.
  *
  * Filename convention: YYYY-MM-DD_short-caption.jpg
  *   - the date prefix sets the ordering (newest first) and the shown date
  *   - the rest becomes the caption, unless overridden in content/media.yaml
  * A file without a date prefix still works; it just sorts last. A file whose
- * name starts with "_" is kept out of the gallery — use that for pictures the
+ * name starts with "_" is kept out of the gallery - use that for pictures the
  * site needs but should not list, such as the front-page cover.
  */
 
