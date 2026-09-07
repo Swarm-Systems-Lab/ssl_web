@@ -23,8 +23,13 @@ const here = Astro.url.pathname;
       {
         site.nav.map((item) => {
           const active = isActive(here, item.href);
+          // Every tab is laid out the same way, whether or not it carries a
+          // chevron: a flex box of its own. Left as inline text, the tab with
+          // the drop-down sat a couple of pixels below the others, because an
+          // inline element takes its height from the font and the chevron
+          // stretched the line box it sat on.
           const linkClass = [
-            "font-display text-[11px] tracking-widest whitespace-nowrap uppercase transition-colors",
+            "flex items-center font-display text-[11px] tracking-widest whitespace-nowrap uppercase transition-colors",
             active ? "text-accent" : "text-muted-foreground hover:text-foreground",
           ];
 
@@ -40,9 +45,7 @@ const here = Astro.url.pathname;
                 class:list={linkClass}
               >
                 {item.label}
-                <span class="ml-1 inline-block opacity-60 transition-transform group-hover:rotate-180">
-                  ▾
-                </span>
+                <span class="ml-1 opacity-60 transition-transform group-hover:rotate-180">▾</span>
               </a>
               <ul class="invisible absolute top-full right-0 z-10 min-w-max translate-y-1 border border-border bg-background py-2 opacity-0 shadow-lg transition-[opacity,visibility,transform] group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                 {item.children.map((child) => (
