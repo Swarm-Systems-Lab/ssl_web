@@ -279,9 +279,6 @@ conference:
     title: "Linear quadratic control for discrete-time systems with stochastic and bounded noises"
     venue: "IEEE American Control Conference (ACC)"
     year: 2026
-    links:
-      - label: Zenodo
-        href: https://zenodo.org/records/18349262
     doi: https://ieeexplore.ieee.org/abstract/document/11616468
     pdf: https://arxiv.org/pdf/2512.11106
   - ref: C39
