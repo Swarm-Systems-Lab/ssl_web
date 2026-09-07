@@ -6,14 +6,14 @@ shortTitle: Swarm Systems Lab
 #tagline: Control theory and emergent behaviour in robot swarms
 description: >-
   The Swarm Systems Lab at the University of Granada works on swarm robotics and
-  autonomous systems, where control theory and emergent behaviour converge — with
+  autonomous systems, where control theory and emergent behaviour converge - with
   swarms of fixed-wing aircraft, rotorcraft, rovers, and other autonomous robots.
 
 institution: University of Granada
 email: swarmsystemslab@gmail.com
 
 # Every page can have a picture across the top. Drop a file in content/covers/
-# named after the page — home.png, news.jpg, team.jpg, join-us.jpg — and it
+# named after the page - home.png, news.jpg, team.jpg, join-us.jpg - and it
 # appears. Captions are optional; without one the picture still shows.
 coverCaptions:
   home: "The Swarm Systems Lab"
@@ -34,6 +34,11 @@ nav:
     href: /team
   - label: Join us
     href: /join-us
+    children:
+      - label: Open positions
+        href: /join-us/positions
+      - label: Student projects
+        href: /join-us/projects
   - label: Awards
     href: /awards
   - label: Media
@@ -67,8 +72,8 @@ social:
     href: https://discord.gg/peMNWpe4YT
 
 # The university, institutes, and funders shown at the foot of the front page.
-# Put the logo in content/affiliations/ named after the label — "ERC" looks for
-# erc.svg — and it replaces the text. Without a file the name is shown instead,
+# Put the logo in content/affiliations/ named after the label - "ERC" looks for
+# erc.svg - and it replaces the text. Without a file the name is shown instead,
 # so this list is useful before any logo has been collected.
 #
 # Logos sit on a white plate, which is what makes a PNG downloaded from an

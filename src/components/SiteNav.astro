@@ -11,7 +11,15 @@ const here = Astro.url.pathname;
       {site.shortTitle}
     </a>
 
-    <nav class="no-scrollbar ml-auto flex items-center gap-5 overflow-x-auto" aria-label="Main">
+    <!--
+      The strip scrolls on narrow screens, but scrolling makes it a clipping
+      box, which would swallow the drop-down. Above `md` there is room for
+      every tab, so the overflow is released and the list can escape.
+    -->
+    <nav
+      class="no-scrollbar ml-auto flex items-center gap-5 overflow-x-auto md:overflow-visible"
+      aria-label="Main"
+    >
       {
         site.nav.map((item) => {
           const active = isActive(here, item.href);
@@ -23,16 +31,20 @@ const here = Astro.url.pathname;
           // A tab with children keeps its own link and reveals the list on
           // hover or keyboard focus, so it works without JavaScript.
           return item.children.length > 0 ? (
-            <div class="group relative">
+            /* The padding fills the header's own height, so the list drops
+               from the header edge and the pointer never crosses a gap. */
+            <div class="group relative -my-4 py-4">
               <a
                 href={url(item.href)}
                 aria-current={active ? "page" : undefined}
                 class:list={linkClass}
               >
                 {item.label}
-                <span class="ml-1 opacity-60">▾</span>
+                <span class="ml-1 inline-block opacity-60 transition-transform group-hover:rotate-180">
+                  ▾
+                </span>
               </a>
-              <ul class="invisible absolute top-full right-0 z-10 min-w-max border border-border bg-background py-2 opacity-0 shadow-lg transition-[opacity,visibility] group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+              <ul class="invisible absolute top-full right-0 z-10 min-w-max translate-y-1 border border-border bg-background py-2 opacity-0 shadow-lg transition-[opacity,visibility,transform] group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                 {item.children.map((child) => (
                   <li>
                     <a

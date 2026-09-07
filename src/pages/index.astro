@@ -6,7 +6,7 @@ import Picture from "@/components/Picture.astro";
 import Logo from "@/components/Logo.astro";
 import VideoGrid from "@/components/VideoGrid.astro";
 import { logoFor } from "@/lib/logos";
-import { getNews, newsPictures, formatDate } from "@/lib/collections";
+import { getNews, newsSummary, newsPictures, formatDate } from "@/lib/collections";
 import { site, featuredVideos } from "@/lib/data";
 import { coverFor } from "@/lib/covers";
 import { gallery } from "@/lib/media";
@@ -15,9 +15,11 @@ import { url } from "@/lib/url";
 const home = await getEntry("pages", "home");
 const { Content } = home ? await render(home) : { Content: null };
 
-const news = (await getNews())
-  .slice(0, 4)
-  .map((entry) => ({ entry, thumbnail: newsPictures(entry).header }));
+const news = (await getNews()).slice(0, 4).map((entry) => ({
+  entry,
+  summary: newsSummary(entry),
+  thumbnail: newsPictures(entry).header,
+}));
 
 // content/covers/home.*, falling back to the newest photo in the gallery.
 const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
@@ -191,9 +193,10 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
           </div>
 
           <ol class="lg:col-span-8">
-            {news.map(({ entry, thumbnail }) => (
+            {news.map(({ entry, summary, thumbnail }) => (
               <li class="flex items-start gap-5 border-b border-border py-5 last:border-0">
-                <div class="flex-1">
+                {/* min-w-0 lets the one-line preview below actually truncate. */}
+                <div class="min-w-0 flex-1">
                   <time
                     datetime={entry.data.date.toISOString()}
                     class="font-display text-[10px] tracking-widest text-muted"
@@ -206,6 +209,8 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
                   >
                     {entry.data.title}
                   </a>
+                  {/* Trimmed by CSS, so it is one line at any window width. */}
+                  <p class="mt-1 truncate text-sm text-muted-foreground">{summary}</p>
                 </div>
                 {thumbnail && (
                   <a href={url(`/news/${entry.id}`)} class="shrink-0">
