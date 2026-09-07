@@ -1,5 +1,6 @@
 ---
 import { site } from "@/lib/data";
+import Logo from "@/components/Logo.astro";
 import { url, isActive } from "@/lib/url";
 
 const here = Astro.url.pathname;
@@ -7,7 +8,23 @@ const here = Astro.url.pathname;
 
 <header class="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur">
   <div class="mx-auto flex max-w-7xl items-center gap-6 px-6 py-4">
-    <a href={url("/")} class="font-display text-sm font-bold tracking-tighter whitespace-nowrap">
+    <a
+      href={url("/")}
+      class="flex items-center gap-2.5 font-display text-sm font-bold tracking-tighter whitespace-nowrap"
+    >
+      {
+        /* Flattened to the theme's ink, so it sits with the wordmark rather
+          than against it. */
+      }
+      <Logo
+        label={site.shortTitle}
+        name="swarm-mark"
+        mono
+        size="h-6 w-auto"
+        widths={[48, 96]}
+        sizes="24px"
+        class="shrink-0"
+      />
       {site.shortTitle}
     </a>
 

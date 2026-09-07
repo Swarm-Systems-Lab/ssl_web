@@ -1,0 +1,36 @@
+---
+import { logoFor } from "@/lib/logos";
+import { pictureUrl } from "@/lib/images";
+
+/**
+ * The mark printed faintly into a page header.
+ *
+ * Decoration, not content: it carries no alt text, takes no clicks, and is
+ * hidden on narrow screens where a header has no room to spare. The colour and
+ * the soft edge come from the `watermark` utility, so it inks itself to the
+ * theme and thins out towards its edges instead of stopping at them.
+ *
+ * Position and size are the caller's business - a header with a cover under it
+ * wants the mark higher than a tall hero does. It must sit inside something
+ * `relative` that clips, or it will widen the page.
+ */
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const mark = logoFor("Swarm Systems Lab", "swarm-mark");
+const src = mark ? pictureUrl(mark) : undefined;
+---
+
+{
+  src && (
+    <img
+      src={src}
+      alt=""
+      aria-hidden="true"
+      class:list={["watermark pointer-events-none absolute hidden select-none md:block", className]}
+    />
+  )
+}

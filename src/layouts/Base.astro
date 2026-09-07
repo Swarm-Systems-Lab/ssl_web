@@ -1,5 +1,6 @@
 ---
 import { site } from "@/lib/data";
+import { url } from "@/lib/url";
 import SiteNav from "@/components/SiteNav.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import Lightbox from "@/components/Lightbox.astro";
@@ -28,6 +29,14 @@ const preview = image ? new URL(image, Astro.site).href : undefined;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+
+    {
+      /* The mark, white on black, so it reads in a light or a dark tab strip.
+        The PNG is there for browsers that will not take an SVG icon. */
+    }
+    <link rel="icon" href={url("/favicon.svg")} type="image/svg+xml" />
+    <link rel="alternate icon" href={url("/favicon-32.png")} sizes="32x32" />
+    <link rel="apple-touch-icon" href={url("/apple-touch-icon.png")} />
     <meta name="theme-color" content="#ffffff" />
 
     {

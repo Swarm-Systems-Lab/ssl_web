@@ -4,6 +4,7 @@ import Base from "@/layouts/Base.astro";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
 import Logo from "@/components/Logo.astro";
+import Watermark from "@/components/Watermark.astro";
 import VideoGrid from "@/components/VideoGrid.astro";
 import { logoFor } from "@/lib/logos";
 import { getNews, newsSummary, newsMedia, formatDate } from "@/lib/collections";
@@ -26,38 +27,46 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
 ---
 
 <Base>
-  <section class="mx-auto max-w-7xl px-6 pt-20 pb-12">
-    <div
-      class="mb-4 flex items-center gap-3 font-display text-xs tracking-widest text-accent uppercase"
-    >
-      <span class="size-1.5 rounded-full bg-accent"></span>{site.institution}
-    </div>
-    <h1
-      class="font-display text-4xl leading-[0.92] font-bold tracking-tighter text-balance md:text-6xl"
-    >
-      SWARM SYSTEMS <span class="text-muted">LAB.</span>
-    </h1>
-    {
-      Content && (
-        <div class="prose-lab mt-8">
-          <Content />
-        </div>
-      )
-    }
+  {
+    /* The hero holds the watermark, so it is clipped to the section rather than
+      spilling into the page. */
+  }
+  <section class="relative overflow-hidden">
+    <Watermark class="-right-24 -bottom-28 w-[26rem] lg:-right-16 lg:w-[32rem]" />
 
-    <div class="mt-8 flex flex-wrap gap-3">
-      <a
-        href={url("/research")}
-        class="bg-accent px-4 py-3 font-display text-xs tracking-widest text-accent-foreground uppercase transition-opacity hover:opacity-90"
+    <div class="relative mx-auto max-w-7xl px-6 pt-20 pb-12">
+      <div
+        class="mb-4 flex items-center gap-3 font-display text-xs tracking-widest text-accent uppercase"
       >
-        Our research →
-      </a>
-      <a
-        href={url("/join-us")}
-        class="border border-border px-4 py-3 font-display text-xs tracking-widest uppercase transition-colors hover:border-accent/50 hover:text-accent"
+        <span class="size-1.5 rounded-full bg-accent"></span>{site.institution}
+      </div>
+      <h1
+        class="font-display text-4xl leading-[0.92] font-bold tracking-tighter text-balance md:text-6xl"
       >
-        Join us
-      </a>
+        SWARM SYSTEMS <span class="text-muted">LAB.</span>
+      </h1>
+      {
+        Content && (
+          <div class="prose-lab mt-8">
+            <Content />
+          </div>
+        )
+      }
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href={url("/research")}
+          class="bg-accent px-4 py-3 font-display text-xs tracking-widest text-accent-foreground uppercase transition-opacity hover:opacity-90"
+        >
+          Our research →
+        </a>
+        <a
+          href={url("/join-us")}
+          class="border border-border px-4 py-3 font-display text-xs tracking-widest uppercase transition-colors hover:border-accent/50 hover:text-accent"
+        >
+          Join us
+        </a>
+      </div>
     </div>
   </section>
 

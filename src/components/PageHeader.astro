@@ -1,5 +1,6 @@
 ---
 import Picture from "@/components/Picture.astro";
+import Watermark from "@/components/Watermark.astro";
 import { coverFor } from "@/lib/covers";
 
 interface Props {
@@ -31,35 +32,48 @@ if (accent && !title.endsWith(accent)) {
 const lead = accent ? title.slice(0, -accent.length) : title;
 ---
 
-<section class="mx-auto max-w-7xl px-6 pt-20 pb-14">
-  <div
-    class="mb-4 flex items-center gap-3 font-display text-xs tracking-widest text-accent uppercase"
-  >
-    <span class="size-1.5 rounded-full bg-accent"></span>{eyebrow}
-  </div>
-  <h1 class="font-display text-4xl leading-[0.95] font-bold tracking-tighter md:text-6xl">
-    {lead}{accent && <span class="text-muted">{accent}</span>}
-  </h1>
-  {description && <p class="mt-6 max-w-3xl leading-relaxed text-muted-foreground">{description}</p>}
+{
+  /* The section holds the watermark, so it is clipped here rather than
+    widening the page. Anchored to the top, where the title is, since a header
+    with a cover under it is far taller than one without. */
+}
+<section class="relative overflow-hidden">
+  <Watermark class="-top-16 -right-24 w-[22rem] lg:-right-16 lg:w-[28rem]" />
 
-  {
-    cover && (
-      <figure class="mt-10 border border-border bg-surface">
-        <Picture
-          src={cover.src}
-          alt={cover.caption ?? title}
-          widths={[720, 1080, 1440, 1920]}
-          sizes="(min-width: 1280px) 1216px, 100vw"
-          priority
-          zoom
-          class="aspect-[3/2] w-full object-cover sm:aspect-[21/9]"
-        />
-        {cover.caption && (
-          <figcaption class="border-t border-border p-4 font-display text-[10px] tracking-widest text-muted uppercase">
-            {cover.caption}
-          </figcaption>
-        )}
-      </figure>
-    )
-  }
+  <div class="relative mx-auto max-w-7xl px-6 pt-20 pb-14">
+    <div
+      class="mb-4 flex items-center gap-3 font-display text-xs tracking-widest text-accent uppercase"
+    >
+      <span class="size-1.5 rounded-full bg-accent"></span>{eyebrow}
+    </div>
+    <h1 class="font-display text-4xl leading-[0.95] font-bold tracking-tighter md:text-6xl">
+      {lead}{accent && <span class="text-muted">{accent}</span>}
+    </h1>
+    {
+      description && (
+        <p class="mt-6 max-w-3xl leading-relaxed text-muted-foreground">{description}</p>
+      )
+    }
+
+    {
+      cover && (
+        <figure class="mt-10 border border-border bg-surface">
+          <Picture
+            src={cover.src}
+            alt={cover.caption ?? title}
+            widths={[720, 1080, 1440, 1920]}
+            sizes="(min-width: 1280px) 1216px, 100vw"
+            priority
+            zoom
+            class="aspect-[3/2] w-full object-cover sm:aspect-[21/9]"
+          />
+          {cover.caption && (
+            <figcaption class="border-t border-border p-4 font-display text-[10px] tracking-widest text-muted uppercase">
+              {cover.caption}
+            </figcaption>
+          )}
+        </figure>
+      )
+    }
+  </div>
 </section>

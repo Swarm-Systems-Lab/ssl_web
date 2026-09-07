@@ -29,6 +29,8 @@
   --grid-opacity: 0.09;
   /* 0 leaves a flattened logo black, 1 turns it white. */
   --logo-invert: 0;
+  /* Ink on paper carries further than light on black, so the two differ. */
+  --watermark-opacity: 0.07;
 }
 
 html[data-theme="dark"] {
@@ -44,6 +46,7 @@ html[data-theme="dark"] {
   --surface: #121214;
 
   --mat: #000000;
+  --watermark-opacity: 0.11;
   --grid-line: #27272a;
   --grid-opacity: 0.07;
   --logo-invert: 1;
@@ -91,6 +94,19 @@ html[data-theme="dark"] {
  */
 @utility logo-mono {
   filter: brightness(0) invert(var(--logo-invert));
+}
+
+/*
+ * The mark printed into the page rather than onto it: faint, in the theme's
+ * own ink, and masked so it thins out towards its edges instead of stopping at
+ * them - the swarm drifting off like cloud rather than a logo stuck in a
+ * corner. Decorative only; it is hidden from screen readers where it is used.
+ */
+@utility watermark {
+  filter: brightness(0) invert(var(--logo-invert));
+  opacity: var(--watermark-opacity);
+  -webkit-mask-image: radial-gradient(58% 58% at 62% 42%, #000 25%, transparent 76%);
+  mask-image: radial-gradient(58% 58% at 62% 42%, #000 25%, transparent 76%);
 }
 
 /* Styling for Markdown bodies rendered from content/. Authors write plain
