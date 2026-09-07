@@ -239,6 +239,67 @@ videos:
 field*. Mark as many as you want to show there; if you mark none, the front page
 falls back to the first three in the list.
 
+### Cropping, captions, and alt text: `images.yaml`
+
+A picture shown in a square card, a wide banner, and a 4:3 thumbnail is cropped
+differently in each, and the crop is taken from the middle - which is wrong for
+a group photo where the faces sit high, or a plot with a label down one side.
+
+Put an `images.yaml` next to the pictures and say so. It is optional, only has
+to mention the pictures that need something, and applies **everywhere that
+picture appears**:
+
+```yaml
+# content/team/photos/images.yaml
+group-launch-at-the-beach.png:
+  focus: top
+  caption: Launching at the beach
+  alt: Six people carrying a fixed-wing drone across the sand
+
+IROS-2025.jpg:
+  focus: 50% 30%
+```
+
+| Setting   | What it does                                                          |
+| --------- | --------------------------------------------------------------------- |
+| `focus`   | which part to keep when the picture is cropped                        |
+| `zoom`    | how close to crop in                                                  |
+| `caption` | the words under the picture, instead of the ones from the file name   |
+| `alt`     | what the picture shows, for screen readers and when it fails to load  |
+
+`focus` takes `top`, `bottom`, `left`, `right`, `center`, a pair like
+`left-bottom`, or exact percentages like `50% 30%` (across, then down). It only
+does something where the frame's shape differs from the picture's; a picture
+shown whole is unaffected.
+
+`zoom` crops in closer: `1` is the whole frame, `1.5` is half again as close, up
+to `4`. It zooms around the same spot `focus` names, so the two work together -
+`focus` says where to look, `zoom` says how close. Use it when a face or a robot
+sits small in a wide shot:
+
+```yaml
+weijia.jpg:
+  focus: 0% 60%
+  zoom: 1.4
+```
+
+Like `focus`, it only applies where the picture is actually cropped - a card, a
+thumbnail, a banner. Where the picture is shown whole, on a person's own page
+for instance, it is ignored rather than blowing the picture up.
+
+`caption` is the line printed under the picture in a carousel or the gallery.
+Without one it is worked out from the file name, which is usually enough -
+`IROS-2025.jpg` reads as "IROS 2025" - and this is how you say something the
+file name cannot.
+
+This means you do **not** need to keep a second, hand-cropped copy of a photo
+just to make it sit right in one place: keep the original and set `focus`.
+
+The file works in any folder holding pictures - a news post, a person, the team
+photos, `media/`, `covers/`, `images/`. Naming a file that is not in that folder
+stops the build and tells you which names it can see, so a typo cannot pass
+quietly.
+
 ### What to hand over
 
 | Format | Use it for                   |

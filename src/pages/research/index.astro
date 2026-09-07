@@ -2,61 +2,86 @@
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
 import Picture from "@/components/Picture.astro";
-import { getResearch } from "@/lib/collections";
+import { getResearch, backerLabel } from "@/lib/collections";
 import { url } from "@/lib/url";
 
-const topics = await getResearch();
+const projects = await getResearch();
 /**
  * How many pictures are on screen before any scrolling. Those are fetched
  * straight away; everything further down stays lazy, which is the default.
  */
-const ABOVE_THE_FOLD = 3;
+const ABOVE_THE_FOLD = 2;
 ---
 
 <Base
   title="Research"
-  description="Swarm robotics, guiding vector fields, formation control, and distributed coordination."
+  description="The funded projects behind the lab's work on swarm robotics and distributed coordination."
 >
   <PageHeader
     page="research"
     eyebrow="Research"
     title="WHAT WE WORK ON."
     accent="WORK ON."
-    description="Control theory and emergent behaviour, from formal guarantees on paper to swarms of fixed-wing aircraft, rotorcraft, and rovers in the field."
+    description="The projects behind the work: what each one set out to do, who funds it, who is on it, and the papers that came out of it."
   />
 
-  <section class="mx-auto grid max-w-7xl gap-px px-6 pb-16 md:grid-cols-2 lg:grid-cols-3">
-    {
-      topics.map((topic, index) => (
-        <article class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
-          {topic.data.image && (
-            <Picture
-              src={topic.data.image}
-              alt={topic.data.imageAlt ?? topic.data.title}
-              widths={[400, 800]}
-              sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw"
-              loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}
-              class="aspect-video w-full border-b border-border object-cover"
-            />
-          )}
-          <div class="flex flex-1 flex-col p-6">
-            <h2 class="font-display text-base font-bold">
-              <a href={url(`/research/${topic.id}`)} class="transition-colors hover:text-accent">
-                {topic.data.title}
-              </a>
-            </h2>
-            <p class="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-              {topic.data.summary}
-            </p>
-            {topic.data.tags.length > 0 && (
-              <div class="mt-5 font-display text-[10px] tracking-widest text-accent uppercase">
-                {topic.data.tags.map((tag) => `#${tag}`).join(" ")}
+  <section class="mx-auto max-w-5xl px-6 pb-16">
+    <ol class="border-t border-border">
+      {
+        projects.map((project, index) => {
+          const { data } = project;
+          const here = url(`/research/${project.id}`);
+          return (
+            <li class="grid gap-8 border-b border-border py-10 sm:grid-cols-[1fr_20rem]">
+              <div class="min-w-0">
+                <div class="mb-4 flex flex-wrap items-center gap-3 font-display text-[10px] tracking-widest uppercase">
+                  {data.acronym && (
+                    <span class="border border-accent/30 px-2 py-1 text-accent">
+                      {data.acronym}
+                    </span>
+                  )}
+                  {data.funding.map((backer) => (
+                    <span class="text-muted">{backerLabel(backer)}</span>
+                  ))}
+                  {data.period && <span class="text-muted">{data.period}</span>}
+                </div>
+
+                <h2 class="font-display text-xl leading-snug font-bold tracking-tight">
+                  <a href={here} class="transition-colors hover:text-accent">
+                    {data.title}
+                  </a>
+                </h2>
+                <p class="mt-3 leading-relaxed text-muted-foreground">{data.summary}</p>
+
+                <div class="mt-5 flex flex-wrap items-center gap-4 font-display text-[10px] tracking-widest uppercase">
+                  {data.works.length > 0 && (
+                    <span class="text-muted">
+                      {data.works.length} {data.works.length === 1 ? "paper" : "papers"}
+                    </span>
+                  )}
+                  {data.tags.length > 0 && (
+                    <span class="text-accent">{data.tags.map((tag) => `#${tag}`).join(" ")}</span>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
-        </article>
-      ))
-    }
-    {topics.length === 0 && <p class="text-muted-foreground">No research topics yet.</p>}
+
+              {data.image && (
+                <a href={here} class="block">
+                  <Picture
+                    src={data.image}
+                    alt={data.imageAlt ?? data.title}
+                    widths={[320, 640]}
+                    sizes="(min-width: 640px) 320px, 100vw"
+                    loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}
+                    class="aspect-[4/3] w-full border border-border object-cover transition-colors hover:border-accent/50"
+                  />
+                </a>
+              )}
+            </li>
+          );
+        })
+      }
+    </ol>
+    {projects.length === 0 && <p class="text-muted-foreground">No projects yet.</p>}
   </section>
 </Base>

@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import { IMAGE_QUALITY, type Picture } from "@/lib/images";
 import { fullSize } from "@/lib/full-size";
+import { displayFor, objectPosition } from "@/lib/display";
 
 interface Props {
   src: Picture;
@@ -21,6 +22,13 @@ interface Props {
    * belongs to the link, not to the picture.
    */
   zoom?: boolean;
+  /**
+   * Which part of the picture to keep when the frame crops it, as a keyword
+   * like "top" or percentages like "50% 20%". Normally left out: a picture
+   * that always wants the same framing says so in its folder's images.yaml,
+   * which this overrides for one place on the site.
+   */
+  focus?: string;
   class?: string;
 }
 
@@ -32,8 +40,44 @@ const {
   loading = "lazy",
   priority = false,
   zoom = false,
+  focus,
   class: className,
 } = Astro.props;
+
+// What the picture's own folder says about it. Cropping only happens with
+// object-cover, so the focus is inert everywhere else.
+const settings = displayFor(src);
+const position = objectPosition(focus ?? settings?.focus);
+
+/*
+ * Zooming past the frame means painting the picture larger than its own box,
+ * which needs something to clip it and a box with a height to clip against.
+ * Where the frame has no height of its own the picture is being shown whole,
+ * nothing is cropped, and a zoom would only collapse the layout - so it is
+ * ignored rather than obeyed.
+ */
+const FRAMED = /(^|\s)(aspect-|size-|min-h-|h-(?!auto\b))/;
+const zoomTo = settings?.zoom && settings.zoom > 1 ? settings.zoom : undefined;
+const magnified = zoomTo && FRAMED.test(className ?? "") ? zoomTo : undefined;
+
+const style = [
+  position && `object-position: ${position}`,
+  // Anchored on the same point the crop is, so zooming keeps it in view.
+  magnified && `transform: scale(${magnified}); transform-origin: ${position ?? "center"}`,
+]
+  .filter(Boolean)
+  .join("; ");
+// Alt written next to the picture describes the picture itself, which beats
+// whatever the page around it happened to call it.
+const description = settings?.alt ?? alt;
+
+/*
+ * The frame that does the clipping. Only a zoomed picture needs one, so
+ * everywhere else it is `display: contents` - it generates no box at all and
+ * the picture stays exactly the element its container was laid out around.
+ */
+const frame = magnified ? ["block overflow-hidden", className] : "contents";
+const paint = magnified ? "h-full w-full object-cover" : className;
 const isVideo = typeof src === "string" && /\.(mp4|webm)$/.test(src);
 
 // Astro emits the fallback `src` at the picture's own resolution unless it is
@@ -52,36 +96,46 @@ const zoomAttrs = {
   "data-zoom": full,
   role: full ? ("button" as const) : undefined,
   tabindex: full ? 0 : undefined,
-  "aria-label": full ? (alt ? `${alt} - view full size` : "View full size") : undefined,
+  "aria-label": full
+    ? description
+      ? `${description} - view full size`
+      : "View full size"
+    : undefined,
 };
 ---
 
 {
   isVideo ? (
     <video src={src as string} muted loop playsinline controls preload="none" class={className} />
-  ) : typeof src === "string" ? (
-    /* GIFs and vectors are served untouched, so this is a plain <img>: there is
-       no format to convert to and no size to resize to. */
-    <img
-      src={src}
-      alt={alt}
-      loading={priority ? "eager" : loading}
-      decoding={priority ? "sync" : "async"}
-      fetchpriority={priority ? "high" : undefined}
-      class:list={[className, full && "cursor-zoom-in"]}
-      {...zoomAttrs}
-    />
   ) : (
-    <Image
-      src={src}
-      alt={alt}
-      widths={widths}
-      width={width}
-      sizes={sizes}
-      quality={IMAGE_QUALITY}
-      class:list={[className, full && "cursor-zoom-in"]}
-      {...speed}
-      {...zoomAttrs}
-    />
+    <span class:list={frame}>
+      {typeof src === "string" ? (
+        /* GIFs and vectors are served untouched, so this is a plain <img>:
+           there is no format to convert to and no size to resize to. */
+        <img
+          src={src}
+          alt={description}
+          style={style || undefined}
+          loading={priority ? "eager" : loading}
+          decoding={priority ? "sync" : "async"}
+          fetchpriority={priority ? "high" : undefined}
+          class:list={[paint, full && "cursor-zoom-in"]}
+          {...zoomAttrs}
+        />
+      ) : (
+        <Image
+          src={src}
+          alt={description}
+          style={style || undefined}
+          widths={widths}
+          width={width}
+          sizes={sizes}
+          quality={IMAGE_QUALITY}
+          class:list={[paint, full && "cursor-zoom-in"]}
+          {...speed}
+          {...zoomAttrs}
+        />
+      )}
+    </span>
   )
 }

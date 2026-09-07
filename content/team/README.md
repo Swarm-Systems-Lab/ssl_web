@@ -27,6 +27,11 @@ their group from the folder they are in.
 
 `order` sorts people inside their block - lower numbers first.
 
+## Group photos
+
+Photos of the whole lab go in `photos/`, not in a person's folder; they become
+the carousel at the top of the page. See the README in there.
+
 ## Photos
 
 Put the photo in the person's own folder. It is picked up automatically, so

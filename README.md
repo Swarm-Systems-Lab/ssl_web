@@ -10,7 +10,7 @@ the site rebuilds and republishes itself within a couple of minutes.
 | I want to add…        | Do this                                                                                  |
 | --------------------- | ---------------------------------------------------------------------------------------- |
 | a news post           | new folder in [`content/news/`](content/news), from its `_template.md`                   |
-| a research topic      | new folder in [`content/research/`](content/research), from its `_template.md`           |
+| a funded project      | new folder in [`content/research/`](content/research), from its `_template.md`           |
 | a person              | new folder under [`content/team/`](content/team) - `members/`, `visitors/`, or `alumni/` |
 | a photo, GIF, or clip | drop the file in [`content/media/`](content/media)                                       |
 | a paper               | add it at the top of [`content/publications.yaml`](content/publications.yaml)            |
@@ -20,6 +20,8 @@ the site rebuilds and republishes itself within a couple of minutes.
 | a logo for a link     | drop it in [`content/logos/`](content/logos), named after the link                       |
 | an affiliation logo   | list it in `site.yaml`, drop the file in [`content/affiliations/`](content/affiliations) |
 | an award              | add it to [`content/awards.yaml`](content/awards.yaml)                                   |
+| press or TV coverage  | add it to [`content/press.yaml`](content/press.yaml)                                     |
+| a crop or caption fix | add `images.yaml` next to the picture - see [`content/README.md`](content/README.md)     |
 | a YouTube video       | add it to [`content/media.yaml`](content/media.yaml)                                     |
 
 News posts, research topics, people, and papers each get their own page; for the

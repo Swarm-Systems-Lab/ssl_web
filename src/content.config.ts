@@ -27,6 +27,23 @@ const posts = (base: string) =>
 
 const link = z.object({ label: z.string(), href: z.string() });
 
+/**
+ * A funder or a partner behind a project: the ERC and its scheme, a ministry,
+ * or the company we are working with. Only `name` is required, so an entry can
+ * be as short as "Airbus" or carry the whole grant reference.
+ */
+const backer = z.object({
+  /** The organisation, e.g. "European Research Council". */
+  name: z.string(),
+  /** Its scheme, e.g. "Starting Grant" or "Proof of Concept". */
+  programme: z.string().optional(),
+  /** Grant or contract number, shown as written. */
+  reference: z.string().optional(),
+  href: z.string().optional(),
+  /** File name in content/affiliations/, when there is a logo for it. */
+  logo: z.string().optional(),
+});
+
 const news = defineCollection({
   loader: posts("./content/news"),
   schema: ({ image }) =>
@@ -44,6 +61,11 @@ const news = defineCollection({
     }),
 });
 
+/**
+ * The funded projects the lab runs. Everything below `summary` is optional, so
+ * a project can start as a title and a paragraph and gain its funding, its
+ * papers, and its people as they arrive.
+ */
 const research = defineCollection({
   loader: posts("./content/research"),
   schema: ({ image }) =>
@@ -51,6 +73,25 @@ const research = defineCollection({
       title: z.string(),
       summary: z.string(),
       order: z.number().default(100),
+      /** Short name the project goes by, e.g. "iSwarm" or "Aerosense". */
+      acronym: z.string().optional(),
+      /** When it runs, written however it should read: "2023 - 2028". */
+      period: z.string().optional(),
+      /** Who pays for it. */
+      funding: z.array(backer).default([]),
+      /** Who we run it with - companies, institutes, other groups. */
+      partners: z.array(backer).default([]),
+      /**
+       * Papers from the project, by their reference in publications.yaml:
+       * ["J20", "C15", "U1"]. Each one is shown in full, as on the
+       * publications page, in the order written here.
+       */
+      works: z.array(z.string()).default([]),
+      /**
+       * People on the project. A folder name under content/team links to that
+       * person; anything else is shown as plain text.
+       */
+      members: z.array(z.string()).default([]),
       image: image().optional(),
       imageAlt: z.string().optional(),
       /** Extra pictures. Two or more render as a carousel under the post. */

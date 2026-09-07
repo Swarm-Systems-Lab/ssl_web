@@ -3,10 +3,13 @@ import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
-import { getTeam, TEAM_GROUPS } from "@/lib/collections";
+import Carousel from "@/components/Carousel.astro";
+import { getTeam, TEAM_GROUPS, getTeamPhotos } from "@/lib/collections";
+import { coverFor } from "@/lib/covers";
 import { url } from "@/lib/url";
 
 const members = await getTeam();
+const photos = getTeamPhotos();
 const shown = TEAM_GROUPS.map((group) => ({
   ...group,
   members: members.filter((m) => m.group === group.key),
@@ -32,8 +35,10 @@ const STRETCH = "after:absolute after:inset-0 after:content-['']";
 /**
  * How many pictures are on screen before any scrolling. Those are fetched
  * straight away; everything further down stays lazy, which is the default.
+ * With a carousel at the top of the page, the first row of people is not on
+ * screen any more and the carousel takes over.
  */
-const ABOVE_THE_FOLD = 3;
+const ABOVE_THE_FOLD = photos.length > 0 ? 0 : 3;
 ---
 
 <Base title="Team" description="People and visitors of the Swarm Systems Lab.">
@@ -44,6 +49,23 @@ const ABOVE_THE_FOLD = 3;
     accent="LAB."
     description="Researchers and students working on swarm robotics and autonomous systems, and the colleagues who come to work with us."
   />
+
+  {
+    photos.length > 0 && (
+      <section class="mx-auto max-w-7xl px-6 pb-14">
+        {/* The banner shape page covers use, so the people below are still on
+            screen: a tall 16/9 would push them off it. */}
+        <Carousel
+          slides={photos}
+          label="Photos of the lab"
+          aspect="aspect-[3/2] sm:aspect-[21/9]"
+          widths={[720, 1080, 1440, 1920]}
+          sizes="(min-width: 1280px) 1216px, 100vw"
+          priority={!coverFor("team")}
+        />
+      </section>
+    )
+  }
 
   <div class="mx-auto max-w-7xl px-6 pb-16">
     {

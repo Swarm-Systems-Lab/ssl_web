@@ -1,0 +1,59 @@
+---
+import Slider from "@/components/Slider.astro";
+import { press } from "@/lib/data";
+import { formatDate } from "@/lib/collections";
+
+/**
+ * Coverage of the lab in the press and on television, newest first.
+ *
+ * Three cards at a time on a wide screen, one on a phone, paged by the arrows.
+ * Each card is a link out to the piece itself.
+ */
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+const items = press.items;
+---
+
+{
+  items.length > 0 && (
+    <Slider
+      label="Coverage of the lab in the press"
+      count={items.length}
+      arrows="beside"
+      class:list={["-mx-2", className]}
+    >
+      {items.map((item) => (
+        <div class="w-[85%] shrink-0 snap-start px-2 sm:w-1/2 lg:w-1/3">
+          <a
+            href={item.href}
+            rel="noopener"
+            class="group flex h-full flex-col border border-border bg-surface/30 p-6 transition-colors hover:border-accent/50"
+          >
+            <div class="flex items-baseline justify-between gap-3 font-display text-[10px] tracking-widest uppercase">
+              <span class="text-accent">
+                {item.outlet}
+                {item.programme && <span class="text-muted"> / {item.programme}</span>}
+              </span>
+              <time datetime={item.date.toISOString()} class="shrink-0 text-muted">
+                {formatDate(item.date)}
+              </time>
+            </div>
+
+            <h3 class="mt-4 flex-1 leading-snug font-medium transition-colors group-hover:text-accent">
+              {item.title}
+            </h3>
+
+            <div class="mt-5 flex items-center justify-between gap-3 font-display text-[10px] tracking-widest uppercase">
+              <span class="text-accent">{item.kind === "video" ? "Watch" : "Read"} →</span>
+              {item.language && <span class="text-muted">{item.language}</span>}
+            </div>
+          </a>
+        </div>
+      ))}
+    </Slider>
+  )
+}

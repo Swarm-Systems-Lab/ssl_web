@@ -6,25 +6,15 @@ import Text from "@/components/Text.astro";
 import { awards } from "@/lib/data";
 import { picture } from "@/lib/images";
 import { hasTransparency } from "@/lib/transparency";
-import { getTeam } from "@/lib/collections";
+import PeopleList from "@/components/PeopleList.astro";
+import { teamLookup } from "@/lib/collections";
 import { url } from "@/lib/url";
 
 const items = [...awards.items].sort((a, b) => b.year - a.year);
 
 // `members` holds either the file name of someone in content/team - in which
-// case we show their name - or plain text for anyone not listed there. Only
-// people whose file has text under the frontmatter have a page to link to.
-const team = new Map(
-  (await getTeam()).map((member) => [
-    member.slug,
-    { name: member.entry.data.name, hasPage: member.hasPage },
-  ]),
-);
-const resolve = (member: string) => {
-  const person = team.get(member);
-  if (!person) return { label: member, href: undefined };
-  return { label: person.name, href: person.hasPage ? url(`/team/${member}`) : undefined };
-};
+// case we show their name - or plain text for anyone not listed there.
+const person = await teamLookup();
 /**
  * How many pictures are on screen before any scrolling. Those are fetched
  * straight away; everything further down stays lazy, which is the default.
@@ -72,22 +62,7 @@ const ABOVE_THE_FOLD = 2;
 
                 {item.members.length > 0 && (
                   <p class="mt-3 text-sm text-muted-foreground">
-                    Awarded to{" "}
-                    {item.members.map((member, index) => {
-                      const person = resolve(member);
-                      return (
-                        <>
-                          {index > 0 && ", "}
-                          {person.href ? (
-                            <a href={person.href} class="text-accent hover:underline">
-                              {person.label}
-                            </a>
-                          ) : (
-                            <span class="text-foreground">{person.label}</span>
-                          )}
-                        </>
-                      );
-                    })}
+                    Awarded to <PeopleList people={item.members.map(person)} />
                   </p>
                 )}
 

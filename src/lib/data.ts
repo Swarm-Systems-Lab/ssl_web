@@ -201,6 +201,41 @@ export const publicationKinds = PUBLICATION_KINDS.filter(({ key }) =>
   publications.some((entry) => entry.kind === key),
 );
 
+// -- press.yaml --------------------------------------------------------------
+
+/**
+ * Coverage of the lab by newspapers, TV, radio, and institutional news
+ * outlets. Sorted here rather than in the file, so whoever adds a piece can
+ * paste it anywhere in the list.
+ */
+export const press = load(
+  "press.yaml",
+  z.object({
+    intro: z.string().optional(),
+    items: z
+      .array(
+        z.object({
+          /** When it was published or broadcast, as YYYY-MM-DD. */
+          date: z.coerce.date(),
+          /** Who published it, e.g. "Ideal", "Canal Sur". */
+          outlet: z.string(),
+          /** The headline, as printed. */
+          title: z.string(),
+          href: z.string(),
+          /** Changes the wording on the card from "Read" to "Watch". */
+          kind: z.enum(["article", "video"]).default("article"),
+          /** For radio and TV, the programme it went out on. */
+          programme: z.string().optional(),
+          /** Shown on the card when the piece is not in English, e.g. "ES". */
+          language: z.string().optional(),
+        }),
+      )
+      .default([]),
+  }),
+);
+
+press.items.sort((a, b) => b.date.getTime() - a.date.getTime());
+
 // -- awards.yaml -------------------------------------------------------------
 
 export const awards = load(

@@ -1,0 +1,72 @@
+# Press and broadcast coverage - newspapers, TV, radio, and institutional news
+# outlets writing about the lab. Shown as a shelf at the top of the news page.
+#
+# To add a piece, copy an entry and fill it in. Order does not matter: the page
+# sorts by date, newest first.
+#
+#   date:      when it was published or broadcast, as YYYY-MM-DD
+#   outlet:    who published it, e.g. Ideal, Canal Sur, Granada Hoy
+#   title:     the headline, copied from the piece itself
+#   href:      the link
+#   kind:      article (default) or video, which changes "Read" to "Watch"
+#   programme: for radio and TV, the name of the programme
+#   language:  a short tag shown on the card when the piece is not in English
+
+items:
+  - date: 2026-06-30
+    outlet: Canal Sur
+    programme: EnRed
+    kind: video
+    language: ES
+    title: "Aerosense: enjambres de drones coordinados como bandadas de pájaros"
+    href: https://www.canalsurmas.es/videos/detail/380711-enred-aerosense-el-innovador-sistema-de-coordinaci%C3%B3n-de-drones-canal-sur
+
+  - date: 2026-03-24
+    outlet: Ideal
+    language: ES
+    title: Un equipo de la UGR desarrolla un sistema que dota a los enjambres de drones de 'conciencia' espacial para no depender de apoyo externo
+    href: https://www.ideal.es/miugr/equipo-ugr-desarrolla-sistema-dota-enjambres-drones-20260324105301-nt.html
+
+  - date: 2026-03-24
+    outlet: Canal UGR
+    language: ES
+    title: Un equipo de la UGR desarrolla un sistema que dota a los enjambres de drones de "conciencia" espacial individual y de grupo para no depender de apoyo externo
+    href: https://canal.ugr.es/noticia/un-equipo-de-la-ugr-desarrolla-un-sistema-que-dota-a-los-enjambres-de-drones-de-conciencia-espacial-individual-y-de-grupo-para-no-depender-de-apoyo-externo/
+
+  - date: 2024-11-20
+    outlet: Ideal
+    language: ES
+    title: Robots y drones en el escenario alternativo del II Congreso de Inteligencia Artificial
+    href: https://www.ideal.es/taigranada/robots-drones-escenario-alternativo-congreso-inteligencia-artificial-20241120160208-nt.html
+
+  - date: 2023-12-17
+    outlet: Canal Sur
+    programme: ConCiencia
+    kind: video
+    language: ES
+    title: Colmena de robots imperfectos
+    href: https://www.canalsur.es/television/con-ciencia/colmena-robots-imperfectos_1_1253781.html
+
+  - date: 2023-10-30
+    outlet: Granada Hoy
+    language: ES
+    title: El investigador de la Universidad de Granada que estudia los robots imperfectos
+    href: https://www.granadahoy.com/granada/investigador-Universidad-Granada-robots-imperfectos_0_1843316150.html
+
+  - date: 2023-10-23
+    outlet: Ideal
+    language: ES
+    title: El investigador de los robots
+    href: https://www.ideal.es/miugr/investigador-robots-20231023002007-nt.html
+
+  - date: 2023-10-02
+    outlet: Canal UGR
+    language: ES
+    title: El investigador de la UGR Héctor García de Marina consigue el programa de investigación ERC Starting Grant dotado con 1,5 millones de euros
+    href: https://canal.ugr.es/noticia/hector-garcia-de-marina-consigue-el-programa-de-investigacion-erc-starting-grant/
+
+  - date: 2023-10-02
+    outlet: Nova Ciencia
+    language: ES
+    title: Un investigador de la UGR logra 1,5 millones de la Comisión Europea para un proyecto de robótica
+    href: https://novaciencia.es/un-investigador-de-la-ugr-logra-15-millones-de-la-comision-europea-para-un-proyecto-de-robotica/

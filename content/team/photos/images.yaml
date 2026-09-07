@@ -1,0 +1,11 @@
+# Optional. Display settings for the pictures in this folder, one block per
+# file. Only list the pictures that need something; the rest are left alone,
+# and you can delete this file entirely if none of them do.
+#
+beach-launch.png:
+  caption: 'Group Launch at the beach. From left to right: Diego, Jesús, Nico, Héctor, Jose, Bosco, Yang, and Enric.'
+  focus: 0% 50%
+
+IROS-2025.jpg:
+  caption: 'IROS 2025 group photo. From left to right: Yang, Jesús, Héctor, José, Diego, Nico.'
+  focus: 0% 100%

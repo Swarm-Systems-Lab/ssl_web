@@ -1,0 +1,34 @@
+---
+import type { Person } from "@/lib/collections";
+
+/**
+ * A run of people, comma separated, each linked when they have a page here.
+ *
+ * The comma is drawn by CSS rather than written between the names: the line
+ * break JSX puts between two elements collapses to a space, which would
+ * otherwise print as "Weijia Yao , Héctor García de Marina".
+ */
+
+interface Props {
+  people: Person[];
+  class?: string;
+}
+
+const { people, class: className } = Astro.props;
+---
+
+<span class:list={className}>
+  {
+    people.map((person) => (
+      <span class="after:content-[','] last:after:content-['']">
+        {person.href ? (
+          <a href={person.href} class="text-accent hover:underline">
+            {person.label}
+          </a>
+        ) : (
+          person.label
+        )}
+      </span>
+    ))
+  }
+</span>

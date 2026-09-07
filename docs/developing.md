@@ -64,16 +64,20 @@ names the file and field, so bad content cannot reach production.
 
 ## Shared components
 
-| Component          | What it does                                                                                                                       |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `Picture.astro`    | one way to render any picture: optimises `ImageMetadata`, passes GIFs and clips through, renders `<video>` for `.mp4`/`.webm`      |
-| `Carousel.astro`   | scroll-snapping strip of pictures; arrows and dots appear only once its script runs, and a single slide degrades to a plain figure |
-| `Lightbox.astro`   | one per page, in the layout: opens any picture marked `data-zoom` full size over the page                                          |
-| `VideoGrid.astro`  | YouTube videos as thumbnails; the player is only embedded once someone clicks one                                                  |
-| `FilterBar.astro`  | client-side filter over an already-rendered list                                                                                   |
-| `Text.astro`       | renders one line of YAML text through the inline Markdown parser                                                                   |
-| `PageHeader.astro` | the eyebrow + big title block at the top of a page                                                                                 |
-| `Rule.astro`       | section heading with a hairline                                                                                                    |
+| Component                | What it does                                                                                                                       |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `Picture.astro`          | one way to render any picture: optimises `ImageMetadata`, passes GIFs and clips through, renders `<video>` for `.mp4`/`.webm`      |
+| `Carousel.astro`         | scroll-snapping strip of pictures; arrows and dots appear only once its script runs, and a single slide degrades to a plain figure |
+| `Lightbox.astro`         | one per page, in the layout: opens any picture marked `data-zoom` full size over the page                                          |
+| `VideoGrid.astro`        | YouTube videos as thumbnails; the player is only embedded once someone clicks one                                                  |
+| `Slider.astro`           | the scroll-snapping strip under both the picture carousel and the press shelf, with the arrows and the paging                      |
+| `PressShelf.astro`       | coverage from `press.yaml` as a shelf of cards, newest first                                                                       |
+| `PublicationEntry.astro` | one paper as the publications page draws it; a project page shows its own papers with the same component                           |
+| `PeopleList.astro`       | a comma-separated run of people, linked where they have a page                                                                     |
+| `FilterBar.astro`        | client-side filter over an already-rendered list                                                                                   |
+| `Text.astro`             | renders one line of YAML text through the inline Markdown parser                                                                   |
+| `PageHeader.astro`       | the eyebrow + big title block at the top of a page                                                                                 |
+| `Rule.astro`             | section heading with a hairline                                                                                                    |
 
 Prefer these over one-off markup - every one of them is used by at least two
 pages, and the carousel and filter are meant to absorb the next few features.
@@ -84,6 +88,13 @@ Takes `slides: { src, alt, caption? }[]` and a `label` for screen readers. The
 markup is a horizontal scroll container with snap points, so it works with a
 swipe or a trackpad before any JavaScript loads; the script only adds the arrows
 and dots and keeps them in sync.
+
+Both it and the press shelf sit on `Slider`, which owns the strip, the arrows,
+and that script. Give `Slider` slides of any width and it pages by the width of
+the strip rather than by the width of a slide, so a shelf showing three cards
+moves three at a time. `arrows="beside"` puts the arrows in the page margin
+instead of on top of the slides, which is what a card wants and a photograph
+does not.
 
 ### Loading pictures
 
@@ -111,6 +122,42 @@ before it shows a frame, so `VideoGrid` ships a thumbnail and a play button and
 only creates the iframe when someone clicks. The thumbnail sits inside a plain
 link to YouTube, which is what happens without JavaScript.
 
+### Per-picture settings
+
+`lib/display.ts` reads every `content/**/images.yaml` at build time and keys the
+settings by the picture's built URL, so a picture can find its own row no matter
+how it was resolved - the YAML picture index, a Markdown `image:` field, or a
+folder scan. `Picture` looks that up itself, which is why one line in one file
+follows a photo onto the post, the listing thumbnail, and the front page at
+once.
+
+`focus` becomes `object-position` and `zoom` a `transform: scale()` anchored on
+the same point, deliberately rather than a real crop: the file keeps its whole
+frame, so the lightbox still opens the entire picture and the same original
+serves every shape it is shown in. Astro can crop server-side (`fit` plus
+`position`), but that needs `layout` mode, an explicit height per aspect ratio,
+and would crop the full-size copy too. `object-view-box` would express both
+settings in one line and clip itself, but Firefox 153 still does not support it.
+
+A scaled picture is painted larger than its own box, so it needs something to
+clip it. `Picture` wraps every picture in a span that is `display: contents` -
+generating no box at all, leaving layout exactly as it was - and turns that span
+into `overflow-hidden` only for a picture that is actually zoomed, moving the
+frame's classes onto it. A zoom is applied only where the frame has a height to
+clip against (an `aspect-*`, `size-*` or `h-*` class); where the picture is
+shown whole nothing is cropped, so the zoom is ignored rather than collapsing
+the layout.
+
+`caption` and `alt` come out of the same file. `describeFile()` prefers the
+sheet over the file name, and over the `captions:` map in `media.yaml` - the
+file sitting next to the picture is the more specific statement about it.
+`Carousel` also falls back to the sheet for any slide with no caption of its
+own, which is the only way the awards pictures and the Granada photos can have
+one: both are listed in YAML, which carries no captions.
+
+Keys that name a missing file, unknown settings, and malformed `focus` values
+all stop the build with the file and field named.
+
 ### Opening a picture full size
 
 `<Picture zoom />` makes a picture clickable: it gains `data-zoom` pointing at a
@@ -123,6 +170,13 @@ to its link, and a picture cannot be both. `Carousel` turns it on for every
 slide, so galleries need nothing. The media grid is the one place where the
 trigger is the link itself: it keeps `href` to the full size file, and the
 lightbox takes the click when its script has run.
+
+### In the press
+
+`content/press.yaml` holds coverage by newspapers, TV, and institutional news
+outlets. The file is unordered - `lib/data.ts` sorts it by date, newest first -
+so whoever adds a piece can paste it anywhere. `kind: video` changes the card's
+wording from "Read" to "Watch", and `programme:` names the show it went out on.
 
 ### FilterBar
 

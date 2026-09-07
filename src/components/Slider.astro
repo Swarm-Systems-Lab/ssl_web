@@ -1,0 +1,130 @@
+---
+/**
+ * The horizontal strip that both the picture carousel and the press shelf sit
+ * on: a scroll-snapping row with arrows.
+ *
+ * It is a scroll container first and a carousel second - with no JavaScript it
+ * still swipes and scrolls; the script only adds the arrows and the dots. The
+ * slides come from the caller, so a slide can be a picture, a card, or
+ * anything else that can be given a width.
+ */
+
+interface Props {
+  /** Describes the set for screen readers, e.g. "Photos of Granada". */
+  label: string;
+  /** How many slides there are, for the dots. */
+  count: number;
+  /** Dots suit one-slide-per-view strips; a shelf of narrow cards is paged. */
+  dots?: boolean;
+  /**
+   * Set false for a strip that cannot move - a single slide - which drops the
+   * arrows, the dots, and the scrolling with them.
+   */
+  interactive?: boolean;
+  /**
+   * "over" lays the arrows on top of the slides, which suits a picture that
+   * runs to the edge. "beside" pulls them into the page margin, so they do not
+   * cover the text of a card.
+   */
+  arrows?: "over" | "beside";
+  class?: string;
+}
+
+const {
+  label,
+  count,
+  dots = false,
+  interactive = true,
+  arrows = "over",
+  class: className,
+} = Astro.props;
+
+const arrow =
+  "absolute top-1/2 z-10 grid size-9 -translate-y-1/2 place-items-center border border-border bg-background/80 font-display text-lg text-foreground backdrop-blur transition-colors hover:border-accent hover:text-accent disabled:opacity-30";
+const [atStart, atEnd] = arrows === "beside" ? ["-left-4", "-right-4"] : ["left-2", "right-2"];
+---
+
+<div
+  class:list={["relative", className]}
+  data-carousel={interactive ? "" : undefined}
+  role="group"
+  aria-roledescription={interactive ? "carousel" : undefined}
+  aria-label={label}
+>
+  <div
+    class:list={[
+      "no-scrollbar flex snap-x snap-mandatory overflow-x-auto scroll-smooth",
+      !interactive && "overflow-x-hidden",
+    ]}
+    data-track
+  >
+    <slot />
+  </div>
+
+  {
+    interactive && (
+      <Fragment>
+        <button type="button" data-prev hidden aria-label="Previous" class:list={[atStart, arrow]}>
+          ‹
+        </button>
+        <button type="button" data-next hidden aria-label="Next" class:list={[atEnd, arrow]}>
+          ›
+        </button>
+
+        {dots && (
+          <div
+            class="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center gap-1.5"
+            data-dots
+            hidden
+          >
+            {Array.from({ length: count }, (_, index) => (
+              <span
+                class="size-1.5 rounded-full bg-foreground/30 transition-colors"
+                data-dot={index}
+              />
+            ))}
+          </div>
+        )}
+      </Fragment>
+    )
+  }
+</div>
+
+<script>
+  // Progressive enhancement: the strip already scrolls and swipes on its own,
+  // so everything here is additive.
+  for (const root of document.querySelectorAll<HTMLElement>("[data-carousel]")) {
+    const track = root.querySelector<HTMLElement>("[data-track]");
+    const prev = root.querySelector<HTMLButtonElement>("[data-prev]");
+    const next = root.querySelector<HTMLButtonElement>("[data-next]");
+    const dots = [...root.querySelectorAll<HTMLElement>("[data-dot]")];
+    if (!track || !prev || !next) continue;
+
+    // Paging by the width of the strip rather than by the width of a slide, so
+    // a shelf showing three cards at a time moves three at a time.
+    const page = () => track.clientWidth;
+    const goBy = (direction: number) =>
+      track.scrollTo({ left: track.scrollLeft + direction * page() });
+
+    const sync = () => {
+      // The end of the scroll, not the last slide: with narrow cards there are
+      // more slides than there are pages to scroll through.
+      const end = track.scrollWidth - track.clientWidth;
+      prev.disabled = track.scrollLeft < 1;
+      next.disabled = track.scrollLeft > end - 1;
+
+      const index = Math.round(track.scrollLeft / page());
+      dots.forEach((dot, position) => dot.classList.toggle("bg-accent", position === index));
+    };
+
+    prev.hidden = false;
+    next.hidden = false;
+    root.querySelector<HTMLElement>("[data-dots]")?.removeAttribute("hidden");
+
+    prev.addEventListener("click", () => goBy(-1));
+    next.addEventListener("click", () => goBy(1));
+    track.addEventListener("scroll", () => requestAnimationFrame(sync), { passive: true });
+    window.addEventListener("resize", sync);
+    sync();
+  }
+</script>

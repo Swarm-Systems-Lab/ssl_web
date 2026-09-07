@@ -1,11 +1,9 @@
 ---
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
-import Picture from "@/components/Picture.astro";
+import PublicationEntry from "@/components/PublicationEntry.astro";
 import FilterBar from "@/components/FilterBar.astro";
 import { publications, publicationKinds, type Publication } from "@/lib/data";
-import { optionalPicture } from "@/lib/images";
-import { url } from "@/lib/url";
 
 /**
  * Three zones. Work under review comes first — it is the most recent thing we
@@ -69,59 +67,12 @@ const ABOVE_THE_FOLD = 4;
           </div>
 
           <ol class="space-y-8">
-            {items.map((pub, index) => {
-              const thumb = optionalPicture(pub.image);
-              return (
-                <li class="flex gap-5" data-kind={pub.kind}>
-                  {/* The reference number always stays on the left. */}
-                  <span class="w-12 shrink-0 pt-1 font-display text-xs text-muted">
-                    [{pub.ref}]
-                  </span>
-
-                  <div class="min-w-0 flex-1">
-                    <h3 class="font-display text-base leading-snug font-medium">
-                      <a
-                        href={url(`/publications/${pub.slug}`)}
-                        class="transition-colors hover:text-accent"
-                      >
-                        {pub.title}
-                      </a>
-                    </h3>
-                    <p class="mt-2 text-sm text-muted-foreground">
-                      {pub.authors} · <span class="text-foreground italic">{pub.venue}</span>
-                    </p>
-                    <div class="mt-3 flex flex-wrap items-center gap-4 font-display text-[10px] tracking-widest uppercase">
-                      <span class="border border-border px-2 py-0.5 text-muted">
-                        {pub.kindLabel}
-                      </span>
-                      {pub.links.map((l) => (
-                        <a href={l.href} rel="noopener" class="text-accent">
-                          {l.label}
-                        </a>
-                      ))}
-                    </div>
-                    {pub.note && (
-                      <p class="mt-3 font-display text-[10px] tracking-widest text-accent uppercase">
-                        {pub.note}
-                      </p>
-                    )}
-                  </div>
-
-                  {thumb && (
-                    <a href={url(`/publications/${pub.slug}`)} class="shrink-0">
-                      <Picture
-                        src={thumb}
-                        alt={pub.imageAlt ?? pub.title}
-                        widths={[96, 192]}
-                        sizes="96px"
-                        loading={section === 0 && index < ABOVE_THE_FOLD ? "eager" : "lazy"}
-                        class="size-24 border border-border object-cover transition-colors hover:border-accent/50"
-                      />
-                    </a>
-                  )}
-                </li>
-              );
-            })}
+            {items.map((pub, index) => (
+              <PublicationEntry
+                pub={pub}
+                loading={section === 0 && index < ABOVE_THE_FOLD ? "eager" : "lazy"}
+              />
+            ))}
           </ol>
         </section>
       ))
