@@ -7,18 +7,31 @@ import { publications, publicationKinds, type Publication } from "@/lib/data";
 import { optionalPicture } from "@/lib/images";
 import { url } from "@/lib/url";
 
-// Primary grouping is the year; the kind is a filter on top of it.
-// Papers with no year (preprints, work in review) sort to the front.
-const groups = (() => {
-  const byYear = new Map<number, Publication[]>();
+/**
+ * Three zones. Work under review comes first — it is the most recent thing we
+ * have to say, and its year is the year it was submitted, not published.
+ * Published work follows, grouped by year. Tech notes come last: they live on
+ * arXiv and were never headed for a journal, so they do not belong in the
+ * chronology of published work.
+ */
+const inReview = publications.filter((entry) => entry.kind === "preprint");
+const notes = publications.filter((entry) => entry.kind === "technote");
+
+const byYear = (() => {
+  const groups = new Map<number, Publication[]>();
   for (const entry of publications) {
+    if (entry.kind === "preprint" || entry.kind === "technote") continue;
     const key = entry.year ?? 0;
-    byYear.set(key, [...(byYear.get(key) ?? []), entry]);
+    groups.set(key, [...(groups.get(key) ?? []), entry]);
   }
-  // Work still in review sits above the published years, not below 2010.
-  const rank = (year: number) => (year === 0 ? Infinity : year);
-  return [...byYear.entries()].sort((a, b) => rank(b[0]) - rank(a[0]));
+  return [...groups.entries()].sort((a, b) => b[0] - a[0]);
 })();
+
+const sections: { title: string; items: Publication[] }[] = [
+  { title: "In review", items: inReview },
+  ...byYear.map(([year, items]) => ({ title: String(year), items })),
+  { title: "Tech notes", items: notes },
+].filter((section) => section.items.length > 0);
 
 const options = publicationKinds.map(({ key, label }) => ({
   value: key,
@@ -43,12 +56,10 @@ const options = publicationKinds.map(({ key, label }) => ({
     <FilterBar options={options} allLabel="Everything" class="mb-14 border-y border-border py-4" />
 
     {
-      groups.map(([year, items]) => (
+      sections.map(({ title, items }) => (
         <section class="mb-16" data-filter-group>
           <div class="mb-8 flex items-baseline gap-4">
-            <h2 class="font-display text-3xl font-bold tracking-tighter">
-              {year > 0 ? year : "In review"}
-            </h2>
+            <h2 class="font-display text-3xl font-bold tracking-tighter">{title}</h2>
             <div class="h-px flex-1 bg-border" />
           </div>
 

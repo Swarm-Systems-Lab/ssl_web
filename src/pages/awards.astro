@@ -5,6 +5,7 @@ import Picture from "@/components/Picture.astro";
 import Text from "@/components/Text.astro";
 import { awards } from "@/lib/data";
 import { optionalPicture } from "@/lib/images";
+import { hasTransparency } from "@/lib/transparency";
 import { getTeam } from "@/lib/collections";
 import { url } from "@/lib/url";
 
@@ -43,22 +44,15 @@ const resolve = (member: string) => {
       {
         items.map((item) => {
           const thumb = optionalPicture(item.image);
+          // A logo with see-through parts would vanish against the dark page,
+          // so it sits on a white plate and is shown whole rather than cropped.
+          const plate = item.image ? (item.plate ?? hasTransparency(item.image)) : false;
           return (
             <li class="flex gap-5 border-b border-border py-8">
-              {thumb ? (
-                <Picture
-                  src={thumb}
-                  alt={item.imageAlt ?? item.title}
-                  widths={[112, 224]}
-                  sizes="72px"
-                  class="size-18 shrink-0 border border-border object-cover"
-                />
-              ) : (
-                <span class="w-18 shrink-0 pt-1 font-display text-sm text-accent">{item.year}</span>
-              )}
+              {/* The year keeps the left column whether or not there is a picture. */}
+              <span class="w-16 shrink-0 pt-1 font-display text-sm text-accent">{item.year}</span>
 
-              <div class="min-w-0">
-                {thumb && <span class="font-display text-sm text-accent">{item.year}</span>}
+              <div class="min-w-0 flex-1">
                 <h2 class="font-display text-lg leading-snug font-bold tracking-tight">
                   {item.title}
                 </h2>
@@ -93,7 +87,34 @@ const resolve = (member: string) => {
                     class="mt-3 text-sm leading-relaxed text-muted-foreground"
                   />
                 )}
+
+                {item.links.length > 0 && (
+                  <div class="mt-3 flex flex-wrap gap-4 font-display text-[10px] tracking-widest uppercase">
+                    {item.links.map((l) => (
+                      <a
+                        href={url(l.href)}
+                        rel={l.href.startsWith("http") ? "noopener" : undefined}
+                        class="text-accent"
+                      >
+                        {l.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
+
+              {thumb && (
+                <Picture
+                  src={thumb}
+                  alt={item.imageAlt ?? item.title}
+                  widths={[160, 320]}
+                  sizes="96px"
+                  class:list={[
+                    "size-24 shrink-0 border border-border",
+                    plate ? "bg-white object-contain p-2" : "object-cover",
+                  ]}
+                />
+              )}
             </li>
           );
         })

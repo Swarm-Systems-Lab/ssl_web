@@ -114,13 +114,26 @@ const publication = z.object({
   /** Free text shown on the paper's own page. */
   abstract: z.string().optional(),
   bibtex: z.string().optional(),
+  /**
+   * The record at the publisher. A bare DOI ("10.1109/TAC.2025.123456") or the
+   * full address; either way it is shown as a DOI link.
+   */
+  doi: z.string().optional(),
+  /** Openly readable full text — arXiv, a repository, a direct PDF. */
+  pdf: z.string().optional(),
+  /** Anything else worth linking: a video, the code, a dataset. */
   links: z.array(link).default([]),
 });
 
+/**
+ * Order matters: it is the order of the filter buttons, and of the three zones
+ * on the page. Work under review leads, published work follows by year, and
+ * the notes that were never headed for a journal come last.
+ */
 const PUBLICATION_KINDS = [
+  { key: "preprint", label: "In review" },
   { key: "journal", label: "Journal" },
   { key: "conference", label: "Conference" },
-  { key: "preprint", label: "Preprint" },
   { key: "technote", label: "Tech note" },
 ] as const;
 
@@ -142,6 +155,11 @@ export type Publication = z.infer<typeof publication> & {
   slug: string;
 };
 
+/** A bare DOI becomes a link; anything already a URL is left alone. */
+function doiUrl(doi: string): string {
+  return /^https?:\/\//.test(doi) ? doi : `https://doi.org/${doi.replace(/^doi:/i, "")}`;
+}
+
 function slugify(text: string): string {
   return text
     .normalize("NFKD")
@@ -162,7 +180,18 @@ export const publications: Publication[] = (() => {
       let slug = slugify(entry.title) || entry.ref.toLowerCase();
       if (seen.has(slug)) slug = `${slug}-${entry.ref.toLowerCase()}`;
       seen.add(slug);
-      return { ...entry, kind: key, kindLabel: label, slug };
+      // DOI and PDF lead, being the two nearly every paper has; anything
+      // else follows alphabetically, so the order never depends on how the
+      // YAML happens to be written.
+      const extra = [...entry.links].sort((a, b) =>
+        a.label.localeCompare(b.label, "en", { sensitivity: "base" }),
+      );
+      const links = [
+        ...(entry.doi ? [{ label: "DOI", href: doiUrl(entry.doi) }] : []),
+        ...(entry.pdf ? [{ label: "PDF", href: entry.pdf }] : []),
+        ...extra,
+      ];
+      return { ...entry, links, kind: key, kindLabel: label, slug };
     }),
   );
 })();
@@ -191,6 +220,13 @@ export const awards = load(
          * as plain text.
          */
         members: z.array(z.string()).default([]),
+        /** Optional references: the project page, the official call, a PDF. */
+        links: z.array(link).default([]),
+        /**
+         * Force the white plate on or off. Left out, a logo that can have
+         * see-through parts gets one and a photograph does not.
+         */
+        plate: z.boolean().optional(),
       }),
     ),
   }),

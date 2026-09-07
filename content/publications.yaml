@@ -1,28 +1,48 @@
 # Publications.
 #
-# Papers live in four lists - `journal:`, `conference:`, `preprint:`, and
-# `technote:`. Add a new paper at the TOP of its list and give it the next
-# reference number (J.. for journals, C.. for conferences, U.. for preprints,
-# T.. for tech notes).
+# Papers live in four lists. Which one a paper belongs in:
+#
+#   journal:     published in a journal
+#   conference:  published in conference proceedings
+#   preprint:    written up and submitted, still under review
+#   technote:    on arXiv, and not headed for a journal
+#
+# Add a new paper at the TOP of its list and give it the next reference number
+# (J.. journals, C.. conferences, U.. under review, T.. tech notes).
+#
+# The page shows them in three blocks: everything under review first, then the
+# published work by year, then the tech notes. Work under review keeps a
+# `year:` - the year it was submitted - but is not filed under it.
 #
 #   - ref: J28
 #     authors: "A. Author, B. Author, HG de Marina"
 #     title: "The title of the paper"
 #     venue: "IEEE Transactions on Automatic Control"
 #     year: 2026                   # leave out for something still in review
+#     doi: 10.1109/TAC.2025.123456          # the record at the publisher
+#     pdf: https://arxiv.org/pdf/2410.15921 # an openly readable full text
 #     note: "Optional line shown in accent type, e.g. an award"
 #     abstract: "Shown on the paper's own page. Links work here."
 #     image: images/publications/j28.jpg    # thumbnail, relative to content/
 #     imageAlt: "What the picture shows"
-#     links:
-#       - label: PDF
+#     links:                               # anything else: a video, code, data
+#       - label: Video
 #         href: https://...
-#       - label: DOI
-#         href: https://doi.org/...
 #     bibtex: |
 #       @article{author2026title,
 #         title = {The title of the paper},
 #       }
+#
+# `doi` and `pdf` are the two nearly every paper has, so they get their own
+# fields and are always shown first, in that order. Everything else goes under
+# `links` and is listed alphabetically after them.
+#
+# You do not have to find them by hand. Run
+#
+#     bun run publications:enrich
+#
+# and any missing `doi` and `pdf` are looked up from OpenAlex and arXiv and
+# written into this file. It never changes a line you wrote yourself.
 #
 # Every paper also gets its own page at /publications/<title-as-a-slug>.
 # The page groups by year; the buttons at the top filter by list, so do not
@@ -32,152 +52,199 @@
 preprint:
   - ref: U2
     authors: "J. Bautista, HG de Marina"
-    title: "SO(3) attitude controllers and the alignment of robots with non-constant 3D vector fields"
-    venue: "arXiv"
+    title: "Singularity-Free Guiding Vector Fields on SO(3) with Designer-Specified Progression Behavior"
+    venue: "Submitted to Automatica"
+    year: 2026
     image: images/publications/test.png
+    links:
+      - label: Code
+        href: https://github.com/Swarm-Systems-Lab/gvf_so3
   - ref: U1
-    authors: "N Chan, B Jayawardhana, HG de Marina"
-    title: "Securing Isosceles Triangular Formations under Heterogeneous Sensing and Mixed Constraints"
-    venue: "arXiv"
+    authors: "G. Wang, HG de Marina, M. Fu, G. Wen, L. Chen"
+    title: "Angle-based leaderless formation maneuvering with global convergence"
+    venue: "Submitted to Automatica"
+    year: 2026
 
 # Journal papers
 journal:
-  - ref: J27
+  - ref: J26
     authors: "J. Bautista, A. Acuaviva, J. Hinojosa, W. Yao, J. Castellanos, HG de Marina"
     title: "Fully distributed and resilient source seeking for robot swarms"
     venue: "IEEE Transactions on Automatic Control"
     year: 2026
-  - ref: J26
-    authors: "G. Wang, HG de Marina, M. Fu, G. Wen, L. Chen"
-    title: "Angle-based leaderless formation maneuvering with global convergence"
-    venue: "Automatica"
-    year: 2026
+    doi: https://ieeexplore.ieee.org/abstract/document/11664370
+    pdf: https://arxiv.org/pdf/2410.15921
   - ref: J25
     authors: "J. Bautista, E. Morella, L. Wang, HG de Marina"
     title: "Leaderless Collective Motion in Affine Formation Control over the Complex Plane"
     venue: "IEEE Transactions on Network Systems"
     year: 2026
+    doi: https://ieeexplore.ieee.org/document/11629560/
+    pdf: http://arxiv.org/pdf/2604.05648v2
   - ref: J24
     authors: "J. Chen, J. Bautista, B. Jayawardhana, HG de Marina"
     title: "Dispersion Formation Control: from Geometry to Distribution"
     venue: "IEEE Transactions on Automatic Control"
     year: 2025
+    doi: https://ieeexplore.ieee.org/document/11194724
+    pdf: http://arxiv.org/pdf/2509.19784v1
   - ref: J23
     authors: "L. Chen, HG de Marina, L. Xie, C. Zhang"
     title: "Multi-Robot Relative Localization Using Interior Angle Measurements"
     venue: "IEEE Transactions on Control Systems Technology"
     year: 2025
+    doi: https://ieeexplore.ieee.org/document/11299455
   - ref: J22
     authors: "J. Chen, B. Jayawardhana, HG de Marina"
     title: "Distributed Distance-based Formation-Motion Control of Unicycle Agents without Orientation Measurements"
     venue: "Transactions on Control of Network Systems"
     year: 2024
+    doi: https://ieeexplore.ieee.org/abstract/document/10613512
   - ref: J21
     authors: "J. Chen, B. Jayawardhana, HG de Marina"
     title: "Scaling up the formation of agents with heterogeneous sensing: mixed distance and bearing-only"
     venue: "IEEE Transactions on Automatic Control"
     year: 2024
+    doi: https://ieeexplore.ieee.org/document/10537988
+    pdf: http://arxiv.org/pdf/2311.12195v1
   - ref: J20
     authors: "W. Yao, HG de Marina, Z. Sun, M. Cao"
     title: "Guiding vector fields for the distributed motion coordination of mobile robots"
     venue: "IEEE Transactions on Robotics, 39 (2), 1119-1135"
     year: 2023
+    doi: https://ieeexplore.ieee.org/document/9969449
+    pdf: http://arxiv.org/pdf/2209.09478v4
   - ref: J19
     authors: "H. Wu, B. Jayawardhana, H.G. de Marina, D. Xu"
     title: "Distributed formation control for manipulator end-effectors"
     venue: "IEEE Transactions on Automatic Control, 68 (9), 5413-5428"
     year: 2023
+    doi: https://ieeexplore.ieee.org/document/9965565
+    pdf: http://arxiv.org/pdf/2107.04141v1
   - ref: J18
     authors: "L. Chen; Z. Lin, HG de Marina, Z. Sun, F. Mir"
     title: "Maneuvering Angle Rigid Formations with Global Convergence Guarantee"
     venue: "IEEE/CAA Journal of Automatica Sinica, 9 (8), 1464-1475"
     year: 2022
+    doi: https://www.ieee-jas.net/en/article/doi/10.1109/JAS.2022.105749
+    pdf: https://pure.tue.nl/ws/files/228936158/Maneuvering_Angle_Rigid_Formations_With_Global_Convergence_Guarantees.pdf
   - ref: J17
     authors: "L. Chen, M. Shi, HG de Marina, M. Cao"
     title: "Stabilizing and maneuvering angle rigid multi-agent formations with double-integrator agent dynamics"
     venue: "IEEE Transactions on Control of Network Systems, 9 (3), 1362-1374"
     year: 2022
+    doi: https://ieeexplore.ieee.org/document/9721691
   - ref: J16
     authors: "N Chan, B Jayawardhana, HG de Marina"
     title: "Stability Analysis of Gradient-Based Distributed Formation Control with Heterogeneous Sensing Mechanism: T he Three Robot Case"
     venue: "IEEE Transactions on Automatic Control, 67 (8), 4285 - 4292"
     year: 2022
+    doi: https://ieeexplore.ieee.org/document/9551785
   - ref: J15
     authors: "L Colombo, HG de Marina"
     title: "Forced Variational Integrators for the Formation Control of Multi-Agent Systems"
     venue: "IEEE Transactions on Control of Network Systems, 8(3), 1336-1347"
     year: 2021
+    doi: https://ieeexplore.ieee.org/document/9376255
+    pdf: https://arxiv.org/pdf/2010.00425
   - ref: J14
     authors: "W.Yao, HG de Marina, B Lin, M.Cao"
     title: "Singularity-free Guiding Vector Field for Robot Navigation"
     venue: "IEEE Transactions on Robotics, 37 (4), 1206-1221"
     year: 2021
+    doi: https://ieeexplore.ieee.org/document/9312173
+    pdf: https://research.rug.nl/files/177665719/Singularity_Free_Guiding_Vector_Field_for_Robot_Navigation_1_.pdf
   - ref: J13
     authors: "L Chen, M Cao, HG de Marina"
     title: "Maneuvering formations of mobile agents using designed mismatched angles"
     venue: "IEEE Transactions on Automatic Control, 67 (4), 1655-1668"
     year: 2021
+    doi: https://ieeexplore.ieee.org/document/9380184
   - ref: J12
     authors: "HG de Marina"
     title: "Distributed formation maneuver control by manipulating the complex Laplacian"
     venue: "Automatica, 132"
     year: 2021
+    doi: https://doi.org/10.1016/j.automatica.2021.109813
+    pdf: http://arxiv.org/pdf/2009.07625v2
   - ref: J11
     authors: "Z Sun, HG de Marina, BDO Anderson, C. Yu"
     title: "Collaborative target-tracking control using multiple autonomous fixed-wing UAVs with constant speeds"
     venue: "AIAA Journal of Guidance, Control, and Dynamics. 44(2), 238-250"
     year: 2021
+    doi: https://arc.aiaa.org/doi/abs/10.2514/1.G005092
+    pdf: https://arxiv.org/pdf/1810.00182
   - ref: J10
     authors: "HG de Marina"
     title: "Maneuvering and robustness issues in undirected displacement-consensus-based formation control"
     venue: "IEEE Transactions on Automatic Control, 66 (7), 3370-3377"
     year: 2021
+    doi: https://ieeexplore.ieee.org/document/9178485
+    pdf: https://arxiv.org/pdf/2008.03544
   - ref: J9
     authors: "N Chan, B Jayawardhana, HG de Marina"
     title: "Angle-Constrained Formation Control for Circular Mobile Robots"
     venue: "IEEE Control Systems Letters, 5 (1), 109-114"
     year: 2021
+    doi: https://ieeexplore.ieee.org/document/9108273
+    pdf: https://pure.rug.nl/ws/files/128994718/09108273.pdf
   - ref: J8
     authors: "Z Sun, HG de Marina, G Seyboth, BDO Anderson, C Yu"
     title: "Circular formation control of multiple unicycle-type agents with non-identical constant speeds"
     venue: "IEEE Transactions on Control Systems and Technology, 27 (1), 192-205"
     year: 2019
+    doi: http://ieeexplore.ieee.org/document/8267504
   - ref: J7
     authors: "Q Yang, M Cao, HG de Marina, H Fang, J Chen"
     title: "Distributed formation tracking using local coordinate systems"
     venue: "Systems & Control Letters. 111, 70-78"
     year: 2018
+    doi: https://www.sciencedirect.com/science/article/pii/S0167691117302128
+    pdf: https://www.sciencedirect.com/science/article/pii/S0167691117302128
   - ref: J6
     authors: "Z Sun, HG de Marina, BDO Anderson, M Cao"
     title: "Quantization effects and convergence properties of rigid formation control systems with quantized distance measurements"
     venue: "International Journal of Robust and Nonlinear Control, 28 (16), 4865-4884"
     year: 2018
+    doi: https://onlinelibrary.wiley.com/doi/abs/10.1002/rnc.4288
+    pdf: https://arxiv.org/pdf/1808.04161
   - ref: J5
     authors: "HG de Marina, B Jayawardhana, M Cao"
     title: "Taming Mismatches in Inter-agent Distances for the Formation-Motion Control of Second-Order Agents"
     venue: "IEEE Transactions on Automatic Control, 63 (2), 449-462"
     year: 2018
+    doi: https://ieeexplore.ieee.org/document/7949096
+    pdf: http://arxiv.org/pdf/1604.02943v2
   - ref: J4
     authors: "HG de Marina, B Jayawardhana, M Cao"
     title: "Distributed Rotational and Translational Maneuvering of Rigid Formations and Their Applications"
     venue: "IEEE Transactions on Robotics, 32 (3), 684-696"
     year: 2016
+    doi: https://ieeexplore.ieee.org/document/7478657/
+    pdf: http://arxiv.org/pdf/1604.07849v2
   - ref: J3
     authors: "HG de Marina, M Cao, B Jayawardhana"
     title: "Controlling Rigid Formations of Mobile Agents Under Inconsistent Measurements"
     venue: "IEEE Transactions on Robotics 31 (1), 31-39"
     year: 2015
+    doi: https://ieeexplore.ieee.org/document/6979244/
+    pdf: http://arxiv.org/pdf/1609.06435v1
   - ref: J2
     authors: "HG de Marina, F Espinosa, C Santos"
     title: "Adaptive UAV attitude estimation employing unscented kalman filter, FOAM and low-cost MEMS sensors"
     venue: "Sensors 12 (7), 9566-9585"
     year: 2012
+    links:
+      - label: ResearchGate
+        href: https://www.researchgate.net/publication/231212280_Adaptive_UAV_attitude_estimation_employing_unscented_Kalman_Filter_FOAM_and_low-cost_MEMS_sensors
+    doi: https://www.mdpi.com/1424-8220/12/7/9566
   - ref: J1
     authors: "HG de Marina, FJ Pereda, JM Giron-Sierra, F Espinosa"
     title: "UAV attitude estimation using unscented Kalman filter and TRIAD"
     venue: "IEEE Transactions on Industrial Electronics, 59 (11), 4465-4474"
     year: 2012
-
+    pdf: https://arxiv.org/pdf/1609.07436
+    doi: https://ieeexplore.ieee.org/document/5977026/
 # Conference papers
 conference:
   - ref: C42
@@ -185,213 +252,311 @@ conference:
     title: "The distance-based formation controller design for multi-agent systems in port-Hamiltonian form"
     venue: "IFAC World Congress"
     year: 2026
+    pdf: https://arxiv.org/pdf/2605.18502
+    doi: https://doi.org/10.48550/arxiv.2605.18502
   - ref: C41
     authors: "J. Bautista, and HG de Marina"
     title: "Distributed 3D Source Seeking via SO(3) Geometric Control of Robot Swarms"
     venue: "IFAC World Congress"
     year: 2026
+    pdf: https://arxiv.org/pdf/2510.06836
+    doi: https://doi.org/10.48550/arxiv.2510.06836
   - ref: C40
     authors: "X. Ma, S. Zhang, X. Zhang, J. Xin, HG de Marina"
     title: "Linear quadratic control for discrete-time systems with stochastic and bounded noises"
     venue: "IEEE American Control Conference (ACC)"
     year: 2026
+    links:
+      - label: Zenodo
+        href: https://zenodo.org/records/18349262
+    doi: https://ieeexplore.ieee.org/abstract/document/11616468
+    pdf: https://arxiv.org/pdf/2512.11106
   - ref: C39
     authors: "J. Bosco, E. Morellà, O. Arslan, HG de Marina"
     title: "Voronoi-Based Area Coverage Algorithms: Turning Real-World Fragility into Strength"
     venue: "IEEE International Symposium on Multi-Robot and Multi-Agent Systems (MRS)"
     year: 2025
+    doi: https://ieeexplore.ieee.org/document/11357268/
+    pdf: https://zenodo.org/records/18132441
   - ref: C38
     authors: "Y. Xu, J. Bautista, J. Hinojosa, HG de Marina"
     title: "Distributed Oscillatory Guidance for Formation Flight of Fixed-Wing Drones"
     venue: "IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)"
     year: 2025
+    pdf: https://arxiv.org/pdf/2507.16458
+    doi: https://ieeexplore.ieee.org/abstract/document/11246740
   - ref: C37
     authors: "Y. Lu, S. Luo, P. Zhu, W. Yao, HG de Marina, X. Zhang, and X. Xu"
-    title: "Distributed Versatile Maneuvering with Generalized Formations Using Guiding Vector Fields"
+    title: "Versatile Distributed Maneuvering With Generalized Formations Using Guiding Vector Fields"
     venue: "IEEE International Conference on Robotics and Automation (ICRA)"
     year: 2025
+    pdf: https://arxiv.org/pdf/2505.05840
+    doi: https://ieeexplore.ieee.org/document/11127716
   - ref: C36
     authors: "Y. Zhou, J. Bautista, W. Yao, and HG de Marina"
     title: "Inverse Kinematics on Guiding Vector Fields for Robot Path Following"
     venue: "IEEE International Conference on Robotics and Automation (ICRA)"
     year: 2025
+    pdf: https://arxiv.org/pdf/2502.17313
+    doi: https://ieeexplore.ieee.org/abstract/document/11127300
   - ref: C35
     authors: "A. Acuaviva, J. Bautista, W. Yao, J. Jiménez, HG de Marina"
     title: "Resilient source seeking with robot swarms"
     venue: "63rd IEEE Conference on Decision and Control (CDC)"
     year: 2024
+    pdf: https://arxiv.org/pdf/2309.02937
+    doi: https://ieeexplore.ieee.org/document/10886464
   - ref: C34
     authors: "J Bautista, HG de Marina"
     title: "Behavioral-based circular formation control for robot swarms"
     venue: "IEEE International Conference on Robotics and Automation (ICRA)"
     year: 2024
+    pdf: https://arxiv.org/pdf/2309.09101
+    doi: https://ieeexplore.ieee.org/document/10610826
   - ref: C33
     authors: "J. Chen, B. Jayawardhana, HG de Marina"
     title: "Distance-based Formation-Motion Control for Unicycle Agents"
     venue: "American Control Conference (ACC)"
     year: 2023
+    doi: https://ieeexplore.ieee.org/document/10156612
+    pdf: https://pure.rug.nl/ws/portalfiles/portal/940093450/Distance-based_Formation-Motion_Control_for_Unicycle_Agents.pdf
   - ref: C32
     authors: "A. Seewald, HG de Marina, H. Skov, U. Pagh"
     title: "Energy-Aware Planning-Scheduling for Autonomous Aerial Robots"
     venue: "IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)"
     year: 2022
+    pdf: https://arxiv.org/pdf/2207.11056
+    doi: https://ieeexplore.ieee.org/document/9981285
   - ref: C31
     authors: "HG de Marina, J Jimenez, W Yao"
     title: "Leaderless collective motions in affine formation control"
     venue: "60th IEEE Conference on Decision and Control (CDC)"
     year: 2021
+    pdf: https://arxiv.org/pdf/2104.03412
+    doi: https://ieeexplore.ieee.org/abstract/document/9682800
   - ref: C30
     authors: "Haiwen Wu, Bayu Jayawardhana, HG de Marina, Dabo Xu"
     title: "Distributed formation control of manipulators' end-effector with internal model-based disturbance rejection"
     venue: "60th IEEE Conference on Decision and Control (CDC)"
     year: 2021
+    pdf: https://arxiv.org/pdf/2103.14595
+    doi: https://ieeexplore.ieee.org/document/9683561
   - ref: C29
     authors: "W Yao, HG de Marina, Z Sun, M Cao"
     title: "Distributed coordinated path following using guiding vector fields"
     venue: "IEEE International Conference on Robotics and Automation (ICRA)"
     year: 2021
     note: "Nominated for Best Paper Award! Top 4 among 1946 accepted works out of 4005 submissions!"
+    pdf: https://arxiv.org/pdf/2103.12372
+    doi: https://ieeexplore.ieee.org/document/9560845
   - ref: C28
     authors: "W Yao, HG de Marina, M Cao"
-    title: "Mobile Robot Path Following Control in 2D Using a 3D Guiding Vector Field: Singularity Elimination and Global Convergence"
+    title: "Vector Field Guided Path Following Control: Singularity Elimination and Global Convergence"
     venue: "59th IEEE Conference on Decision and Control (CDC)"
     year: 2020
+    pdf: https://arxiv.org/pdf/2003.10012
+    doi: https://ieeexplore.ieee.org/document/9303923
   - ref: C27
     authors: "L Colombo, P Moreno, M Ye, HG de Marina, M Cao"
     title: "Forced variational integrator for distance-based shape control with flocking behavior of multi-agent systems"
     venue: "21st IFAC World Congress"
     year: 2020
+    pdf: https://arxiv.org/pdf/2009.14495
+    doi: https://www.sciencedirect.com/science/article/pii/S2405896320320570
   - ref: C26
     authors: "L Colombo, HG de Marina, M Barbero, D Martin de Diego"
     title: "On the observability of relative positions in left-invariant multi-agent control systems and its application to formation control"
     venue: "58th IEEE Conference on Decision and Control (CDC)"
     year: 2019
+    pdf: https://arxiv.org/pdf/1909.08914
+    doi: https://ieeexplore.ieee.org/document/9030045
   - ref: C25
     authors: "L Chen, M Cao, HG de Marina, B Jayawardhana, C Li"
     title: "Triangular formation maneuver using designed mismatched angles"
     venue: "IEEE European Control Conference (ECC)"
     year: 2019
+    doi: https://ieeexplore.ieee.org/document/8795944
+    pdf: https://pure.rug.nl/ws/portalfiles/portal/109249819/08795944.pdf
   - ref: C24
     authors: "HG de Marina, E Smeur"
     title: "Flexible collaborative transportation by a team of rotorcraft"
     venue: "IEEE International Conference on Robotics and Automation (ICRA)"
     year: 2019
+    pdf: https://arxiv.org/pdf/1902.00279
+    doi: https://ieeexplore.ieee.org/document/8794316
   - ref: C23
     authors: "HG de Marina, Z Sun, S Mou"
     title: "On the stability and applications of distance-based flexible formations"
     venue: "57th IEEE Conference on Decision and Control (CDC)"
     year: 2018
+    doi: https://ieeexplore.ieee.org/document/8619429
+    pdf: https://arxiv.org/pdf/1808.04594
   - ref: C22
     authors: "HG de Marina, J Siemonsma, B Jayawardhana, M Cao"
     title: "Multi-robot motion-formation distributed control with sensor self-calibration: experimental validation"
     venue: "15th International Conference on Control, Automation, Robotics and Vision (ICARCV)"
     year: 2018
     note: "Nominated for Best Paper Award! Top 5 among 300+ accepted works"
+    doi: https://ieeexplore.ieee.org/document/8581362
+    pdf: https://arxiv.org/pdf/1809.07560
   - ref: C21
     authors: "L Colombo, HG de Marina"
     title: "A Variational Integrator for the distance-based formation control of multi-agent systems"
     venue: "7th IFAC Workshop on Distributed and Control in Networked Systems"
     year: 2018
+    doi: https://www.sciencedirect.com/science/article/pii/S2405896318335468
   - ref: C20
     authors: "M Bronz, E Smeur, HG de Marina, G Hattenberger"
     title: "Development of A Fixed-Wing mini UAV with Transitioning Flight Capability"
     venue: "35th AIAA Applied Aerodynamics Conference"
     year: 2017
+    links:
+      - label: ResearchGate
+        href: https://www.researchgate.net/publication/318040286_Development_of_A_Fixed-Wing_mini_UAV_with_Transitioning_Flight_Capability
+    doi: https://arc.aiaa.org/doi/10.2514/6.2017-3739
   - ref: C19
     authors: "Rafael Bailon-Ruiz, Christophe Reymann, Simon Lacroix, Gautier Hattenberger, HG de Marina, Fayçal Lamraoui"
     title: "System simulation of a fleet of drones to probe cumulus clouds"
     venue: "International Conference on Unmanned Aircraft Systems"
     year: 2017
+    doi: https://ieeexplore.ieee.org/document/7991448/
   - ref: C18
     authors: "HG de Marina, Z Sun, M Bronz, G Hattenberger"
     title: "Circular formation control of fixed-wing UAVs with constant speeds"
     venue: "International Conference on Intelligent Robots and Systems (IROS)"
     year: 2017
+    doi: https://ieeexplore.ieee.org/abstract/document/8206422
+    pdf: http://arxiv.org/pdf/1703.07736v1
   - ref: C17
     authors: "M Bronz, HG de Marina, G Hattenberger"
     title: "In-Flight Thrust Measurement using On-Board Force Sensor"
     venue: "AIAA Atmospheric Flight Mechanics Conference"
     year: 2017
+    doi: https://arc.aiaa.org/doi/abs/10.2514/6.2017-0698
   - ref: C16
     authors: "Y Kapitanyuk, HG de Marina, A Proskurnikov, M Cao"
     title: "Guiding Vector Field Algorithm for a Moving Path Following Problem"
     venue: "20th World Congress of the International Federation of Automatic Control (IFAC)"
     year: 2017
+    doi: https://www.sciencedirect.com/science/article/pii/S2405896317318748
   - ref: C15
     authors: "HG de Marina, B Jayawardhana, M Cao"
     title: "Distributed algorithm for controlling scale-free polygonal formations"
     venue: "20th World Congress of the International Federation of Automatic Control (IFAC)"
     year: 2017
+    doi: https://www.sciencedirect.com/science/article/pii/S2405896317301945
+    pdf: https://arxiv.org/pdf/1703.07960
   - ref: C14
     authors: "HG de Marina, Z. Sun, M. Cao, and B. D. O. Anderson"
     title: "Controlling a triangular flexible formation of autonomous agents"
     venue: "20th World Congress of the International Federation of Automatic Control (IFAC)"
     year: 2017
+    doi: https://www.sciencedirect.com/science/article/pii/S2405896317301258
+    pdf: https://arxiv.org/pdf/1704.00534
   - ref: C13
     authors: "HG de Marina, YA Kapitanyuk, M Bronz, G Hattenberger, M Cao"
     title: "Guidance algorithm for smooth trajectory tracking of a fixed wing UAV flying in wind flows"
     venue: "IEEE International Conference on Robotics and Automation (ICRA)"
     year: 2017
+    links:
+      - label: ResearchGate
+        href: https://www.researchgate.net/publication/308980999_Guidance_algorithm_for_smooth_trajectory_tracking_of_a_fixed_wing_UAV_flying_in_wind_flows
+    doi: https://ieeexplore.ieee.org/document/7989674
+    pdf: https://arxiv.org/pdf/1610.02797
   - ref: C12
     authors: "HG de Marina, B Jayawardhana, M Cao"
     title: "Distributed scaling control for rigid formations"
     venue: "IEEE 55th Conference on Decision and Control (CDC) 5140 - 5145"
     year: 2016
+    links:
+      - label: ResearchGate
+        href: https://www.researchgate.net/publication/308611084_Distributed_scaling_control_of_rigid_formations
+    doi: https://ieeexplore.ieee.org/document/7799055
+    pdf: https://enac.hal.science/hal-01422736/document
   - ref: C11
     authors: "HG de Marina, B Jayawardhana, M Cao"
     title: "On the Role and Compensation of Distance Mismatches in Rigid Formation Control for Second-Order Agents"
     venue: "IFAC-PapersOnLine 49 (18), 398-403 (NOLCOS)"
     year: 2016
+    links:
+      - label: ResearchGate
+        href: https://www.researchgate.net/publication/312244038_On_the_Role_and_Compensation_of_Distance_Mismatches_in_Rigid_Formation_Control_for_Second-Order_Agents
+    doi: https://www.sciencedirect.com/science/article/pii/S2405896316317773
   - ref: C10
     authors: "Z. Sun, HG de Marina, B. D. O. Anderson, and M. Cao"
     title: "Quantization effects in rigid formation control"
-    venue: "6th Australian Control Conference (AUCC’16), Newcastle, Australia"
+    venue: "6th Australian Control Conference (AUCC) 2016, Newcastle, Australia"
     year: 2016
+    doi: https://ieeexplore.ieee.org/document/7868182/
   - ref: C9
     authors: "H Liu, HG de Marina, M Cao"
     title: "Controlling triangular formations of autonomous agents in finite time using coarse measurements"
     venue: "IEEE International Conference on Robotics and Automation (ICRA), 3601-3606"
     year: 2014
+    doi: https://ieeexplore.ieee.org/document/6907379
   - ref: C8
     authors: "HG de Marina, M Cao, B Jayawardhana"
     title: "Controlling Formation of Autonomous Agents with Distance Disagreements"
     venue: "Estimation and Control of Networked Systems (NECSYS) 4 (1), 411-416"
     year: 2013
+    doi: https://www.sciencedirect.com/science/article/pii/S1474667015402587
   - ref: C7
     authors: "A Marcos, HG De Marina, V Mantini, C Roux, S Bennani"
     title: "Optimization-based worst-case analysis of a launcher during the atmospheric ascent phase"
     venue: "AIAA Guidance, Navigation, and Control Conference and Exhibit"
     year: 2013
+    doi: https://arc.aiaa.org/doi/10.2514/6.2013-4645
   - ref: C6
     authors: "HG de Marina, A Marcos, R Haya"
     title: "Angle of Attack and True Airspeed failure sensor detection and recovery based on Unscented Kalman Filters for the ALPHA vehicle"
     venue: "Fault Detection, Supervision and Safety of Technical Processes 8 (1), 1197-1202"
     year: 2012
+    links:
+      - label: ResearchGate
+        href: https://www.researchgate.net/publication/271495569_Angle_of_Attack_and_True_Airspeed_Failure_Sensor_Detection_and_Recovery_Based_on_Unscented_Kalman_Filters_for_the_ALPHA_Vehicle
+    doi: https://www.sciencedirect.com/science/article/pii/S1474667016349175
   - ref: C5
     authors: "FJ Pereda, HG de Marina, JM Giron-Sierra, J Jimenez"
     title: "Towards automatic oil spill confinement with autonomous marine surface vehicles"
     venue: "OCEANS IEEE-Spain"
     year: 2011
+    doi: https://ieeexplore.ieee.org/document/6003473/
   - ref: C4
     authors: "JM Giron-Sierra, F Pereda, HG de Marina, S Cifuentes"
     title: "Developing an Autonomous Surface Ship for Sea Demining"
     venue: "IFAC Proceedings Volumes 43 (20), 91-96"
     year: 2010
+    doi: 10.3182/20100915-3-de-3008.00008
   - ref: C3
     authors: "HG de Marina, FJ Pereda, JM Girón-Sierra"
     title: "Path planning combined with fuzzy control for autonomous ships"
     venue: "IEEE International Conference on Computational Intelligence for Measurement Systems and Applications"
     year: 2010
+    doi: https://ieeexplore.ieee.org/document/5611754
   - ref: C2
     authors: "FJ Pereda, HG de Marina, JF Jiménez, JM Giron-Sierra"
     title: "Sea demining with autonomous marine surface vehicles"
     venue: "IEEE Safety Security and Rescue Robotics"
     year: 2010
+    doi: https://ieeexplore.ieee.org/document/5981553/
   - ref: C1
     authors: "FJ Pereda, HG de Marina, JF Jiménez, JM Giron-Sierra"
     title: "A development project of autonomous marine surface vehicles for sea demining"
     venue: "11th International Conference on Control Automation Robotics & Vision"
     year: 2010
+    doi: 10.1109/icarcv.2010.5707299
 
 # Tech notes and other write-ups
-technote: []
+technote:
+  - ref: T2
+    authors: "J. Bautista, HG de Marina"
+    title: "SO(3) attitude controllers and the alignment of robots with non-constant 3D vector fields"
+    venue: "arXiv"
+    pdf: https://arxiv.org/pdf/2406.14998
+    doi: https://doi.org/10.48550/arxiv.2406.14998
+  - ref: T1
+    authors: "N Chan, B Jayawardhana, HG de Marina"
+    title: "Securing Isosceles Triangular Formations under Heterogeneous Sensing and Mixed Constraints"
+    venue: "arXiv"
+    pdf: https://arxiv.org/pdf/2101.00474
+    doi: https://doi.org/10.48550/arxiv.2101.00474

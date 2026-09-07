@@ -7,7 +7,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "publications:enrich": "bun run tools/enrich-publications.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.0",

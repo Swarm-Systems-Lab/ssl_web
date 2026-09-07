@@ -232,6 +232,43 @@ points at the current Google Sites page. To cut over: set the domain under
 **Settings → Pages → Custom domain** (which creates the `CNAME` file), point the
 DNS records at GitHub, and leave `SITE_URL` as it is.
 
+## Filling in DOIs and PDFs
+
+`tools/enrich-publications.mjs`, wired up as `bun run publications:enrich`,
+fills missing `doi:` and `pdf:` fields in `content/publications.yaml`.
+
+Google Scholar has no API and its terms forbid scraping, so it uses the open
+scholarly infrastructure instead. **OpenAlex** matches the paper by title and
+returns its DOI plus the best open-access copy it knows of; **arXiv** is asked
+only when OpenAlex knows of no open copy, which covers our own recent
+preprints. Both are free and need no key.
+
+Three decisions worth keeping:
+
+- **It is a script, not a build step.** Reaching out to two APIs on every build
+  would be slow, would fail whenever the network hiccups, and would make the
+  output non-deterministic. Content is fetched once and committed.
+- **It never overwrites.** Only empty fields are filled, so anything written by
+  hand always wins.
+- **A weak title match is refused.** Matches below 0.8 word overlap are
+  reported and skipped, because a wrong DOI is worse than a missing one.
+
+It backs off and retries on HTTP 429, and reports separately on papers it could
+not recognise at all versus papers that simply have no open copy — the second
+being the normal state of a paywalled paper, not a problem to fix.
+
+`--dry-run` prints what it would do and writes nothing. `--verify` checks the
+DOIs already in the file against Crossref and reports three things separately:
+entries whose DOI disagrees with the one registered for that title (one of the
+two is a different paper), entries with no DOI where Crossref knows one, and
+entries holding a publisher address rather than a DOI — the last being a
+tidiness matter, not a fault.
+
+That check earned its keep immediately: two 2010 papers about sea demining, one
+at ICARCV and one at IFAC, had been given the same IEEE link. Fuzzy title
+matching will do that, which is exactly why the DOIs are checked rather than
+trusted.
+
 ## Checks
 
 ```sh
