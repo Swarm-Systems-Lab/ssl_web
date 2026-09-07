@@ -5,10 +5,9 @@ import PageHeader from "@/components/PageHeader.astro";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
 import VideoGrid from "@/components/VideoGrid.astro";
-import { getImage } from "astro:assets";
 import { gallery, type MediaItem } from "@/lib/media";
 import { mediaConfig } from "@/lib/data";
-import { pictureUrl } from "@/lib/images";
+import { fullSize } from "@/lib/full-size";
 import { url } from "@/lib/url";
 
 export const getStaticPaths = (({ paginate }) =>
@@ -17,16 +16,11 @@ export const getStaticPaths = (({ paginate }) =>
 const { page } = Astro.props as { page: Page<MediaItem> };
 const { channel } = mediaConfig;
 
-// "View full size" points at a large WebP rather than the file as uploaded, so
-// a 7 MB photo straight from a camera never has to travel down the wire.
+// Full size means a large WebP rather than the file as uploaded, so a 7 MB
+// photo straight from a camera never has to travel down the wire. Video comes
+// back without one - it plays where it sits.
 const items = await Promise.all(
-  page.data.map(async (item) => ({
-    item,
-    full:
-      item.kind === "photo" && typeof item.src !== "string"
-        ? (await getImage({ src: item.src, width: 1600, format: "webp" })).src
-        : pictureUrl(item.src),
-  })),
+  page.data.map(async (item) => ({ item, full: await fullSize(item.src) })),
 );
 ---
 
@@ -85,8 +79,16 @@ const items = await Promise.all(
           items.map(({ item, full }) => (
             <li class="group flex flex-col border border-border bg-surface/30">
               <div class="aspect-[4/3] overflow-hidden bg-black">
-                {item.kind === "photo" ? (
-                  <a href={full} target="_blank" rel="noopener">
+                {full ? (
+                  /* The link is the fallback: the lightbox takes the click
+                     when it can, the file opens in a tab when it cannot. */
+                  <a
+                    href={full}
+                    target="_blank"
+                    rel="noopener"
+                    data-zoom={full}
+                    class="block h-full w-full cursor-zoom-in"
+                  >
                     <Picture
                       src={item.src}
                       alt={item.caption}

@@ -68,6 +68,7 @@ names the file and field, so bad content cannot reach production.
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `Picture.astro`    | one way to render any picture: optimises `ImageMetadata`, passes GIFs and clips through, renders `<video>` for `.mp4`/`.webm`      |
 | `Carousel.astro`   | scroll-snapping strip of pictures; arrows and dots appear only once its script runs, and a single slide degrades to a plain figure |
+| `Lightbox.astro`   | one per page, in the layout: opens any picture marked `data-zoom` full size over the page                                          |
 | `FilterBar.astro`  | client-side filter over an already-rendered list                                                                                   |
 | `Text.astro`       | renders one line of YAML text through the inline Markdown parser                                                                   |
 | `PageHeader.astro` | the eyebrow + big title block at the top of a page                                                                                 |
@@ -82,6 +83,19 @@ Takes `slides: { src, alt, caption? }[]` and a `label` for screen readers. The
 markup is a horizontal scroll container with snap points, so it works with a
 swipe or a trackpad before any JavaScript loads; the script only adds the arrows
 and dots and keeps them in sync.
+
+### Opening a picture full size
+
+`<Picture zoom />` makes a picture clickable: it gains `data-zoom` pointing at a
+1600px WebP, a `zoom-in` cursor, and a place in the tab order, and the single
+`Lightbox` in the layout opens it over the page. The lightbox is a native
+`<dialog>`, so Escape, focus trapping, and the backdrop are the browser's job.
+
+Use it for a picture that is not already inside a link - a linked picture belongs
+to its link, and a picture cannot be both. `Carousel` turns it on for every
+slide, so galleries need nothing. The media grid is the one place where the
+trigger is the link itself: it keeps `href` to the full size file, and the
+lightbox takes the click when its script has run.
 
 ### FilterBar
 

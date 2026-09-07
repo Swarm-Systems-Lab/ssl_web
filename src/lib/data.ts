@@ -214,6 +214,8 @@ export const awards = load(
         detail: z.string().optional(),
         image: picturePath.optional(),
         imageAlt: z.string().optional(),
+        /** Several pictures instead of one: they become a carousel. */
+        images: z.array(picturePath).default([]),
         /**
          * Who received it. Use the file name of a person in content/team to
          * link to them, e.g. "hector-garcia-de-marina"; anything else is shown

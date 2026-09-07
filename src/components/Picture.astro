@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import type { Picture } from "@/lib/images";
+import { fullSize } from "@/lib/full-size";
 
 interface Props {
   src: Picture;
@@ -8,23 +9,45 @@ interface Props {
   widths?: number[];
   sizes?: string;
   loading?: "lazy" | "eager";
+  /**
+   * Let a click open the picture full size, in the lightbox the layout
+   * carries. For pictures that are not already inside a link - where a click
+   * belongs to the link, not to the picture.
+   */
+  zoom?: boolean;
   class?: string;
 }
 
-const { src, alt, widths, sizes, loading = "lazy", class: className } = Astro.props;
+const { src, alt, widths, sizes, loading = "lazy", zoom = false, class: className } = Astro.props;
 const isVideo = typeof src === "string" && /\.(mp4|webm)$/.test(src);
 
 // Astro emits the fallback `src` at the picture's own resolution unless it is
 // told otherwise, which for a 6 MB photo means shipping a 2 MB variant nobody
 // asks for. Cap it at the largest width the caller actually uses.
 const width = widths?.length ? Math.max(...widths) : undefined;
+
+// The lightbox finds a picture by this attribute alone. The role and tabindex
+// put it in the tab order, which a bare <img> never is.
+const full = zoom && !isVideo ? await fullSize(src) : undefined;
+const zoomAttrs = {
+  "data-zoom": full,
+  role: full ? ("button" as const) : undefined,
+  tabindex: full ? 0 : undefined,
+  "aria-label": full ? (alt ? `${alt} - view full size` : "View full size") : undefined,
+};
 ---
 
 {
   isVideo ? (
     <video src={src as string} muted loop playsinline controls preload="none" class={className} />
   ) : typeof src === "string" ? (
-    <img src={src} alt={alt} loading={loading} class={className} />
+    <img
+      src={src}
+      alt={alt}
+      loading={loading}
+      class:list={[className, full && "cursor-zoom-in"]}
+      {...zoomAttrs}
+    />
   ) : (
     <Image
       src={src}
@@ -33,7 +56,8 @@ const width = widths?.length ? Math.max(...widths) : undefined;
       width={width}
       sizes={sizes}
       loading={loading}
-      class={className}
+      class:list={[className, full && "cursor-zoom-in"]}
+      {...zoomAttrs}
     />
   )
 }

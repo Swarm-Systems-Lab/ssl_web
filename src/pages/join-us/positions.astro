@@ -48,6 +48,7 @@ const granada = (positions.aside?.photos ?? []).map((path) => ({
                   alt={item.imageAlt ?? item.title}
                   widths={[480, 960]}
                   sizes="(min-width: 768px) 50vw, 100vw"
+                  zoom
                   class="aspect-[21/9] w-full border-b border-border object-cover"
                 />
               )}

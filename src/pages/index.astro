@@ -72,6 +72,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
             widths={[720, 1080, 1440, 1920]}
             sizes="(min-width: 1280px) 1216px, 100vw"
             loading="eager"
+            zoom
             class="h-auto w-full"
           />
           {cover.caption && (

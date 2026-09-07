@@ -7,8 +7,15 @@
 #     year: 2026
 #     detail: Optional extra sentence. Links work here - [like this](https://…).
 #     members: [hector-garcia-de-marina]   # file names from content/team/
-#     image: images/awards/erc.jpg         # optional thumbnail, relative to content/
+#     image: images/awards/erc.jpg         # one picture, relative to content/
+#     images:                              # or several, shown as a carousel
+#       - images/awards/erc.jpg
+#       - images/awards/ceremony.jpg
 #     imageAlt: "What the picture shows"
+#     plate: true                          # force the white ground on or off
+#     links:                               # optional references
+#       - label: Project
+#         href: https://...
 #
 # A name in `members` that matches a file in content/team/ becomes a link to
 # that person; anything else is shown as plain text.
@@ -18,27 +25,51 @@ intro: Grants, prizes, and distinctions received by the lab and its members.
 items:
   - title: ERC Starting Grant
     awarder: European Research Council
-    year: 2022
+    year: 2023
     members: [hector-garcia-de-marina]
-    image: images/awards/test.png
+    image: affiliations/erc.png
+    links:
+      - label: CORDIS project
+        href: https://cordis.europa.eu/project/id/101076091
 
   - title: Best conference paper award finalist
     awarder: IEEE ICRA 2021
     year: 2021
     members: [weijia-yao, hector-garcia-de-marina]
+    image: images/awards/best-paper-icra-2021.png
     detail: Distributed coordinated path following using guiding vector fields.
+    links:
+      - label: The paper
+        href: /publications/distributed-coordinated-path-following-using-guiding-vector-fields
 
-  - title: Seal of Excellence
-    awarder: European Commission
+  - title: Ramón y Cajal fellowship
+    awarder: Agencia Estatal de Investigación, Gobierno de España
     year: 2020
     members: [hector-garcia-de-marina]
-    detail: The H2020-MSCA-IF-2019 proposal was recognised as a high-quality project proposal.
+    image: images/awards/ryc.png
+    links:
+      - label: RYC2020-030090-I
+        href: https://www.aei.gob.es/ayudas-concedidas/buscador-ayudas-concedidas?code=RYC2020-030090-I
+    detail: >-
+      Five years of independent research funding, and arguably the most
+      prestigious Spanish grant for young investigators. Taken up at the
+      University of Granada in April 2022.
 
   - title: Research fellow - Atracción de Talento
     awarder: Comunidad de Madrid
     year: 2020
     members: [hector-garcia-de-marina]
     detail: 2nd position in the Engineering field, a competitive personal research funding for 2020/24.
+    images:
+      - images/awards/comunidad-madrid.png
+      - images/awards/ucm.png
+
+  - title: Seal of Excellence
+    awarder: European Commission
+    year: 2019
+    members: [hector-garcia-de-marina]
+    detail: The H2020-MSCA-IF-2019 proposal was recognised as a high-quality project proposal.
+    image: images/awards/seal-of-excellence.png
 
   - title: Best paper award finalist
     awarder: ICARCV 2018
@@ -47,16 +78,26 @@ items:
     detail: >-
       Multi-robot motion-formation distributed control with sensor
       self-calibration: experimental validation.
+    images:
+      - images/awards/best-paper-icarcv-2018.png
+      - images/awards/best-paper-icarcv-2018_paper.png
 
   - title: 1st position, international drone competition
     awarder: IMAV 2017
     year: 2017
+    members: [hector-garcia-de-marina]
     detail: >-
       Category: drone parade. Circular formation control of fixed-wing UAVs with
       constant speeds.
+    images:
+      - images/awards/imav.jpg
+      - images/awards/imav_field.jpg
 
   - title: Shortlisted for the best thesis award
     awarder: Dutch Institute for Systems and Control
     year: 2016
     members: [hector-garcia-de-marina]
     detail: Distributed formation control for autonomous robots.
+    images:
+      - images/awards/hector_thesis.png
+      - images/awards/hector_thesis2.jpg

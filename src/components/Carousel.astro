@@ -27,6 +27,12 @@ interface Props {
   sizes?: string;
   widths?: number[];
   loading?: "lazy" | "eager";
+  /**
+   * Show artwork rather than photographs: each picture is fitted whole onto a
+   * white ground instead of being cropped to fill a dark one. A logo with
+   * see-through parts is invisible without it.
+   */
+  plate?: boolean;
   class?: string;
 }
 
@@ -37,6 +43,7 @@ const {
   sizes = "(min-width: 1024px) 900px, 100vw",
   widths = [640, 960, 1440],
   loading = "lazy",
+  plate = false,
   class: className,
 } = Astro.props;
 
@@ -61,14 +68,15 @@ const single = slides.length === 1;
       >
         {slides.map((slide, index) => (
           <figure class="w-full shrink-0 snap-start">
-            <div class:list={["overflow-hidden bg-black", aspect]}>
+            <div class:list={["overflow-hidden", aspect, plate ? "bg-white" : "bg-black"]}>
               <Picture
                 src={slide.src}
                 alt={slide.alt}
                 widths={widths}
                 sizes={sizes}
                 loading={index === 0 ? loading : "lazy"}
-                class="h-full w-full object-cover"
+                zoom
+                class:list={["h-full w-full", plate ? "object-contain p-3" : "object-cover"]}
               />
             </div>
             {slide.caption && (

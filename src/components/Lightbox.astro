@@ -1,0 +1,100 @@
+---
+/**
+ * Opens a picture full size over the page, the way a photo gallery does.
+ *
+ * There is one of these per page, in the layout. It listens for a click on
+ * anything carrying `data-zoom="<url of the full size picture>"` anywhere in
+ * the page, so a picture becomes zoomable by gaining that one attribute -
+ * usually through <Picture zoom />.
+ *
+ * A native <dialog> does the work: it traps focus, closes on Escape, and
+ * paints its own backdrop, none of which is worth reimplementing.
+ */
+---
+
+<dialog
+  id="lightbox"
+  aria-label="Picture, full size"
+  class="fixed inset-0 m-0 h-full max-h-none w-full max-w-none overflow-hidden bg-transparent p-0 backdrop:bg-black/90 backdrop:backdrop-blur-sm"
+>
+  <div class="flex h-full w-full items-center justify-center p-4 sm:p-10">
+    <figure class="flex max-h-full flex-col items-center gap-4" data-figure>
+      <img
+        data-image
+        alt=""
+        class="max-h-[80dvh] w-auto max-w-full border border-border object-contain"
+      />
+      <figcaption data-caption class="max-w-2xl text-center text-sm text-muted-foreground">
+      </figcaption>
+    </figure>
+  </div>
+
+  <button
+    type="button"
+    aria-label="Close"
+    class="absolute top-4 right-4 grid size-10 place-items-center border border-border bg-background/80 font-display text-lg text-foreground backdrop-blur transition-colors hover:border-accent hover:text-accent"
+  >
+    ✕
+  </button>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("#lightbox");
+  const image = dialog?.querySelector<HTMLImageElement>("[data-image]");
+  const caption = dialog?.querySelector<HTMLElement>("[data-caption]");
+
+  if (dialog && image && caption) {
+    const triggerFor = (node: EventTarget | null) =>
+      node instanceof Element ? node.closest<HTMLElement>("[data-zoom]") : null;
+
+    const open = (trigger: HTMLElement) => {
+      const src = trigger.dataset.zoom;
+      if (!src) return;
+
+      // The trigger is either the picture itself or a link wrapped round one.
+      const text =
+        trigger.getAttribute("alt") ?? trigger.querySelector("img")?.getAttribute("alt") ?? "";
+
+      image.src = src;
+      image.alt = text;
+      caption.textContent = text;
+      caption.hidden = text === "";
+
+      // showModal() leaves the page behind free to scroll.
+      document.body.style.overflow = "hidden";
+      dialog.showModal();
+    };
+
+    document.addEventListener("click", (event) => {
+      if (dialog.open) return;
+      const trigger = triggerFor(event.target);
+      if (!trigger) return;
+      // A "view full size" link opens here instead of in a new tab. Without
+      // JavaScript the same link still works, which is why it is a link.
+      event.preventDefault();
+      open(trigger);
+    });
+
+    // A picture marked up as a button is focusable, so make it act like one.
+    document.addEventListener("keydown", (event) => {
+      if (dialog.open || (event.key !== "Enter" && event.key !== " ")) return;
+      const trigger = triggerFor(document.activeElement);
+      if (!trigger || trigger.tagName === "A") return;
+      event.preventDefault();
+      open(trigger);
+    });
+
+    // Anywhere but the picture closes, which covers the backdrop, the margins,
+    // and the close button.
+    dialog.addEventListener("click", (event) => {
+      const node = event.target;
+      if (!(node instanceof Element) || !node.closest("[data-figure]")) dialog.close();
+    });
+
+    dialog.addEventListener("close", () => {
+      document.body.style.overflow = "";
+      // Drop the picture so a large one is not left decoded in the background.
+      image.removeAttribute("src");
+    });
+  }
+</script>
