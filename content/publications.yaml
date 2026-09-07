@@ -55,7 +55,7 @@ preprint:
     title: "Singularity-Free Guiding Vector Fields on SO(3) with Designer-Specified Progression Behavior"
     venue: "Submitted to Automatica"
     year: 2026
-    image: images/publications/test.png
+    image: images/publications/sf-gvf-so3.png
     links:
       - label: Code
         href: https://github.com/Swarm-Systems-Lab/gvf_so3
@@ -74,6 +74,10 @@ journal:
     year: 2026
     doi: https://ieeexplore.ieee.org/abstract/document/11664370
     pdf: https://arxiv.org/pdf/2410.15921
+    image: images/publications/ss.png
+    links:
+      - label: Code
+        href: https://github.com/Swarm-Systems-Lab/source_seeking
   - ref: J25
     authors: "J. Bautista, E. Morella, L. Wang, HG de Marina"
     title: "Leaderless Collective Motion in Affine Formation Control over the Complex Plane"
@@ -81,11 +85,16 @@ journal:
     year: 2026
     doi: https://ieeexplore.ieee.org/document/11629560/
     pdf: http://arxiv.org/pdf/2604.05648v2
+    image: images/publications/i_fc_affine.png
+    links:
+      - label: Code
+        href: https://github.com/Swarm-Systems-Lab/paper-affine-formation-control
   - ref: J24
     authors: "J. Chen, J. Bautista, B. Jayawardhana, HG de Marina"
     title: "Dispersion Formation Control: from Geometry to Distribution"
     venue: "IEEE Transactions on Automatic Control"
     year: 2025
+    image: images/publications/fc_dispersion.png
     doi: https://ieeexplore.ieee.org/document/11194724
     pdf: http://arxiv.org/pdf/2509.19784v1
   - ref: J23
@@ -261,6 +270,10 @@ conference:
     year: 2026
     pdf: https://arxiv.org/pdf/2510.06836
     doi: https://doi.org/10.48550/arxiv.2510.06836
+    image: images/publications/ss_3d.png
+    links:
+      - label: Code
+        href: https://github.com/Swarm-Systems-Lab/source_seeking
   - ref: C40
     authors: "X. Ma, S. Zhang, X. Zhang, J. Xin, HG de Marina"
     title: "Linear quadratic control for discrete-time systems with stochastic and bounded noises"
@@ -283,6 +296,7 @@ conference:
     title: "Distributed Oscillatory Guidance for Formation Flight of Fixed-Wing Drones"
     venue: "IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)"
     year: 2025
+    image: images/publications/gvfik_osc.png
     pdf: https://arxiv.org/pdf/2507.16458
     doi: https://ieeexplore.ieee.org/abstract/document/11246740
   - ref: C37
@@ -297,8 +311,12 @@ conference:
     title: "Inverse Kinematics on Guiding Vector Fields for Robot Path Following"
     venue: "IEEE International Conference on Robotics and Automation (ICRA)"
     year: 2025
+    image: images/publications/gvfik.png
     pdf: https://arxiv.org/pdf/2502.17313
     doi: https://ieeexplore.ieee.org/abstract/document/11127300
+    links:
+      - label: Code
+        href: https://github.com/Swarm-Systems-Lab/gvf_ik
   - ref: C35
     authors: "A. Acuaviva, J. Bautista, W. Yao, J. Jiménez, HG de Marina"
     title: "Resilient source seeking with robot swarms"
@@ -306,6 +324,10 @@ conference:
     year: 2024
     pdf: https://arxiv.org/pdf/2309.02937
     doi: https://ieeexplore.ieee.org/document/10886464
+    image: images/publications/ss_cdc.png
+    links:
+      - label: Code
+        href: https://github.com/Swarm-Systems-Lab/source_seeking
   - ref: C34
     authors: "J Bautista, HG de Marina"
     title: "Behavioral-based circular formation control for robot swarms"
@@ -313,6 +335,10 @@ conference:
     year: 2024
     pdf: https://arxiv.org/pdf/2309.09101
     doi: https://ieeexplore.ieee.org/document/10610826
+    image: images/publications/c3bf_multi.png
+    links:
+      - label: Code
+        href: https://github.com/jesusBV20/multi_C3BF
   - ref: C33
     authors: "J. Chen, B. Jayawardhana, HG de Marina"
     title: "Distance-based Formation-Motion Control for Unicycle Agents"
