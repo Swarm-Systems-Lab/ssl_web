@@ -34,11 +34,7 @@ const works = worksByRef(entry.data.works, `content/news/${entry.id}/index.md`);
   image={await socialImage(header)}
 >
   <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
-    <a href={url("/news")} class="font-display text-[10px] tracking-widest text-accent uppercase">
-      ← All news
-    </a>
-
-    <header class="mt-10 border-b border-border pb-10">
+    <header class="border-b border-border pb-10">
       <div class="mb-4 flex items-center gap-3 font-display text-[10px] tracking-widest">
         <time datetime={entry.data.date.toISOString()} class="text-accent">
           {formatDate(entry.data.date)}
@@ -58,6 +54,14 @@ const works = worksByRef(entry.data.works, `content/news/${entry.id}/index.md`);
         )
       }
     </header>
+
+    {/* Under the header, where every list page puts its way back. */}
+    <a
+      href={url("/news")}
+      class="mt-10 inline-block font-display text-[10px] tracking-widest text-accent uppercase"
+    >
+      ← All news
+    </a>
 
     {
       header && (

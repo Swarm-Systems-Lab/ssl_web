@@ -26,11 +26,7 @@ const wide = photo ? isPanoramic(photo) : false;
 
 <Base title={entry.data.name} description={entry.data.summary} image={await socialImage(photo)}>
   <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
-    <a href={url("/team")} class="font-display text-[10px] tracking-widest text-accent uppercase">
-      ← All team
-    </a>
-
-    <header class="mt-10 border-b border-border pb-10">
+    <header class="border-b border-border pb-10">
       <div class:list={["flex flex-col gap-8", !wide && "sm:flex-row sm:items-start"]}>
         {
           photo && !wide && (
@@ -87,6 +83,14 @@ const wide = photo ? isPanoramic(photo) : false;
         }
       </div>
     </header>
+
+    {/* Under the header, where every list page puts its way back. */}
+    <a
+      href={url("/team")}
+      class="mt-10 inline-block font-display text-[10px] tracking-widest text-accent uppercase"
+    >
+      ← All team
+    </a>
 
     {
       hasText && (

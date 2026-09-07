@@ -18,14 +18,7 @@ const summary = `${pub.authors}. ${pub.venue}${pub.year ? `, ${pub.year}` : ""}.
 
 <Base title={pub.title} description={summary} image={await socialImage(image)}>
   <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
-    <a
-      href={url("/publications")}
-      class="font-display text-[10px] tracking-widest text-accent uppercase"
-    >
-      ← All publications
-    </a>
-
-    <header class="mt-10 border-b border-border pb-10">
+    <header class="border-b border-border pb-10">
       <div
         class="mb-4 flex flex-wrap items-center gap-3 font-display text-[10px] tracking-widest uppercase"
       >
@@ -61,6 +54,14 @@ const summary = `${pub.authors}. ${pub.venue}${pub.year ? `, ${pub.year}` : ""}.
         )
       }
     </header>
+
+    {/* Under the header, where every list page puts its way back. */}
+    <a
+      href={url("/publications")}
+      class="mt-10 inline-block font-display text-[10px] tracking-widest text-accent uppercase"
+    >
+      ← All publications
+    </a>
 
     {
       image && (

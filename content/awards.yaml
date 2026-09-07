@@ -81,6 +81,9 @@ items:
     images:
       - images/awards/best-paper-icarcv-2018.png
       - images/awards/best-paper-icarcv-2018_paper.png
+    links:
+      - label: The paper
+        href: /publications/multi-robot-motion-formation-distributed-control-with-sensor-self-calibration
 
   - title: 1st position, international drone competition
     awarder: IMAV 2017
