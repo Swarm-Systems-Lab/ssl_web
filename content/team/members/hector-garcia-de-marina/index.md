@@ -7,7 +7,7 @@ summary: "Runs the Swarm Systems Lab. Ramón y Cajal researcher and ERC Starting
 # photo: ./your-photo.jpg   # optional; the first picture here is used anyway
 links:
   - label: Google Scholar
-    href: https://scholar.google.com/citations?user=Vh6VjBoAAAAJ
+    href: https://scholar.google.com/citations?user=JK_EsLwAAAAJ
   - label: GitHub
     href: https://github.com/noether
 ---

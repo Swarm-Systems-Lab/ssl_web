@@ -63,7 +63,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
     cover && (
       <section class="mx-auto max-w-7xl px-6 pb-20">
         <figure class="border border-border bg-surface">
-          {/* Shown whole rather than cropped — the team photo is the point. */}
+          {/* Shown whole rather than cropped - the team photo is the point. */}
           <Picture
             src={cover.src}
             alt={cover.caption ?? `The ${site.title} team`}
@@ -129,7 +129,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
       </section>
     )
   }
-  
+
   {
     site.community.length > 0 && (
       <section class="border-y border-border bg-surface/30 py-16">

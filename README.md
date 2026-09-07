@@ -24,7 +24,8 @@ the site rebuilds and republishes itself within a couple of minutes.
 
 News posts, research topics, people, and papers each get their own page; for the
 first three the folder name becomes the address. Everything else appears on a
-single shared page — open positions and student projects share **Join us**.
+single shared page. **Join us** is a small section of its own: a landing page
+with **Open positions** and **Student projects** under it.
 
 Anything with its own page gets its own folder, holding the text as `index.md`
 and its pictures next to it:

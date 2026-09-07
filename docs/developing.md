@@ -169,8 +169,12 @@ rather than pointing at an original, for the same reason.
 
 A tab with `children` in `site.yaml` renders as a drop-down. The parent keeps
 its own `href`, and the list opens on hover or keyboard focus with CSS only, so
-it works without JavaScript. That is how **Join us** holds open positions and
-student projects.
+it works without JavaScript.
+
+**Join us** is the one section with pages under it: `/join-us` is a landing page
+of two cards, and `/join-us/positions` and `/join-us/projects` carry the lists,
+so each can be linked to on its own. The shared "how to apply" panel is
+`ApplyBox.astro`.
 
 For a tab pointing at documentation hosted elsewhere, a plain external entry in
 `nav:` works — `href` is used as given when it starts with `http`.

@@ -10,7 +10,7 @@ interface Props {
   folder?: LogoFolder;
   /**
    * Flatten the logo to a single white mark. Only safe for artwork on a
-   * transparent background — a logo supplied on an opaque white rectangle
+   * transparent background - a logo supplied on an opaque white rectangle
    * would come out as a white block.
    */
   white?: boolean;
@@ -40,7 +40,7 @@ const src = logoFor(label, name, folder);
   src &&
     (white ? (
       /*
-       * brightness-0 turns every colour black, invert then turns it white —
+       * brightness-0 turns every colour black, invert then turns it white 
        * which flattens a transparent monochrome mark to a single white shape.
        */
       <Picture
@@ -53,8 +53,8 @@ const src = logoFor(label, name, folder);
     ) : (
       /*
        * Everything else sits on a white plate. Institutional logos arrive in
-       * every possible form — full colour, transparent, or flattened onto an
-       * opaque white rectangle — and a plate renders all of them correctly on
+       * every possible form  full colour, transparent, or flattened onto an
+       * opaque white rectangle  and a plate renders all of them correctly on
        * a dark page without anyone having to check which they have.
        */
       <span

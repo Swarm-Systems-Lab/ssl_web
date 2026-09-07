@@ -1,4 +1,5 @@
-# Open positions. Everything on this page lives in this one file.
+# Open positions, shown at Join us -> Open positions.
+# Everything on that page lives in this one file.
 #
 #   - title: What the position is
 #     type: PhD | Postdoc | Engineer | Intern | ...
@@ -49,13 +50,10 @@ items:
 
 aside:
   title: Why Granada?
-  # Photos shown as a carousel next to the text. Drop the files in
-  # content/images/granada/ and list them here.
-  photos: []
-  # photos:
-  #   - images/granada/alhambra.jpg
-  #   - images/granada/albaicin.jpg
-  #   - images/granada/sierra-nevada.jpg
+  # Shown beside the text. One picture is shown on its own; add more and they
+  # become a carousel with arrows. Paths are relative to content/.
+  photos:
+    - images/positions/alhambra.png
   body: >-
     Granada is the most popular destination among European exchange students and
     has a welcoming, cosmopolitan university. It is a safe modern city 40 minutes

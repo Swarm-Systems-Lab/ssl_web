@@ -1,0 +1,108 @@
+---
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Rule from "@/components/Rule.astro";
+import Picture from "@/components/Picture.astro";
+import Carousel from "@/components/Carousel.astro";
+import Text from "@/components/Text.astro";
+import ApplyBox from "@/components/ApplyBox.astro";
+import { positions } from "@/lib/data";
+import { optionalPicture, picture } from "@/lib/images";
+import { url } from "@/lib/url";
+
+const granada = (positions.aside?.photos ?? []).map((path) => ({
+  src: picture(path),
+  alt: "Granada",
+}));
+---
+
+<Base
+  title="Open positions"
+  description="Ph.D., postdoctoral, and research positions at the Swarm Systems Lab, University of Granada."
+>
+  <PageHeader
+    page="positions"
+    eyebrow="Now recruiting"
+    title="OPEN POSITIONS."
+    accent="POSITIONS."
+    description={positions.intro}
+  />
+
+  <div class="mx-auto max-w-7xl px-6 pb-16">
+    <a
+      href={url("/join-us")}
+      class="mb-10 inline-block font-display text-[10px] tracking-widest text-accent uppercase"
+    >
+      ← Join us
+    </a>
+
+    <ul class="grid gap-px md:grid-cols-2">
+      {
+        positions.items.map((item) => {
+          const photo = optionalPicture(item.image);
+          return (
+            <li class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
+              {photo && (
+                <Picture
+                  src={photo}
+                  alt={item.imageAlt ?? item.title}
+                  widths={[480, 960]}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  class="aspect-[21/9] w-full border-b border-border object-cover"
+                />
+              )}
+              <div class="flex flex-1 flex-col p-8">
+                <div class="mb-6 flex items-center justify-between gap-4">
+                  <span class="border border-accent/30 px-2 py-1 font-display text-[10px] tracking-widest text-accent uppercase">
+                    {item.type}
+                  </span>
+                  <span class="font-display text-[10px] tracking-widest text-muted uppercase">
+                    Deadline: {item.deadline}
+                  </span>
+                </div>
+                <h2 class="font-display text-xl font-bold tracking-tight">{item.title}</h2>
+                <Text
+                  text={item.summary}
+                  class="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground"
+                />
+                {item.details.length > 0 && (
+                  <ul class="mt-5 space-y-2 border-t border-border pt-5">
+                    {item.details.map((detail) => (
+                      <li class="flex gap-3 text-sm text-muted-foreground">
+                        <span class="text-accent">—</span>
+                        <Text text={detail} as="span" />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    {
+      positions.aside && (
+        <section class="mt-16">
+          <Rule label={positions.aside.title} />
+          <div class="grid gap-px lg:grid-cols-2">
+            <div class="border border-border bg-surface/30 p-10">
+              <Text text={positions.aside.body} class="leading-relaxed text-muted-foreground" />
+            </div>
+            {granada.length > 0 && (
+              <Carousel
+                slides={granada}
+                label="Photos of Granada"
+                aspect="aspect-[4/3]"
+                sizes="(min-width: 1024px) 600px, 100vw"
+              />
+            )}
+          </div>
+        </section>
+      )
+    }
+
+    <ApplyBox class="mt-16" />
+  </div>
+</Base>

@@ -4,8 +4,13 @@ import { coverFor } from "@/lib/covers";
 
 interface Props {
   eyebrow: string;
+  /** The heading, written out in full: "LAB NEWS." or "PUBLICATIONS." */
   title: string;
-  /** Rendered in muted type after the title, e.g. "LAB" + "NEWS." */
+  /**
+   * The tail of `title` to render in muted type - "NEWS." of "LAB NEWS.", or
+   * "CATIONS." of "PUBLICATIONS.". Spacing comes from the title itself, so a
+   * heading split mid-word stays one word.
+   */
   accent?: string;
   description?: string;
   /**
@@ -17,6 +22,13 @@ interface Props {
 
 const { eyebrow, title, accent, description, page } = Astro.props;
 const cover = page ? coverFor(page) : undefined;
+
+if (accent && !title.endsWith(accent)) {
+  throw new Error(
+    `<PageHeader> accent must be the end of title. Got title="${title}" accent="${accent}".`,
+  );
+}
+const lead = accent ? title.slice(0, -accent.length) : title;
 ---
 
 <section class="mx-auto max-w-7xl px-6 pt-20 pb-14">
@@ -26,7 +38,7 @@ const cover = page ? coverFor(page) : undefined;
     <span class="size-1.5 rounded-full bg-accent"></span>{eyebrow}
   </div>
   <h1 class="font-display text-4xl leading-[0.95] font-bold tracking-tighter md:text-6xl">
-    {title}{accent && <span class="text-muted"> {accent}</span>}
+    {lead}{accent && <span class="text-muted">{accent}</span>}
   </h1>
   {description && <p class="mt-6 max-w-3xl leading-relaxed text-muted-foreground">{description}</p>}
 

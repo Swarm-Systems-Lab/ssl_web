@@ -12,7 +12,9 @@ interface Props {
 }
 
 const { title, description = site.description, image } = Astro.props;
-const pageTitle = title ? `${title} — ${site.shortTitle}` : `${site.title} — ${site.tagline}`;
+// Without a tagline the front page is just the site name.
+const home = site.tagline ? `${site.title} - ${site.tagline}` : site.title;
+const pageTitle = title ? `${title} - ${site.shortTitle}` : home;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const preview = image ? new URL(image, Astro.site).href : undefined;
 ---

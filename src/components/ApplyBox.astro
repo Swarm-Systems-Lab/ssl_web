@@ -1,0 +1,23 @@
+---
+import { site } from "@/lib/data";
+
+/** The "how to apply" panel, shared by the Join us pages. */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<section class:list={["border border-border p-10 text-center", className]}>
+  <div class="font-display text-[10px] tracking-widest text-muted uppercase">How to apply</div>
+  <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+    Send a CV, a research statement, and contact references. If you do not hear back within three
+    weeks, your application has not been considered.
+  </p>
+  <a
+    href={`mailto:${site.email}`}
+    class="mt-6 inline-block bg-accent px-5 py-3 font-display text-xs tracking-widest text-accent-foreground uppercase transition-opacity hover:opacity-90"
+  >
+    {site.email} →
+  </a>
+</section>

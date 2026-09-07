@@ -3,7 +3,7 @@
 
 title: Swarm Systems Lab
 shortTitle: Swarm Systems Lab
-tagline: Control theory and emergent behaviour in robot swarms
+#tagline: Control theory and emergent behaviour in robot swarms
 description: >-
   The Swarm Systems Lab at the University of Granada works on swarm robotics and
   autonomous systems, where control theory and emergent behaviour converge — with
@@ -34,11 +34,6 @@ nav:
     href: /team
   - label: Join us
     href: /join-us
-    children:
-      - label: Open positions
-        href: /join-us#positions
-      - label: Student projects
-        href: /join-us#projects
   - label: Awards
     href: /awards
   - label: Media
@@ -83,17 +78,18 @@ social:
 #
 # `href` is optional; check each one before publishing.
 affiliations:
-  - label: Universidad de Granada
+  - label: Unisersity of Granada (UGR)
     href: https://www.ugr.es
     logo: ugr
-  - label: European Research Council
+  - label: European Research Council (ERC)
     href: https://erc.europa.eu
     logo: erc
-  - label: ICAR
-    # Department of Computer Engineering, Automation and Robotics, UGR
-  - label: IMAG
+  - label: Department of Computer Engineering, Automation and Robotics (ICAR), UGR 
+    href: https://icar.ugr.es/
+    logo: icar
+  - label: Math Institute of the University of Granada (IMAG)
     href: https://imag.ugr.es
     logo: imag
-  - label: Ministerio de Ciencia, Innovación y Universidades
+  - label: Ministerio de Ciencia, Innovación y Universidades, Gobierno de España
     href: https://www.ciencia.gob.es
     logo: spain

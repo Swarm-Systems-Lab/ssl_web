@@ -55,7 +55,8 @@ const navItem = z.object({
 const siteSchema = z.object({
   title: z.string(),
   shortTitle: z.string(),
-  tagline: z.string(),
+  /** Appended to the site name in the browser tab on the front page. */
+  tagline: z.string().optional(),
   description: z.string(),
   institution: z.string(),
   email: z.string(),

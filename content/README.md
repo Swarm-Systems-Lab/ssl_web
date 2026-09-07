@@ -13,8 +13,8 @@ Everything on the website is generated from this folder.
 | `affiliations/`    | university, institute, funder logos | front page             |
 | `pages/home.md`    | the text on the front page          | the front page         |
 | `publications.yaml`| every paper                         | the publications page  |
-| `positions.yaml`   | open positions                      | the Join us page       |
-| `projects.yaml`    | TFM / TFG offers                    | the Join us page       |
+| `positions.yaml`   | open positions                      | Join us → Open positions   |
+| `projects.yaml`    | TFM / TFG offers                    | Join us → Student projects |
 | `images/`          | pictures used by the `.yaml` pages  | wherever they are used |
 | `awards.yaml`      | awards and grants                   | the awards page        |
 | `media.yaml`       | YouTube videos and gallery settings | the media page         |

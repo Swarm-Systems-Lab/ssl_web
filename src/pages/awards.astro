@@ -10,8 +10,8 @@ import { url } from "@/lib/url";
 
 const items = [...awards.items].sort((a, b) => b.year - a.year);
 
-// `members` holds either the file name of someone in content/team — in which
-// case we show their name — or plain text for anyone not listed there. Only
+// `members` holds either the file name of someone in content/team - in which
+// case we show their name - or plain text for anyone not listed there. Only
 // people whose file has text under the frontmatter have a page to link to.
 const team = new Map(
   (await getTeam()).map((member) => [
@@ -33,7 +33,7 @@ const resolve = (member: string) => {
   <PageHeader
     page="awards"
     eyebrow="Recognition"
-    title="AWARDS &"
+    title="AWARDS & GRANTS."
     accent="GRANTS."
     description={awards.intro}
   />

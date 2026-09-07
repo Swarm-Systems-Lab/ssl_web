@@ -11,6 +11,8 @@ content/covers/
   publications.jpg  /publications
   team.jpg          /team
   join-us.jpg       /join-us
+  positions.jpg     /join-us/positions
+  projects.jpg      /join-us/projects
   awards.jpg        /awards
   media.jpg         /media
 ```

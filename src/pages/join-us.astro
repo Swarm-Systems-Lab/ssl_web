@@ -1,169 +1,74 @@
 ---
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
-import Rule from "@/components/Rule.astro";
-import Picture from "@/components/Picture.astro";
-import Carousel from "@/components/Carousel.astro";
-import Text from "@/components/Text.astro";
-import { positions, projects, site } from "@/lib/data";
-import { optionalPicture, picture } from "@/lib/images";
+import ApplyBox from "@/components/ApplyBox.astro";
+import { positions, projects } from "@/lib/data";
+import { url } from "@/lib/url";
 
-const granada = (positions.aside?.photos ?? []).map((path) => ({
-  src: picture(path),
-  alt: "Granada",
-}));
+// The landing page for the two ways into the lab. The lists themselves live on
+// their own pages so each can be linked to on its own.
+const listed = (count: number, unit: string) => `${count} ${unit}${count === 1 ? "" : "s"} listed`;
+
+const routes = [
+  {
+    href: "/join-us/positions",
+    eyebrow: "Researchers",
+    title: "Open positions",
+    count: positions.items.length,
+    unit: "opening",
+
+    body: "Ph.D. and postdoctoral fellowships, visiting researchers, and the funding schemes we can support you through.",
+  },
+  {
+    href: "/join-us/projects",
+    eyebrow: "Students",
+    title: "Master & bachelor projects",
+    count: projects.items.length,
+    unit: "project",
+
+    body: "TFM and TFG topics on guiding vector fields, distributed algorithms, onboard navigation, and the tools behind our experiments.",
+  },
+];
 ---
 
 <Base
   title="Join us"
-  description="Open positions and master's and bachelor's projects at the Swarm Systems Lab, University of Granada."
+  description="Open positions and student projects at the Swarm Systems Lab, University of Granada."
 >
   <PageHeader
     page="join-us"
     eyebrow="Now recruiting"
-    title="JOIN THE"
+    title="JOIN THE SWARM."
     accent="SWARM."
-    description={positions.intro}
+    description="We run a lab with diverse but strong theoretical and practical backgrounds. If your profile does not fit an offer but you think you are a good match, get in touch anyway."
   />
 
   <div class="mx-auto max-w-7xl px-6 pb-16">
-    <!-- Open positions -->
-    <section id="positions" class="scroll-mt-24">
-      <Rule label="Open positions" />
+    <ul class="grid gap-px md:grid-cols-2">
+      {
+        routes.map((route) => (
+          <li class="relative flex flex-col border border-border bg-surface/30 p-10 transition-colors hover:border-accent/50">
+            <div class="font-display text-[10px] tracking-widest text-accent uppercase">
+              {route.eyebrow}
+            </div>
+            <h2 class="mt-3 font-display text-2xl font-bold tracking-tight">
+              <a
+                href={url(route.href)}
+                class="transition-colors after:absolute after:inset-0 after:content-[''] hover:text-accent"
+              >
+                {route.title}
+              </a>
+            </h2>
+            <p class="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">{route.body}</p>
+            <div class="mt-8 flex items-center justify-between border-t border-border pt-6 font-display text-[10px] tracking-widest uppercase">
+              <span class="text-muted">{listed(route.count, route.unit)}</span>
+              <span class="text-accent">See them →</span>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
 
-      <ul class="grid gap-px md:grid-cols-2">
-        {
-          positions.items.map((item) => {
-            const photo = optionalPicture(item.image);
-            return (
-              <li class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
-                {photo && (
-                  <Picture
-                    src={photo}
-                    alt={item.imageAlt ?? item.title}
-                    widths={[480, 960]}
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    class="aspect-[21/9] w-full border-b border-border object-cover"
-                  />
-                )}
-                <div class="flex flex-1 flex-col p-8">
-                  <div class="mb-6 flex items-center justify-between gap-4">
-                    <span class="border border-accent/30 px-2 py-1 font-display text-[10px] tracking-widest text-accent uppercase">
-                      {item.type}
-                    </span>
-                    <span class="font-display text-[10px] tracking-widest text-muted uppercase">
-                      Deadline: {item.deadline}
-                    </span>
-                  </div>
-                  <h3 class="font-display text-xl font-bold tracking-tight">{item.title}</h3>
-                  <Text
-                    text={item.summary}
-                    class="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground"
-                  />
-                  {item.details.length > 0 && (
-                    <ul class="mt-5 space-y-2 border-t border-border pt-5">
-                      {item.details.map((detail) => (
-                        <li class="flex gap-3 text-sm text-muted-foreground">
-                          <span class="text-accent">—</span>
-                          <Text text={detail} as="span" />
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </li>
-            );
-          })
-        }
-      </ul>
-    </section>
-
-    <!-- Why Granada -->
-    {
-      positions.aside && (
-        <section class="mt-16 grid gap-px lg:grid-cols-2">
-          <div class="border border-border bg-surface/30 p-10">
-            <h2 class="font-display text-2xl font-bold tracking-tight">{positions.aside.title}</h2>
-            <Text text={positions.aside.body} class="mt-5 leading-relaxed text-muted-foreground" />
-          </div>
-          {granada.length > 0 && (
-            <Carousel
-              slides={granada}
-              label="Photos of Granada"
-              aspect="aspect-[4/3]"
-              sizes="(min-width: 1024px) 600px, 100vw"
-              class="border-0"
-            />
-          )}
-        </section>
-      )
-    }
-
-    <!-- Student projects -->
-    <section id="projects" class="mt-20 scroll-mt-24">
-      <Rule label="Master (TFM) and bachelor (TFG) projects" />
-      <Text text={projects.intro} class="mb-8 max-w-3xl leading-relaxed text-muted-foreground" />
-
-      <ul class="grid gap-px md:grid-cols-2">
-        {
-          projects.items.map((item) => {
-            const photo = optionalPicture(item.image);
-            return (
-              <li class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
-                {photo && (
-                  <Picture
-                    src={photo}
-                    alt={item.imageAlt ?? item.title}
-                    widths={[480, 960]}
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    class="aspect-[21/9] w-full border-b border-border object-cover"
-                  />
-                )}
-                <div class="flex flex-1 flex-col p-8">
-                  <span class="self-start border border-accent/30 px-2 py-1 font-display text-[10px] tracking-widest text-accent uppercase">
-                    {item.level}
-                  </span>
-                  <h3 class="mt-6 font-display text-xl font-bold tracking-tight">{item.title}</h3>
-                  <Text
-                    text={item.summary}
-                    class="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground"
-                  />
-                  {item.requirements.length > 0 && (
-                    <div class="mt-6 border-t border-border pt-5">
-                      <div class="font-display text-[10px] tracking-widest text-muted uppercase">
-                        We require
-                      </div>
-                      <ul class="mt-3 space-y-2">
-                        {item.requirements.map((req) => (
-                          <li class="flex gap-3 text-sm text-muted-foreground">
-                            <span class="text-accent">—</span>
-                            <Text text={req} as="span" />
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </li>
-            );
-          })
-        }
-      </ul>
-    </section>
-
-    <!-- How to apply -->
-    <section class="mt-16 border border-border p-10 text-center">
-      <div class="font-display text-[10px] tracking-widest text-muted uppercase">How to apply</div>
-      <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-        Send a CV, a research statement, and contact references. If you do not hear back within
-        three weeks, your application has not been considered.
-      </p>
-      <a
-        href={`mailto:${site.email}`}
-        class="mt-6 inline-block bg-accent px-5 py-3 font-display text-xs tracking-widest text-accent-foreground uppercase transition-opacity hover:opacity-90"
-      >
-        {site.email} →
-      </a>
-    </section>
+    <ApplyBox class="mt-16" />
   </div>
 </Base>

@@ -31,13 +31,13 @@ const items = await Promise.all(
 ---
 
 <Base
-  title={page.currentPage > 1 ? `Media — page ${page.currentPage}` : "Media"}
+  title={page.currentPage > 1 ? `Media - page ${page.currentPage}` : "Media"}
   description="Photos, animations, and videos from the Swarm Systems Lab."
 >
   <PageHeader
     page="media"
     eyebrow="Photo & video"
-    title="MEDIA"
+    title="MEDIA FEED."
     accent="FEED."
     description={mediaConfig.intro}
   />
@@ -78,7 +78,7 @@ const items = await Promise.all(
     }
 
     <section>
-      <Rule label={page.currentPage === 1 ? "Photos" : `Photos — page ${page.currentPage}`} />
+      <Rule label={page.currentPage === 1 ? "Photos" : `Photos - page ${page.currentPage}`} />
 
       <ul class="grid gap-px sm:grid-cols-2 lg:grid-cols-3">
         {
