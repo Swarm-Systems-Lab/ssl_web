@@ -87,10 +87,11 @@ const siteSchema = z.object({
         /** File name in content/affiliations/, when it differs from the label. */
         logo: z.string().optional(),
         /**
-         * Show the logo as a plain white mark instead of on a white plate.
-         * Only for artwork on a transparent background.
+         * Show the logo as a plain single-colour mark instead of on a white
+         * plate: black on the light theme, white on the dark one. Only for
+         * artwork on a transparent background.
          */
-        white: z.boolean().default(false),
+        mono: z.boolean().default(false),
       }),
     )
     .default([]),

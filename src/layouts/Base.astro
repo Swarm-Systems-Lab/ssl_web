@@ -28,7 +28,18 @@ const preview = image ? new URL(image, Astro.site).href : undefined;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#09090b" />
+    <meta name="theme-color" content="#ffffff" />
+
+    {
+      /* Runs before the body is painted, so a visitor who chose the dark theme
+        never sees a white flash on the way in. */
+    }
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem("theme");
+        if (saved === "dark" || saved === "light") document.documentElement.dataset.theme = saved;
+      } catch {}
+    </script>
 
     <meta property="og:site_name" content={site.title} />
     <meta property="og:type" content="website" />
@@ -48,7 +59,7 @@ const preview = image ? new URL(image, Astro.site).href : undefined;
   </head>
 
   <body class="relative min-h-screen">
-    <div class="grid-bg pointer-events-none fixed inset-0 opacity-[0.07]" aria-hidden="true"></div>
+    <div class="grid-bg pointer-events-none fixed inset-0" aria-hidden="true"></div>
 
     <div class="relative z-10 flex min-h-screen flex-col">
       <SiteNav />

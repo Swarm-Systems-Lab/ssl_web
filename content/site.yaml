@@ -78,8 +78,8 @@ social:
 #
 # Logos sit on a white plate, which is what makes a PNG downloaded from an
 # institution look right whether or not it has a transparent background. If you
-# do have a clean transparent file and would rather it appeared as a plain white
-# mark with no plate, add `white: true` to that entry.
+# do have a clean transparent file and would rather it appeared as a plain
+# single-colour mark with no plate, add `mono: true` to that entry.
 #
 # `href` is optional; check each one before publishing.
 affiliations:

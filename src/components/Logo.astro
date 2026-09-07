@@ -9,11 +9,12 @@ interface Props {
   name?: string;
   folder?: LogoFolder;
   /**
-   * Flatten the logo to a single white mark. Only safe for artwork on a
-   * transparent background - a logo supplied on an opaque white rectangle
-   * would come out as a white block.
+   * Flatten the logo to a single mark in the theme's ink colour: black on the
+   * light theme, white on the dark one. Only safe for artwork on a transparent
+   * background - a logo supplied on an opaque white rectangle would come out
+   * as a solid block.
    */
-  white?: boolean;
+  mono?: boolean;
   /** Height class applied to the logo itself. */
   size?: string;
   /** Widths to render, for raster logos. Scale these with `size`. */
@@ -26,7 +27,7 @@ const {
   label,
   name,
   folder = "logos",
-  white = false,
+  mono = false,
   size = "h-10 w-auto",
   widths = [80, 160, 320],
   sizes = "160px",
@@ -38,17 +39,13 @@ const src = logoFor(label, name, folder);
 
 {
   src &&
-    (white ? (
-      /*
-       * brightness-0 turns every colour black, invert then turns it white
-       * which flattens a transparent monochrome mark to a single white shape.
-       */
+    (mono ? (
       <Picture
         src={src}
         alt=""
         widths={widths}
         sizes={sizes}
-        class:list={["object-contain brightness-0 invert", size, className]}
+        class:list={["logo-mono object-contain", size, className]}
       />
     ) : (
       /*

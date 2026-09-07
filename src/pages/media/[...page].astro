@@ -85,7 +85,7 @@ const items = await Promise.all(
         {
           items.map(({ item, full }, index) => (
             <li class="group flex flex-col border border-border bg-surface/30">
-              <div class="aspect-[4/3] overflow-hidden bg-black">
+              <div class="aspect-[4/3] overflow-hidden bg-mat">
                 {full ? (
                   /* The link is the fallback: the lightbox takes the click
                      when it can, the file opens in a tab when it cannot. */

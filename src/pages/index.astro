@@ -99,7 +99,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
                   label={item.label}
                   name={item.logo}
                   folder="affiliations"
-                  white={item.white}
+                  mono={item.mono}
                   size="h-20 w-auto max-w-[16rem]"
                   widths={[240, 480, 640]}
                   sizes="256px"
@@ -142,7 +142,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
             {site.community.map((item) => (
               <li class="group border border-border bg-background p-8 transition-colors hover:border-accent/50">
                 <a href={item.href} rel="noopener" class="block">
-                  <Logo label={item.label} name={item.logo} white size="h-9 w-auto" class="mb-5" />
+                  <Logo label={item.label} name={item.logo} mono size="h-9 w-auto" class="mb-5" />
                   <h3 class="font-display text-2xl font-bold tracking-tight transition-colors group-hover:text-accent">
                     {item.label}
                   </h3>

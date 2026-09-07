@@ -40,7 +40,7 @@ const watch = (id: string) => `https://www.youtube.com/watch?v=${id}`;
   {
     videos.map((video, index) => (
       <li class="border border-border bg-surface/30 transition-colors hover:border-accent/50">
-        <div class="relative aspect-video border-b border-border bg-black" data-player>
+        <div class="relative aspect-video border-b border-border bg-mat" data-player>
           {/* A link, so it still leads to the video with no JavaScript and can
               be opened in a new tab. The script turns it into the player. */}
           <a

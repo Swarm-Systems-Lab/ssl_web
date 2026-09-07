@@ -22,17 +22,20 @@
       <img
         data-image
         alt=""
-        class="max-h-[80dvh] w-auto max-w-full border border-border object-contain"
+        class="max-h-[80dvh] w-auto max-w-full border border-white/15 object-contain"
       />
-      <figcaption data-caption class="max-w-2xl text-center text-sm text-muted-foreground">
-      </figcaption>
+      {
+        /* The backdrop is dark whichever theme the page is in, so this chrome
+          does not follow the palette. */
+      }
+      <figcaption data-caption class="max-w-2xl text-center text-sm text-zinc-300"></figcaption>
     </figure>
   </div>
 
   <button
     type="button"
     aria-label="Close"
-    class="absolute top-4 right-4 grid size-10 place-items-center border border-border bg-background/80 font-display text-lg text-foreground backdrop-blur transition-colors hover:border-accent hover:text-accent"
+    class="absolute top-4 right-4 grid size-10 place-items-center border border-white/25 bg-black/50 font-display text-lg text-white backdrop-blur transition-colors hover:border-white hover:text-white"
   >
     ✕
   </button>

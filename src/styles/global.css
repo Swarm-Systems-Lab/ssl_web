@@ -1,20 +1,73 @@
 @import "tailwindcss" source(none);
 @source "../../src";
 
+/*
+ * The palette is written twice, light first and dark second, and every colour
+ * utility resolves through these variables. Switching the theme is then one
+ * attribute on <html> - no second stylesheet, no classes to swap.
+ *
+ * Light is the default: a page with no data-theme is the white one.
+ */
+:root {
+  color-scheme: light;
+
+  --background: #ffffff;
+  --foreground: #18181b;
+  --muted: #71717a;
+  --muted-foreground: #52525b;
+  /* Cyan-700 rather than the cyan-400 used on black: the bright one reads at
+     under 2:1 against white, which is not a link colour. */
+  --accent: #0e7490;
+  --accent-foreground: #ffffff;
+  --border: #e4e4e7;
+  --surface: #fafafa;
+
+  /* The ground a picture is laid on when it does not fill its frame. */
+  --mat: #f4f4f5;
+  /* The faint grid behind the page, and how strongly it shows. */
+  --grid-line: #a1a1aa;
+  --grid-opacity: 0.09;
+  /* 0 leaves a flattened logo black, 1 turns it white. */
+  --logo-invert: 0;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --muted: #71717a;
+  --muted-foreground: #a1a1aa;
+  --accent: #22d3ee;
+  --accent-foreground: #09090b;
+  --border: #27272a;
+  --surface: #121214;
+
+  --mat: #000000;
+  --grid-line: #27272a;
+  --grid-opacity: 0.07;
+  --logo-invert: 1;
+}
+
 @theme {
-  --color-background: #09090b;
-  --color-foreground: #f4f4f5;
-  --color-muted: #71717a;
-  --color-muted-foreground: #a1a1aa;
-  --color-accent: #22d3ee;
-  --color-accent-foreground: #09090b;
-  --color-border: #27272a;
-  --color-surface: #121214;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-mat: var(--mat);
 
   --font-display: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
+
+/* Lets components say `dark:` and mean this site's toggle rather than the
+   operating system's setting. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @utility no-scrollbar {
   scrollbar-width: none;
@@ -25,9 +78,19 @@
 
 @utility grid-bg {
   background-image:
-    linear-gradient(to right, var(--color-border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 40px 40px;
+  opacity: var(--grid-opacity);
+}
+
+/*
+ * A logo flattened to a single ink colour: black on the light theme, white on
+ * the dark one. brightness(0) throws away the artwork's own colours, invert
+ * then flips the result when the page is dark.
+ */
+@utility logo-mono {
+  filter: brightness(0) invert(var(--logo-invert));
 }
 
 /* Styling for Markdown bodies rendered from content/. Authors write plain
@@ -119,7 +182,6 @@
 
 @layer base {
   html {
-    color-scheme: dark;
     scroll-behavior: smooth;
   }
   body {
