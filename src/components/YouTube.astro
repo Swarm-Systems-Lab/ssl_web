@@ -1,6 +1,7 @@
 ---
 import { youtubeWatch } from "@/lib/video";
 import { youtubeStill } from "@/lib/poster";
+import { displayFor, objectPosition } from "@/lib/display";
 
 /**
  * A YouTube video, shown as its own still until someone asks to watch.
@@ -31,6 +32,17 @@ const FRAMED = /(^|\s)(aspect-|size-|h-(?!auto\b))/;
 const shape = FRAMED.test(className ?? "") ? undefined : "aspect-video";
 
 const still = await youtubeStill(id);
+
+// The same framing a picture gets, for the still the player is built on.
+const settings = displayFor(`youtube:${id}`);
+const position = objectPosition(settings?.focus);
+const scale = settings?.zoom && settings.zoom !== 1 ? settings.zoom : undefined;
+const style = [
+  position && `object-position: ${position}`,
+  scale && `transform: scale(${scale}); transform-origin: ${position ?? "center"}`,
+]
+  .filter(Boolean)
+  .join("; ");
 ---
 
 <a
@@ -38,7 +50,7 @@ const still = await youtubeStill(id);
   rel="noopener"
   data-play={id}
   aria-label={`Play ${label}`}
-  class:list={["group/play relative block bg-mat", shape, className]}
+  class:list={["group/play relative block overflow-hidden bg-mat", shape, className]}
 >
   <img
     src={still}
@@ -47,7 +59,11 @@ const still = await youtubeStill(id);
     height="720"
     loading={loading}
     decoding="async"
-    class="h-full w-full object-cover opacity-90 transition-opacity group-hover/play:opacity-100"
+    style={style || undefined}
+    class:list={[
+      "h-full w-full opacity-90 transition-opacity group-hover/play:opacity-100",
+      scale && scale < 1 ? "object-contain" : "object-cover",
+    ]}
   />
   <span class="absolute inset-0 grid place-items-center">
     <span

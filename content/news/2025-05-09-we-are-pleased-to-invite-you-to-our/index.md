@@ -1,7 +1,6 @@
 ---
 title: "We are pleased to invite you to our upcoming Workshop on Guiding Vector Fields (GVFs) for Autonomous Robots, taking place at IROS 2025 in Hangzhou, China"
 date: 2025-05-09
-summary: "Guiding Vector Fields (GVFs) have emerged as a powerful and versatile framework for autonomous robot navigation, enabling effective motion control in a variety of settings. This four-hour workshop will offer a deep dive into recent…"
 ---
 We are pleased to invite you to our upcoming Workshop on Guiding Vector Fields (GVFs) for Autonomous Robots, taking place at IROS 2025 in Hangzhou, China.
 

@@ -140,8 +140,10 @@ serves every shape it is shown in. Astro can crop server-side (`fit` plus
 and would crop the full-size copy too. `object-view-box` would express both
 settings in one line and clip itself, but Firefox 153 still does not support it.
 
-A scaled picture is painted larger than its own box, so it needs something to
-clip it. `Picture` wraps every picture in a span that is `display: contents` -
+`zoom` above 1 keeps `object-cover` and scales past the frame; below 1 switches
+to `object-contain` and scales within it, so the whole picture shows with the
+mat around it. A scaled picture is painted at a size other than its own box, so
+it needs something to clip it. `Picture` wraps every picture in a span that is `display: contents` -
 generating no box at all, leaving layout exactly as it was - and turns that span
 into `overflow-hidden` only for a picture that is actually zoomed, moving the
 frame's classes onto it. A zoom is applied only where the frame has a height to
@@ -168,6 +170,11 @@ served as it is; a YouTube video has no file, so it is declared in that folder's
 special case in the collection plumbing: `folderMedia()` mixes declared videos
 in with the folder's files, so a video can be a page's cover, a carousel slide,
 or a listing thumbnail wherever a picture could.
+
+A video's own settings - `focus`, `zoom`, `caption`, `alt` - are keyed by that
+same reference rather than by a path, since a video has no file to be found by,
+and `displayFor()` resolves either. That is what lets a still be framed like
+any other picture wherever it is shown.
 
 `Picture` turns that string into a player, or into YouTube's own still when the
 caller asks for one with `still` - which is what a listing wants, where the
@@ -282,6 +289,15 @@ it once the team photos landed. `tools/prune-assets.mjs` runs on
 the built HTML, CSS, JS, or XML. Hashed names make a match a real reference, and
 anything ambiguous is kept. Link previews go through `lib/social-image.ts`
 rather than pointing at an original, for the same reason.
+
+## Links in Markdown
+
+Components build addresses with `url()` so they pick up `BASE_PATH`. Markdown
+has no such seam, so `tools/base-links.mjs` rewrites site-relative `href` and
+`src` values as the Markdown is rendered - a link written `/research/aerosense`
+becomes `/ssl_web/research/aerosense` when the site is served from a sub-path,
+and is left alone when it is not. Protocol-relative, absolute, `mailto:` and
+anchor links are never touched.
 
 ## Adding a tab
 

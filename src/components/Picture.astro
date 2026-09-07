@@ -62,19 +62,23 @@ const source: Media = video ? await youtubeStill(video) : src;
 
 // What the picture's own folder says about it. Cropping only happens with
 // object-cover, so the focus is inert everywhere else.
-const settings = displayFor(source);
+const settings = displayFor(video ? src : source);
 const position = objectPosition(focus ?? settings?.focus);
 
 /*
- * Zooming past the frame means painting the picture larger than its own box,
- * which needs something to clip it and a box with a height to clip against.
- * Where the frame has no height of its own the picture is being shown whole,
+ * Zooming means painting the picture at a size other than its own box, which
+ * needs something to clip it and a box with a height to clip against. Where
+ * the frame has no height of its own the picture is being shown whole already,
  * nothing is cropped, and a zoom would only collapse the layout - so it is
  * ignored rather than obeyed.
+ *
+ * Above 1 the picture fills the frame and is cropped closer; below 1 it is
+ * fitted whole and stands away from the edges.
  */
 const FRAMED = /(^|\s)(aspect-|size-|min-h-|h-(?!auto\b))/;
-const zoomTo = settings?.zoom && settings.zoom > 1 ? settings.zoom : undefined;
+const zoomTo = settings?.zoom && settings.zoom !== 1 ? settings.zoom : undefined;
 const magnified = zoomTo && FRAMED.test(className ?? "") ? zoomTo : undefined;
+const shrunk = magnified !== undefined && magnified < 1;
 
 const style = [
   position && `object-position: ${position}`,
@@ -92,8 +96,8 @@ const description = settings?.alt ?? alt;
  * everywhere else it is `display: contents` - it generates no box at all and
  * the picture stays exactly the element its container was laid out around.
  */
-const frame = magnified ? ["block overflow-hidden", className] : "contents";
-const paint = magnified ? "h-full w-full object-cover" : className;
+const frame = magnified ? ["block overflow-hidden", shrunk && "bg-mat", className] : "contents";
+const paint = magnified ? ["h-full w-full", shrunk ? "object-contain" : "object-cover"] : className;
 const isVideo = typeof source === "string" && /\.(mp4|webm)$/.test(source);
 
 // Astro emits the fallback `src` at the picture's own resolution unless it is

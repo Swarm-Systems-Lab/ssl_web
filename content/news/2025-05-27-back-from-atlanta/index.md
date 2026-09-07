@@ -1,7 +1,6 @@
 ---
 title: "Back from Atlanta!"
 date: 2025-05-27
-summary: "We have presented two works Inverse Kinematics on Guiding Vector Fields for Robot Path Following and Distributed Versatile Maneuvering with Generalized Formations Using Guiding Vector Fields."
 ---
 Back from Atlanta! We have presented two works Inverse Kinematics on Guiding Vector Fields for Robot Path Following and Distributed Versatile Maneuvering with Generalized Formations Using Guiding Vector Fields.
 

@@ -1,7 +1,6 @@
 ---
 title: "Our friends from CanalSur (Spanish TV from Andalucia) made a reportage about our research on swarm robotics!"
 date: 2023-12-17
-summary: "In this video, we explain the concept of a robot swarm and what are the applications of swarms of drones in the real world."
 ---
 Our friends from CanalSur (Spanish TV from Andalucia) made a reportage about our research on swarm robotics! In this video, we explain the concept of a robot swarm and what are the applications of swarms of drones in the real world.
 

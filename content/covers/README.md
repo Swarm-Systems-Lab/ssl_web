@@ -20,23 +20,32 @@ content/covers/
 Any of `.jpg .jpeg .png .webp .avif .gif` works. A page with no file here simply
 has no cover, which is fine - none of them are required.
 
-## Captions
+## Captions, cropping, and alt text
 
-Optional, and written in `../site.yaml` under `coverCaptions:`, keyed by the
-same page name:
+An `images.yaml` in this folder works exactly as it does anywhere else, so a
+cover can say how it should be cropped and what it should be called:
 
 ```yaml
-coverCaptions:
-  home: "The Swarm Systems Lab"
-  news: "Field testing near Granada"
+# content/covers/images.yaml
+research.jpg:
+  focus: top          # keep the top of the picture when it is cropped
+  zoom: 1.2           # or 0.8 to show it whole, smaller than the banner
+  caption: Field testing near Granada
+  alt: A fixed-wing drone being launched by hand
 ```
 
+See [`../README.md`](../README.md) for what each setting does.
+
+Captions can also be written in `../site.yaml` under `coverCaptions:`, keyed by
+the page name - the older way, still supported. When a picture is named in both
+places the one here wins, being the more specific of the two.
+
 The caption doubles as the description read out by screen readers, so it is
-worth adding.
+worth adding either way.
 
 ## Shape
 
 `home.png` is shown whole, never cropped - it is the team photo, and nothing
 should be cut off. Covers on the other pages are cropped to a wide banner, so
-put the interesting part near the middle. Wide pictures work best there;
-something around 1600 x 700 is plenty.
+put the interesting part near the middle, or say where it is with `focus:`.
+Wide pictures work best there; something around 1600 x 700 is plenty.

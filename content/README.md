@@ -272,10 +272,12 @@ IROS-2025.jpg:
 does something where the frame's shape differs from the picture's; a picture
 shown whole is unaffected.
 
-`zoom` crops in closer: `1` is the whole frame, `1.5` is half again as close, up
-to `4`. It zooms around the same spot `focus` names, so the two work together -
-`focus` says where to look, `zoom` says how close. Use it when a face or a robot
-sits small in a wide shot:
+`zoom` says how much of the frame the picture takes. `1`, the default, fills it
+and crops off whatever does not fit.
+
+**Above 1 crops in closer**, around the same spot `focus` names - the two work
+together, `focus` saying where to look and `zoom` how close. Use it when a face
+or a robot sits small in a wide shot:
 
 ```yaml
 weijia.jpg:
@@ -283,9 +285,18 @@ weijia.jpg:
   zoom: 1.4
 ```
 
-Like `focus`, it only applies where the picture is actually cropped - a card, a
-thumbnail, a banner. Where the picture is shown whole, on a person's own page
-for instance, it is ignored rather than blowing the picture up.
+**Below 1 goes the other way**: the picture is shown whole, at that fraction of
+the frame, with the background showing around it. Use it for a plot, a poster,
+or a diagram that a crop would ruin:
+
+```yaml
+formation-diagram.png:
+  zoom: 0.8
+```
+
+Like `focus`, `zoom` only applies where the frame would crop the picture - a
+card, a thumbnail, a banner. Where the picture is already shown whole, on a
+person's own page for instance, it is ignored rather than resizing it.
 
 `caption` is the line printed under the picture in a carousel or the gallery.
 Without one it is worked out from the file name, which is usually enough -
@@ -295,8 +306,8 @@ file name cannot.
 This means you do **not** need to keep a second, hand-cropped copy of a photo
 just to make it sit right in one place: keep the original and set `focus`.
 
-The file works in any folder holding pictures - a news post, a person, the team
-photos, `media/`, `covers/`, `images/`. Naming a file that is not in that folder
+The file works in any folder holding pictures - a news post, a research
+project, a person, the team photos, `media/`, `covers/`, `images/`. Naming a file that is not in that folder
 stops the build and tells you which names it can see, so a typo cannot pass
 quietly.
 
@@ -311,7 +322,14 @@ videos:
   - youtube: https://www.youtube.com/watch?v=55N0cbsjq08
     caption: Fully autonomous fixed-wing aerobatics
     cover: true          # lead the page with it
+    focus: top           # and the same framing settings a picture takes
+    zoom: 1.2
+    alt: A fixed-wing drone rolling over a runway
 ```
+
+`focus` and `zoom` apply to the still the video is shown as - in the list, on
+the front page, and behind the play button - so a video can be framed exactly
+like a photograph.
 
 Paste the link from the browser or just the id - both work. `cover: true` makes
 it the media at the top of the page; without it the video joins the carousel
@@ -341,6 +359,40 @@ keep those under a few megabytes, and put anything longer on YouTube.
 
 Use lowercase names with dashes and no spaces or accents:
 `01-group-photo.jpg`, not `Group Photo (Granada).JPG`.
+
+## Mentioning a paper in a news post
+
+Rather than typing out the authors and the venue, name the paper by its
+reference on the publications page - the `[C42]` labels:
+
+```yaml
+works: ["C42", "C41"]
+```
+
+Each one is then shown in full at the end of the post, exactly as it appears on
+the publications page, and links to it. Research projects take the same field.
+A reference that does not exist stops the build and says so.
+
+## Linking to another page of this site
+
+In a `.md` file, write the address the way it appears in the browser:
+
+```markdown
+Aerosense is an [ERC Proof of Concept](/research/aerosense) seeking to give
+spatial awareness using only local measurements.
+```
+
+| To link to        | Write                          |
+| ----------------- | ------------------------------ |
+| a research project | `/research/aerosense`         |
+| a news post        | `/news/2026-07-03-…`          |
+| a person           | `/team/hector-garcia-de-marina` |
+| a paper           | `/publications/…`             |
+| a whole section    | `/publications`, `/team`, `/awards` |
+
+The address is the folder name for anything with its own folder, so
+`content/research/aerosense/` is `/research/aerosense`. Outside links are
+written the same way, with the full `https://…`.
 
 ## Links and emphasis inside a `.yaml` file
 

@@ -3,7 +3,9 @@ import { render } from "astro:content";
 import Base from "@/layouts/Base.astro";
 import Picture from "@/components/Picture.astro";
 import Carousel from "@/components/Carousel.astro";
-import { getNews, newsSummary, newsMedia, formatDate } from "@/lib/collections";
+import Rule from "@/components/Rule.astro";
+import PublicationEntry from "@/components/PublicationEntry.astro";
+import { getNews, newsSummary, newsMedia, worksByRef, formatDate } from "@/lib/collections";
 import { socialImage } from "@/lib/social-image";
 import { url } from "@/lib/url";
 
@@ -18,10 +20,19 @@ const { Content } = await render(entry);
 // The header picture, plus every other picture in the post's folder as a
 // carousel. `image:` and `gallery:` in the frontmatter override both.
 const { header, slides } = newsMedia(entry);
+// Still worth generating for the link preview, where a page needs to say
+// something about itself even when the post does not spell it out.
 const summary = newsSummary(entry);
+// Papers are named by reference, so a post never restates what
+// publications.yaml already holds.
+const works = worksByRef(entry.data.works, `content/news/${entry.id}/index.md`);
 ---
 
-<Base title={entry.data.title} description={summary} image={await socialImage(header)}>
+<Base
+  title={entry.data.title}
+  description={summary || entry.data.title}
+  image={await socialImage(header)}
+>
   <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
     <a href={url("/news")} class="font-display text-[10px] tracking-widest text-accent uppercase">
       ← All news
@@ -37,7 +48,15 @@ const summary = newsSummary(entry);
       <h1 class="font-display text-3xl leading-tight font-bold tracking-tighter md:text-4xl">
         {entry.data.title}
       </h1>
-      <p class="mt-5 text-lg leading-relaxed text-muted-foreground">{summary}</p>
+      {
+        /* Only a summary written by hand earns a place here: the automatic one
+          is drawn from the text printed directly below it. */
+      }
+      {
+        entry.data.summary && (
+          <p class="mt-5 text-lg leading-relaxed text-muted-foreground">{entry.data.summary}</p>
+        )
+      }
     </header>
 
     {
@@ -64,6 +83,18 @@ const summary = newsSummary(entry);
           class="mt-12"
           sizes="(min-width: 768px) 768px, 100vw"
         />
+      )
+    }
+    {
+      works.length > 0 && (
+        <section class="mt-14">
+          <Rule label={works.length === 1 ? "The paper" : "The papers"} />
+          <ol class="space-y-8">
+            {works.map((pub) => (
+              <PublicationEntry pub={pub} />
+            ))}
+          </ol>
+        </section>
       )
     }
   </article>

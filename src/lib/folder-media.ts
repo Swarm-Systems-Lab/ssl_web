@@ -1,6 +1,6 @@
 import type { Slide } from "@/components/Carousel.astro";
 import { describeFile } from "./filenames";
-import { videosIn } from "./display";
+import { videosIn, displayFor } from "./display";
 import { photoEntries, assetEntries, type Media } from "./images";
 
 /**
@@ -36,11 +36,16 @@ export function folderMedia(collection: string, id: string, fallbackAlt: string)
   });
 
   const videos = videosIn(`/content/${collection}/${id}/`);
-  const asSlide = (video: (typeof videos)[number]) => ({
-    src: video.src,
-    alt: video.alt ?? video.caption ?? fallbackAlt,
-    caption: video.caption,
-  });
+  // A video's caption and alt live with its other settings, under the
+  // reference it travels as.
+  const asSlide = (video: (typeof videos)[number]) => {
+    const said = displayFor(video.src);
+    return {
+      src: video.src,
+      alt: said?.alt ?? said?.caption ?? fallbackAlt,
+      caption: said?.caption,
+    };
+  };
 
   return [
     ...videos.filter((video) => video.cover).map(asSlide),

@@ -213,7 +213,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
                     {entry.data.title}
                   </a>
                   {/* Trimmed by CSS, so it is one line at any window width. */}
-                  <p class="mt-1 truncate text-sm text-muted-foreground">{summary}</p>
+                  {summary && <p class="mt-1 truncate text-sm text-muted-foreground">{summary}</p>}
                 </div>
                 {thumbnail && (
                   <a href={url(`/news/${entry.id}`)} class="shrink-0">

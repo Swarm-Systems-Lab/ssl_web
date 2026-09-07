@@ -1,7 +1,6 @@
 ---
 title: "Today, we tested new adjustments in the altitude controller of our aircraft"
 date: 2024-02-23
-summary: "It is astonishing to check that in a 3D trajectory (ellipse, 60m peak, 40m low) our vertical controller kept the error between +-2meters! (plot above)."
 ---
 Today, we tested new adjustments in the altitude controller of our aircraft. It is astonishing to check that in a 3D trajectory (ellipse, 60m peak, 40m low) our vertical controller kept the error between +-2meters! (plot above).
 

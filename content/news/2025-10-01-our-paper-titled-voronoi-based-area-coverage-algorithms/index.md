@@ -1,7 +1,7 @@
 ---
-title: "Our paper titled Voronoi-Based Area Coverage Algorithms: Turning Real-World Fragility into Strength, by Juan Bosco Román Camacho, Enric Morellà Violeta, Omur Arslan, Hector Garcia de Marina, has been accepted at the IEEE International Symposium on Multi-Robot and Multi-Agent Systems (MRS 2025)!!"
+title: "How sensing imperfections impact area coverage algorithms?"
 date: 2025-10-01
-summary: "Our paper titled Voronoi-Based Area Coverage Algorithms: Turning Real-World Fragility into Strength, by Juan Bosco Román Camacho, Enric Morellà Violeta, Omur Arslan, Hector Garcia de Marina, has been accepted at the IEEE International…"
+works: ["C39"]
 ---
 Our paper titled Voronoi-Based Area Coverage Algorithms: Turning Real-World Fragility into Strength, by Juan Bosco Román Camacho, Enric Morellà Violeta, Omur Arslan, Hector Garcia de Marina, has been accepted at the IEEE International Symposium on Multi-Robot and Multi-Agent Systems (MRS 2025)!! to be held in Singapore in December.
 

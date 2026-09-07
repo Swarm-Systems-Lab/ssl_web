@@ -12,9 +12,14 @@
 
 title: "Short headline for the post"
 date: 2026-01-01
-summary: "One or two sentences shown on the news list page."
 
 # Optional ------------------------------------------------------------------
+# Papers the post is about, by their reference on the publications page. Each
+# one is shown in full underneath the post, so there is no need to type out
+# the authors and the venue again.
+# works: ["C42", "C41"]
+# summary: "The line shown under the title in the news list. Left out, it is
+#          taken from the post itself, starting after the opening sentence.
 # image: ./01-photo.jpg            # the big picture at the top of the post
 # imageAlt: "What the picture shows"
 # tags: ["paper", "field-test"]

@@ -24,8 +24,24 @@ export async function getResearch(): Promise<CollectionEntry<"research">[]> {
 }
 
 /** The summary from the frontmatter, or the opening of the post itself. */
+/**
+ * The line shown under a post's title in listings and at the top of the post.
+ *
+ * A post's text opens with the same sentence its title is drawn from, so the
+ * summary starts after it - repeating the title underneath itself reads like a
+ * stutter. A post that is only that one sentence has nothing left to preview,
+ * and gets no summary at all rather than an echo.
+ */
 export function newsSummary(entry: CollectionEntry<"news">): string {
-  return entry.data.summary ?? summarise(entry.body ?? "");
+  if (entry.data.summary) return entry.data.summary;
+
+  const body = (entry.body ?? "").trimStart();
+  const opening = entry.data.title.trim().replace(/[.!?:]+$/, "");
+  const rest = body.startsWith(opening)
+    ? body.slice(opening.length).replace(/^[\s.!?:,–—-]+/, "")
+    : body;
+
+  return summarise(rest);
 }
 
 export function newsMedia(entry: CollectionEntry<"news">): PostMedia {

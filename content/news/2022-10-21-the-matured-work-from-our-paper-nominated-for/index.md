@@ -1,7 +1,6 @@
 ---
 title: "The matured work from our paper nominated for the best paper award in ICRA has been accepted in IEEE Transactions on Robotics!"
 date: 2022-10-21
-summary: "In this work, we show how to coordinate distributely teams of robots on 3D surfaces with strong converge guarantees."
 ---
 The matured work from our paper nominated for the best paper award in ICRA has been accepted in IEEE Transactions on Robotics! In this work, we show how to coordinate distributely teams of robots on 3D surfaces with strong converge guarantees.
 

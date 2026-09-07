@@ -50,7 +50,7 @@
 
 # Preprints (arXiv)
 preprint:
-  - ref: U2
+  - ref: U1
     authors: "J. Bautista, HG de Marina"
     title: "Singularity-Free Guiding Vector Fields on SO(3) with Designer-Specified Progression Behavior"
     venue: "Submitted to Automatica"
@@ -59,14 +59,14 @@ preprint:
     links:
       - label: Code
         href: https://github.com/Swarm-Systems-Lab/gvf_so3
-  - ref: U1
-    authors: "G. Wang, HG de Marina, M. Fu, G. Wen, L. Chen"
-    title: "Angle-based leaderless formation maneuvering with global convergence"
-    venue: "Submitted to Automatica"
-    year: 2026
 
 # Journal papers
 journal:
+  - ref: J27
+    authors: "G. Wang, HG de Marina, M. Fu, G. Wen, L. Chen"
+    title: "Angle-based leaderless formation maneuvering with global convergence"
+    venue: "Automatica"
+    year: 2026
   - ref: J26
     authors: "J. Bautista, A. Acuaviva, J. Hinojosa, W. Yao, J. Castellanos, HG de Marina"
     title: "Fully distributed and resilient source seeking for robot swarms"
@@ -289,6 +289,7 @@ conference:
     title: "Voronoi-Based Area Coverage Algorithms: Turning Real-World Fragility into Strength"
     venue: "IEEE International Symposium on Multi-Robot and Multi-Agent Systems (MRS)"
     year: 2025
+    image: images/publications/voronoi.png
     doi: https://ieeexplore.ieee.org/document/11357268/
     pdf: https://zenodo.org/records/18132441
   - ref: C38

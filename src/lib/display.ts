@@ -14,6 +14,7 @@ import { youtubeRef } from "./video";
  *     01-lab-retreat.jpg:
  *       focus: top          # keep the faces in frame when the picture is cropped
  *       zoom: 1.4           # and crop in closer than the frame would
+ *                           # (below 1 instead shows the picture whole)
  *       caption: The lab in May
  *
  *     videos:               # media with no file to drop in the folder
@@ -48,11 +49,15 @@ const settings = z
       })
       .optional(),
     /**
-     * How much closer to crop in, where 1 is the whole frame and 1.5 is half
-     * again as close. Anchored on `focus`, so the two work together: focus
-     * says where to look, zoom says how close.
+     * How much of the frame the picture takes.
+     *
+     * 1 is the frame filled, cropping whatever does not fit - the default.
+     * Above 1 crops in closer, anchored on `focus`: 1.5 is half again as
+     * close. Below 1 goes the other way and shows the picture whole, at that
+     * fraction of the frame, with the ground showing around it - for a plot or
+     * a poster that a crop would ruin.
      */
-    zoom: z.number().min(1).max(4).optional(),
+    zoom: z.number().min(0.1).max(4).optional(),
     /** Overrides the caption worked out from the file name. */
     caption: z.string().optional(),
     /** Overrides the alt text, which otherwise follows the caption. */
@@ -66,18 +71,16 @@ export type Display = z.infer<typeof settings>;
  * A video that belongs to this folder but has no file in it. It joins the
  * folder's media, so it can be the page's cover or one of its slides.
  */
-const video = z
-  .object({
+const video = settings
+  .extend({
     /** The id, or any link YouTube gives you. */
     youtube: z.string(),
-    caption: z.string().optional(),
-    alt: z.string().optional(),
     /** Lead the page with it, instead of the first picture. */
     cover: z.boolean().default(false),
   })
   .strict();
 
-export type FolderVideo = { src: string; caption?: string; alt?: string; cover: boolean };
+export type FolderVideo = { src: string; cover: boolean };
 
 /** `videos:` is the one key that is not a file name; the rest are. */
 const sheet = z.object({ videos: z.array(video).default([]) }).catchall(settings);
@@ -123,7 +126,15 @@ const byPath = new Map<string, Display>(
   Object.entries(sheets).flatMap(([path, raw]) => read(path, raw)),
 );
 
-/** The videos each folder declares, in the order written. */
+/**
+ * The videos each folder declares, in the order written, and their settings
+ * keyed by the reference they travel as. A video is not a file, so it cannot
+ * be found by path the way a picture is; the reference is what a page has in
+ * hand by the time it draws one. The same video declared twice keeps the
+ * first set of settings.
+ */
+const byRef = new Map<string, Display>();
+
 const videosByFolder = new Map<string, FolderVideo[]>(
   Object.entries(sheets).map(([sheetPath, raw]) => {
     const folder = sheetPath.slice(0, sheetPath.lastIndexOf("/") + 1);
@@ -131,12 +142,18 @@ const videosByFolder = new Map<string, FolderVideo[]>(
     const listed = parsed.success ? parsed.data.videos : [];
     return [
       folder,
-      listed.map((entry) => ({
-        src: youtubeRef(entry.youtube),
-        caption: entry.caption,
-        alt: entry.alt,
-        cover: entry.cover,
-      })),
+      listed.map((entry) => {
+        const src = youtubeRef(entry.youtube);
+        if (!byRef.has(src)) {
+          byRef.set(src, {
+            focus: entry.focus,
+            zoom: entry.zoom,
+            caption: entry.caption,
+            alt: entry.alt,
+          });
+        }
+        return { src, cover: entry.cover };
+      }),
     ];
   }),
 );
@@ -153,9 +170,10 @@ function urlOf(picture: Media): string {
   return typeof picture === "string" ? picture : picture.src;
 }
 
-/** Settings for a picture, wherever it was resolved from. */
+/** Settings for a picture or a video, wherever it was resolved from. */
 export function displayFor(picture?: Media): Display | undefined {
   if (!picture) return undefined;
+  if (typeof picture === "string" && byRef.has(picture)) return byRef.get(picture);
   const path = pathByUrl.get(urlOf(picture));
   return path ? byPath.get(path) : undefined;
 }

@@ -56,6 +56,12 @@ const news = defineCollection({
       imageAlt: z.string().optional(),
       /** Extra pictures. Two or more render as a carousel under the post. */
       gallery: z.array(z.object({ src: image(), caption: z.string().optional() })).default([]),
+      /**
+       * Papers the post is about, by their reference in publications.yaml:
+       * ["C42", "C41"]. Each is shown in full underneath, so a post never has
+       * to spell out authors and venue that are already written down once.
+       */
+      works: z.array(z.string()).default([]),
       tags: z.array(z.string()).default([]),
       draft: z.boolean().default(false),
     }),
