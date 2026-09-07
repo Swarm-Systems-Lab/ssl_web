@@ -11,6 +11,11 @@ const news = (await getNews()).map((entry) => ({
   // Falls back to the first picture in the post's folder.
   thumbnail: newsPictures(entry).header,
 }));
+/**
+ * How many pictures are on screen before any scrolling. Those are fetched
+ * straight away; everything further down stays lazy, which is the default.
+ */
+const ABOVE_THE_FOLD = 2;
 ---
 
 <Base
@@ -28,7 +33,7 @@ const news = (await getNews()).map((entry) => ({
   <section class="mx-auto max-w-4xl px-6 pb-16">
     <ol class="border-t border-border">
       {
-        news.map(({ entry, summary, thumbnail }) => (
+        news.map(({ entry, summary, thumbnail }, index) => (
           <li class="grid gap-6 border-b border-border py-9 sm:grid-cols-[1fr_15rem]">
             <div>
               <div class="mb-3 flex items-center gap-3 font-display text-[10px] tracking-widest">
@@ -52,8 +57,9 @@ const news = (await getNews()).map((entry) => ({
                 <Picture
                   src={thumbnail}
                   alt={entry.data.imageAlt ?? entry.data.title}
-                  widths={[320, 640]}
+                  widths={[240, 480]}
                   sizes="(min-width: 640px) 240px, 100vw"
+                  loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                   class="aspect-[4/3] w-full border border-border object-cover transition-colors hover:border-accent/50"
                 />
               </a>

@@ -7,6 +7,11 @@ import ApplyBox from "@/components/ApplyBox.astro";
 import { projects } from "@/lib/data";
 import { optionalPicture } from "@/lib/images";
 import { url } from "@/lib/url";
+/**
+ * How many pictures are on screen before any scrolling. Those are fetched
+ * straight away; everything further down stays lazy, which is the default.
+ */
+const ABOVE_THE_FOLD = 2;
 ---
 
 <Base
@@ -31,7 +36,7 @@ import { url } from "@/lib/url";
 
     <ul class="grid gap-px md:grid-cols-2">
       {
-        projects.items.map((item) => {
+        projects.items.map((item, index) => {
           const photo = optionalPicture(item.image);
           return (
             <li class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
@@ -41,6 +46,7 @@ import { url } from "@/lib/url";
                   alt={item.imageAlt ?? item.title}
                   widths={[480, 960]}
                   sizes="(min-width: 768px) 50vw, 100vw"
+                  loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                   zoom
                   class="aspect-[21/9] w-full border-b border-border object-cover"
                 />

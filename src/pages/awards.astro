@@ -25,6 +25,11 @@ const resolve = (member: string) => {
   if (!person) return { label: member, href: undefined };
   return { label: person.name, href: person.hasPage ? url(`/team/${member}`) : undefined };
 };
+/**
+ * How many pictures are on screen before any scrolling. Those are fetched
+ * straight away; everything further down stays lazy, which is the default.
+ */
+const ABOVE_THE_FOLD = 2;
 ---
 
 <Base
@@ -42,7 +47,7 @@ const resolve = (member: string) => {
   <div class="mx-auto max-w-4xl px-6 pb-16">
     <ol class="border-t border-border">
       {
-        items.map((item) => {
+        items.map((item, row) => {
           // One picture or several: `images` wins, `image` is the shorthand.
           const paths = item.images.length > 0 ? item.images : item.image ? [item.image] : [];
           const slides = paths.map((path) => ({
@@ -115,6 +120,7 @@ const resolve = (member: string) => {
                   aspect="aspect-[4/3]"
                   widths={[320, 640]}
                   sizes="(min-width: 640px) 288px, 100vw"
+                  loading={row < ABOVE_THE_FOLD ? "eager" : "lazy"}
                   plate={plate}
                   class="w-full shrink-0 sm:w-72"
                 />

@@ -48,7 +48,7 @@ const { header, slides } = researchPictures(entry);
           alt={entry.data.imageAlt ?? entry.data.title}
           widths={[640, 960, 1280]}
           sizes="(min-width: 768px) 768px, 100vw"
-          loading="eager"
+          priority
           zoom
           class="mt-10 w-full border border-border"
         />

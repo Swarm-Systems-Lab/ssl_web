@@ -6,6 +6,11 @@ import { getResearch } from "@/lib/collections";
 import { url } from "@/lib/url";
 
 const topics = await getResearch();
+/**
+ * How many pictures are on screen before any scrolling. Those are fetched
+ * straight away; everything further down stays lazy, which is the default.
+ */
+const ABOVE_THE_FOLD = 3;
 ---
 
 <Base
@@ -22,7 +27,7 @@ const topics = await getResearch();
 
   <section class="mx-auto grid max-w-7xl gap-px px-6 pb-16 md:grid-cols-2 lg:grid-cols-3">
     {
-      topics.map((topic) => (
+      topics.map((topic, index) => (
         <article class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
           {topic.data.image && (
             <Picture
@@ -30,6 +35,7 @@ const topics = await getResearch();
               alt={topic.data.imageAlt ?? topic.data.title}
               widths={[400, 800]}
               sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw"
+              loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}
               class="aspect-video w-full border-b border-border object-cover"
             />
           )}

@@ -38,6 +38,11 @@ const options = publicationKinds.map(({ key, label }) => ({
   label,
   count: publications.filter((entry) => entry.kind === key).length,
 }));
+/**
+ * How many pictures are on screen before any scrolling. Those are fetched
+ * straight away; everything further down stays lazy, which is the default.
+ */
+const ABOVE_THE_FOLD = 4;
 ---
 
 <Base
@@ -56,7 +61,7 @@ const options = publicationKinds.map(({ key, label }) => ({
     <FilterBar options={options} allLabel="Everything" class="mb-14 border-y border-border py-4" />
 
     {
-      sections.map(({ title, items }) => (
+      sections.map(({ title, items }, section) => (
         <section class="mb-16" data-filter-group>
           <div class="mb-8 flex items-baseline gap-4">
             <h2 class="font-display text-3xl font-bold tracking-tighter">{title}</h2>
@@ -64,7 +69,7 @@ const options = publicationKinds.map(({ key, label }) => ({
           </div>
 
           <ol class="space-y-8">
-            {items.map((pub) => {
+            {items.map((pub, index) => {
               const thumb = optionalPicture(pub.image);
               return (
                 <li class="flex gap-5" data-kind={pub.kind}>
@@ -107,8 +112,9 @@ const options = publicationKinds.map(({ key, label }) => ({
                       <Picture
                         src={thumb}
                         alt={pub.imageAlt ?? pub.title}
-                        widths={[160, 320]}
+                        widths={[96, 192]}
                         sizes="96px"
+                        loading={section === 0 && index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                         class="size-24 border border-border object-cover transition-colors hover:border-accent/50"
                       />
                     </a>

@@ -69,6 +69,7 @@ names the file and field, so bad content cannot reach production.
 | `Picture.astro`    | one way to render any picture: optimises `ImageMetadata`, passes GIFs and clips through, renders `<video>` for `.mp4`/`.webm`      |
 | `Carousel.astro`   | scroll-snapping strip of pictures; arrows and dots appear only once its script runs, and a single slide degrades to a plain figure |
 | `Lightbox.astro`   | one per page, in the layout: opens any picture marked `data-zoom` full size over the page                                          |
+| `VideoGrid.astro`  | YouTube videos as thumbnails; the player is only embedded once someone clicks one                                                  |
 | `FilterBar.astro`  | client-side filter over an already-rendered list                                                                                   |
 | `Text.astro`       | renders one line of YAML text through the inline Markdown parser                                                                   |
 | `PageHeader.astro` | the eyebrow + big title block at the top of a page                                                                                 |
@@ -83,6 +84,32 @@ Takes `slides: { src, alt, caption? }[]` and a `label` for screen readers. The
 markup is a horizontal scroll container with snap points, so it works with a
 swipe or a trackpad before any JavaScript loads; the script only adds the arrows
 and dots and keeps them in sync.
+
+### Loading pictures
+
+Three settings decide what a page weighs, and they are worth keeping straight:
+
+- **`quality`** is fixed site-wide in `lib/images.ts`. 72 rather than Astro's
+  default of 80, which is where photographs stop looking different and files
+  keep getting smaller.
+- **`widths`** should stop at twice the size the picture is displayed at, and
+  `sizes` should say what that display size is. A 320px file behind an 80px
+  portrait is four times the pixels any screen can use, and the browser will
+  dutifully download it.
+- **`loading`** is lazy by default. Pass `loading="eager"` to the pictures that
+  are on screen before any scrolling - each list page has an `ABOVE_THE_FOLD`
+  constant saying how many that is for its layout - and `priority` to the one
+  picture the page is judged on, usually its cover or the header of a post.
+  `priority` sets loading, decoding, and fetch priority together, so there
+  should be at most one per page.
+
+Astro's dev toolbar audit checks the last of these against the real viewport, so
+open a page at the size people use and let it tell you when a count is wrong.
+
+Videos are the other half of it. A YouTube embed costs around half a megabyte
+before it shows a frame, so `VideoGrid` ships a thumbnail and a play button and
+only creates the iframe when someone clicks. The thumbnail sits inside a plain
+link to YouTube, which is what happens without JavaScript.
 
 ### Opening a picture full size
 

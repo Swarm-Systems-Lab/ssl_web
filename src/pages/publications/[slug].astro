@@ -69,7 +69,7 @@ const summary = `${pub.authors}. ${pub.venue}${pub.year ? `, ${pub.year}` : ""}.
           alt={pub.imageAlt ?? pub.title}
           widths={[640, 960, 1280]}
           sizes="(min-width: 768px) 768px, 100vw"
-          loading="eager"
+          priority
           zoom
           class="mt-10 w-full border border-border"
         />

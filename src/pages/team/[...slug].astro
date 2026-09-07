@@ -39,7 +39,7 @@ const wide = photo ? isPanoramic(photo) : false;
               alt={entry.data.name}
               widths={[200, 400]}
               sizes="200px"
-              loading="eager"
+              priority
               zoom
               class="w-40 shrink-0 border border-border object-cover"
             />
@@ -79,7 +79,7 @@ const wide = photo ? isPanoramic(photo) : false;
               alt={entry.data.name}
               widths={[640, 960, 1280]}
               sizes="(min-width: 768px) 768px, 100vw"
-              loading="eager"
+              priority
               zoom
               class="h-auto w-full border border-border"
             />

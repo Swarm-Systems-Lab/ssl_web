@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import type { Picture } from "@/lib/images";
+import { IMAGE_QUALITY, type Picture } from "@/lib/images";
 import { fullSize } from "@/lib/full-size";
 
 interface Props {
@@ -10,6 +10,12 @@ interface Props {
   sizes?: string;
   loading?: "lazy" | "eager";
   /**
+   * The one picture a page is judged on: usually its cover or the header of a
+   * post. Fetched eagerly, ahead of everything else, and decoded on the spot.
+   * At most one per page - marking several is the same as marking none.
+   */
+  priority?: boolean;
+  /**
    * Let a click open the picture full size, in the lightbox the layout
    * carries. For pictures that are not already inside a link - where a click
    * belongs to the link, not to the picture.
@@ -18,13 +24,26 @@ interface Props {
   class?: string;
 }
 
-const { src, alt, widths, sizes, loading = "lazy", zoom = false, class: className } = Astro.props;
+const {
+  src,
+  alt,
+  widths,
+  sizes,
+  loading = "lazy",
+  priority = false,
+  zoom = false,
+  class: className,
+} = Astro.props;
 const isVideo = typeof src === "string" && /\.(mp4|webm)$/.test(src);
 
 // Astro emits the fallback `src` at the picture's own resolution unless it is
 // told otherwise, which for a 6 MB photo means shipping a 2 MB variant nobody
 // asks for. Cap it at the largest width the caller actually uses.
 const width = widths?.length ? Math.max(...widths) : undefined;
+
+// `priority` sets loading, decoding, and fetchpriority together, so passing
+// `loading` alongside it would only fight with it.
+const speed = priority ? { priority: true } : { loading };
 
 // The lightbox finds a picture by this attribute alone. The role and tabindex
 // put it in the tab order, which a bare <img> never is.
@@ -41,10 +60,14 @@ const zoomAttrs = {
   isVideo ? (
     <video src={src as string} muted loop playsinline controls preload="none" class={className} />
   ) : typeof src === "string" ? (
+    /* GIFs and vectors are served untouched, so this is a plain <img>: there is
+       no format to convert to and no size to resize to. */
     <img
       src={src}
       alt={alt}
-      loading={loading}
+      loading={priority ? "eager" : loading}
+      decoding={priority ? "sync" : "async"}
+      fetchpriority={priority ? "high" : undefined}
       class:list={[className, full && "cursor-zoom-in"]}
       {...zoomAttrs}
     />
@@ -55,8 +78,9 @@ const zoomAttrs = {
       widths={widths}
       width={width}
       sizes={sizes}
-      loading={loading}
+      quality={IMAGE_QUALITY}
       class:list={[className, full && "cursor-zoom-in"]}
+      {...speed}
       {...zoomAttrs}
     />
   )

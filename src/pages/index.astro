@@ -71,7 +71,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
             alt={cover.caption ?? `The ${site.title} team`}
             widths={[720, 1080, 1440, 1920]}
             sizes="(min-width: 1280px) 1216px, 100vw"
-            loading="eager"
+            priority
             zoom
             class="h-auto w-full"
           />
@@ -218,7 +218,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
                     <Picture
                       src={thumbnail}
                       alt={entry.data.imageAlt ?? entry.data.title}
-                      widths={[160, 320]}
+                      widths={[96, 192]}
                       sizes="96px"
                       class="size-24 border border-border object-cover"
                     />

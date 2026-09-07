@@ -1,5 +1,5 @@
 import { getImage } from "astro:assets";
-import type { Picture } from "./images";
+import { IMAGE_QUALITY, type Picture } from "./images";
 
 /**
  * The widest a picture is ever shown at. Big enough to fill a laptop screen,
@@ -22,6 +22,7 @@ export async function fullSize(picture: Picture): Promise<string | undefined> {
     src: picture,
     width: Math.min(picture.width, MAX_WIDTH),
     format: "webp",
+    quality: IMAGE_QUALITY,
   });
   return rendered.src;
 }

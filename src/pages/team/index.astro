@@ -7,10 +7,20 @@ import { getTeam, TEAM_GROUPS } from "@/lib/collections";
 import { url } from "@/lib/url";
 
 const members = await getTeam();
-const groups = TEAM_GROUPS.map((group) => ({
+const shown = TEAM_GROUPS.map((group) => ({
   ...group,
   members: members.filter((m) => m.group === group.key),
 })).filter((group) => group.members.length > 0);
+
+// How many photos come before each group, so that "the first few on the page"
+// is counted across the whole page rather than restarting at every heading -
+// the lead is a group of one, and the row under it is still on screen.
+let seen = 0;
+const groups = shown.map((group) => {
+  const before = seen;
+  seen += group.members.length;
+  return { ...group, before };
+});
 
 /**
  * The whole card is the click target, not just the name. The link stretches
@@ -18,6 +28,12 @@ const groups = TEAM_GROUPS.map((group) => ({
  * link cannot wrap the other links inside a card.
  */
 const STRETCH = "after:absolute after:inset-0 after:content-['']";
+
+/**
+ * How many pictures are on screen before any scrolling. Those are fetched
+ * straight away; everything further down stays lazy, which is the default.
+ */
+const ABOVE_THE_FOLD = 3;
 ---
 
 <Base title="Team" description="People and visitors of the Swarm Systems Lab.">
@@ -38,14 +54,15 @@ const STRETCH = "after:absolute after:inset-0 after:content-['']";
           {group.key === "visitor" ? (
             /* Visitors read as a gallery: two columns, pictures shown wide. */
             <ul class="grid gap-px md:grid-cols-2">
-              {group.members.map(({ entry, slug, hasPage, photo }) => (
+              {group.members.map(({ entry, slug, hasPage, photo }, index) => (
                 <li class="relative flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
                   {photo && (
                     <Picture
                       src={photo}
                       alt={entry.data.name}
-                      widths={[640, 1280]}
+                      widths={[480, 960]}
                       sizes="(min-width: 768px) 600px, 100vw"
+                      loading={group.before + index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                       class="aspect-video w-full border-b border-border object-cover"
                     />
                   )}
@@ -76,7 +93,7 @@ const STRETCH = "after:absolute after:inset-0 after:content-['']";
             </ul>
           ) : group.key === "alumni" ? (
             <ul class="grid gap-px md:grid-cols-2">
-              {group.members.map(({ entry, slug, hasPage, photo }) => (
+              {group.members.map(({ entry, slug, hasPage, photo }, index) => (
                 <li class="relative flex items-start gap-5 border border-border bg-surface/30 p-6 transition-colors hover:border-accent/50">
                   <div class="min-w-0 flex-1">
                     <div class="font-display text-sm font-bold">
@@ -103,8 +120,9 @@ const STRETCH = "after:absolute after:inset-0 after:content-['']";
                     <Picture
                       src={photo}
                       alt={entry.data.name}
-                      widths={[160, 320]}
+                      widths={[80, 160]}
                       sizes="80px"
+                      loading={group.before + index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                       class="size-20 shrink-0 border border-border object-cover"
                     />
                   )}
@@ -113,7 +131,7 @@ const STRETCH = "after:absolute after:inset-0 after:content-['']";
             </ul>
           ) : (
             <ul class="grid gap-px sm:grid-cols-2 lg:grid-cols-3">
-              {group.members.map(({ entry, slug, hasPage, photo }) => (
+              {group.members.map(({ entry, slug, hasPage, photo }, index) => (
                 <li class="relative flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
                   {photo && (
                     <Picture
@@ -121,6 +139,7 @@ const STRETCH = "after:absolute after:inset-0 after:content-['']";
                       alt={entry.data.name}
                       widths={[300, 600]}
                       sizes="(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw"
+                      loading={group.before + index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                       class="aspect-square w-full border-b border-border object-cover"
                     />
                   )}

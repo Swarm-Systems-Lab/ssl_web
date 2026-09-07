@@ -27,6 +27,8 @@ interface Props {
   sizes?: string;
   widths?: number[];
   loading?: "lazy" | "eager";
+  /** Marks the first slide as the page's priority picture. */
+  priority?: boolean;
   /**
    * Show artwork rather than photographs: each picture is fitted whole onto a
    * white ground instead of being cropped to fill a dark one. A logo with
@@ -43,6 +45,7 @@ const {
   sizes = "(min-width: 1024px) 900px, 100vw",
   widths = [640, 960, 1440],
   loading = "lazy",
+  priority = false,
   plate = false,
   class: className,
 } = Astro.props;
@@ -75,6 +78,7 @@ const single = slides.length === 1;
                 widths={widths}
                 sizes={sizes}
                 loading={index === 0 ? loading : "lazy"}
+                priority={index === 0 && priority}
                 zoom
                 class:list={["h-full w-full", plate ? "object-contain p-3" : "object-cover"]}
               />
