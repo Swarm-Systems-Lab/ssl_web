@@ -18,6 +18,12 @@ const { title, description = site.description, image } = Astro.props;
 const home = site.tagline ? `${site.title} - ${site.tagline}` : site.title;
 const pageTitle = title ? `${title} - ${site.shortTitle}` : home;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+/**
+ * A build pointed anywhere but the lab's own domain is a staging copy - the
+ * github.io copy used to check a deployment, say - and must stay out of search
+ * results, or it competes with the real site for the same words.
+ */
+const staging = !Astro.site?.host.endsWith("swarmsystemslab.eu");
 const preview = image ? new URL(image, Astro.site).href : undefined;
 ---
 
@@ -29,6 +35,7 @@ const preview = image ? new URL(image, Astro.site).href : undefined;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {staging && <meta name="robots" content="noindex, nofollow" />}
 
     {
       /* The mark, white on black, so it reads in a light or a dark tab strip.
@@ -58,7 +65,7 @@ const preview = image ? new URL(image, Astro.site).href : undefined;
     {preview && <meta property="og:image" content={preview} />}
     <meta name="twitter:card" content={preview ? "summary_large_image" : "summary"} />
 
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href={url("/sitemap-index.xml")} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

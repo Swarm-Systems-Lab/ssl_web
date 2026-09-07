@@ -362,12 +362,34 @@ variables -> Actions -> Variables**):
 | `SITE_URL`  | `https://www.swarmsystemslab.eu` | absolute URLs in the sitemap and meta tags |
 | `BASE_PATH` | `/`                              | set to `/<repo>/` for a project-page URL   |
 
+A build pointed anywhere but `swarmsystemslab.eu` also emits
+`<meta name="robots" content="noindex">`, so a staging copy cannot be indexed
+and start competing with the real site for the same words. Nothing to switch
+on: it follows `SITE_URL`.
+
+### Publishing to the github.io address first
+
+To check a deployment before the domain is pointed anywhere, set both variables
+and let the site publish to the project page:
+
+| Variable    | Value                                 |
+| ----------- | ------------------------------------- |
+| `SITE_URL`  | `https://swarm-systems-lab.github.io` |
+| `BASE_PATH` | `/ssl_web/`                           |
+
+The site is then at `https://swarm-systems-lab.github.io/ssl_web/`. Leave the
+custom domain field under **Settings -> Pages** empty while doing this: setting
+it writes a `CNAME` file, and every visit is redirected to a domain that is not
+ready yet.
+
 ### Custom domain
 
 The site does not ship a `public/CNAME`, because `swarmsystemslab.eu` still
-points at the current Google Sites page. To cut over: set the domain under
-**Settings -> Pages -> Custom domain** (which creates the `CNAME` file), point the
-DNS records at GitHub, and leave `SITE_URL` as it is.
+points at the current Google Sites page. To cut over: **delete both repository
+variables** so the defaults apply, set the domain under **Settings -> Pages ->
+Custom domain** (which creates the `CNAME` file), and point the DNS records at
+GitHub. Leaving `BASE_PATH` set to `/ssl_web/` on the custom domain would break
+every link and asset on the site.
 
 ## Filling in DOIs and PDFs
 
