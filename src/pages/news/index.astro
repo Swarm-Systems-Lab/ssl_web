@@ -5,14 +5,14 @@ import Picture from "@/components/Picture.astro";
 import Rule from "@/components/Rule.astro";
 import PressShelf from "@/components/PressShelf.astro";
 import { press } from "@/lib/data";
-import { getNews, newsSummary, newsPictures, formatDate } from "@/lib/collections";
+import { getNews, newsSummary, newsMedia, formatDate } from "@/lib/collections";
 import { url } from "@/lib/url";
 
 const news = (await getNews()).map((entry) => ({
   entry,
   summary: newsSummary(entry),
   // Falls back to the first picture in the post's folder.
-  thumbnail: newsPictures(entry).header,
+  thumbnail: newsMedia(entry).header,
 }));
 /**
  * How many pictures are on screen before any scrolling. Those are fetched
@@ -71,6 +71,7 @@ const ABOVE_THE_FOLD = 2;
                   alt={entry.data.imageAlt ?? entry.data.title}
                   widths={[240, 480]}
                   sizes="(min-width: 640px) 240px, 100vw"
+                  still
                   loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                   class="aspect-[4/3] w-full border border-border object-cover transition-colors hover:border-accent/50"
                 />

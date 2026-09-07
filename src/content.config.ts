@@ -92,6 +92,11 @@ const research = defineCollection({
        * person; anything else is shown as plain text.
        */
       members: z.array(z.string()).default([]),
+      /**
+       * Anything else worth pointing at: the project's own site, a dataset,
+       * the code, a television piece that cannot be embedded.
+       */
+      links: z.array(link).default([]),
       image: image().optional(),
       imageAlt: z.string().optional(),
       /** Extra pictures. Two or more render as a carousel under the post. */

@@ -1,5 +1,5 @@
 import type { ImageMetadata } from "astro";
-import type { Picture } from "./images";
+import type { Media } from "./images";
 
 /**
  * Logos, kept in two folders:
@@ -54,21 +54,19 @@ function key(value: string): string {
   return value.split("/").map(slugify).filter(Boolean).join("/");
 }
 
-function build(folder: LogoFolder): Map<string, Picture> {
+function build(folder: LogoFolder): Map<string, Media> {
   const prefix = `/content/${folder}/`;
-  const files: [string, Picture][] = [
-    ...Object.entries(vector[folder]).map(([path, url]) => [path, url] as [string, Picture]),
-    ...Object.entries(raster[folder]).map(
-      ([path, mod]) => [path, mod.default] as [string, Picture],
-    ),
+  const files: [string, Media][] = [
+    ...Object.entries(vector[folder]).map(([path, url]) => [path, url] as [string, Media]),
+    ...Object.entries(raster[folder]).map(([path, mod]) => [path, mod.default] as [string, Media]),
   ];
 
   const paths = files.map(
     ([path, picture]) =>
-      [path.slice(prefix.length).replace(/\.[^.]+$/, ""), picture] as [string, Picture],
+      [path.slice(prefix.length).replace(/\.[^.]+$/, ""), picture] as [string, Media],
   );
 
-  const map = new Map<string, Picture>();
+  const map = new Map<string, Media>();
   const seen = new Map<string, string>();
 
   // Full paths first, so a file sitting at the top level always owns its own
@@ -95,7 +93,7 @@ function build(folder: LogoFolder): Map<string, Picture> {
   return map;
 }
 
-const index = new Map<LogoFolder, Map<string, Picture>>(
+const index = new Map<LogoFolder, Map<string, Media>>(
   (Object.keys(vector) as LogoFolder[]).map((folder) => [folder, build(folder)]),
 );
 
@@ -117,6 +115,6 @@ export function logoFor(
   label: string,
   name?: string,
   folder: LogoFolder = "logos",
-): Picture | undefined {
+): Media | undefined {
   return index.get(folder)?.get(key(name ?? label));
 }

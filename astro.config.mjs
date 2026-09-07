@@ -23,5 +23,10 @@ export default defineConfig({
     // files under 4 kB, which would bury small GIFs and clips inside the HTML.
     build: { assetsInlineLimit: 0 },
   },
-  image: { responsiveStyles: true },
+  image: {
+    responsiveStyles: true,
+    // YouTube's stills are fetched and cropped at build time, so the black
+    // bands never reach a page and nothing is loaded from Google to show one.
+    domains: ["i.ytimg.com"],
+  },
 });

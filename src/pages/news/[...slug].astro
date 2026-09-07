@@ -3,7 +3,7 @@ import { render } from "astro:content";
 import Base from "@/layouts/Base.astro";
 import Picture from "@/components/Picture.astro";
 import Carousel from "@/components/Carousel.astro";
-import { getNews, newsSummary, newsPictures, formatDate } from "@/lib/collections";
+import { getNews, newsSummary, newsMedia, formatDate } from "@/lib/collections";
 import { socialImage } from "@/lib/social-image";
 import { url } from "@/lib/url";
 
@@ -17,7 +17,7 @@ const { Content } = await render(entry);
 
 // The header picture, plus every other picture in the post's folder as a
 // carousel. `image:` and `gallery:` in the frontmatter override both.
-const { header, slides } = newsPictures(entry);
+const { header, slides } = newsMedia(entry);
 const summary = newsSummary(entry);
 ---
 

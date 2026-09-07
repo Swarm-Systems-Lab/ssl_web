@@ -91,6 +91,8 @@ const [atStart, atEnd] = arrows === "beside" ? ["-left-4", "-right-4"] : ["left-
 </div>
 
 <script>
+  import { pauseMedia } from "@/lib/video";
+
   // Progressive enhancement: the strip already scrolls and swipes on its own,
   // so everything here is additive.
   for (const root of document.querySelectorAll<HTMLElement>("[data-carousel]")) {
@@ -106,6 +108,21 @@ const [atStart, atEnd] = arrows === "beside" ? ["-left-4", "-right-4"] : ["left-
     const goBy = (direction: number) =>
       track.scrollTo({ left: track.scrollLeft + direction * page() });
 
+    /*
+     * Anything scrolled out of sight stops playing. Measured against the strip
+     * rather than counted by slide, so it is right whether a slide fills the
+     * strip or three of them share it.
+     */
+    const quieten = () => {
+      const from = track.scrollLeft;
+      const to = from + track.clientWidth;
+      for (const slide of track.children) {
+        const el = slide as HTMLElement;
+        const showing = el.offsetLeft < to - 1 && el.offsetLeft + el.offsetWidth > from + 1;
+        if (!showing) pauseMedia(el);
+      }
+    };
+
     const sync = () => {
       // The end of the scroll, not the last slide: with narrow cards there are
       // more slides than there are pages to scroll through.
@@ -115,6 +132,8 @@ const [atStart, atEnd] = arrows === "beside" ? ["-left-4", "-right-4"] : ["left-
 
       const index = Math.round(track.scrollLeft / page());
       dots.forEach((dot, position) => dot.classList.toggle("bg-accent", position === index));
+
+      quieten();
     };
 
     prev.hidden = false;

@@ -4,7 +4,6 @@ summary: "Aerosense delivers an avionics system purpose-built for distributed sp
 acronym: "aerosense"
 period: "2026 - 2027"
 order: 1
-image: cover.png
 funding:
   - name: ERC
     programme: Proof of Concept
@@ -15,6 +14,7 @@ partners:
   - name: Universidad de Granada
     href: https://www.ugr.es
 works: []
+members: ["jose-hinojosa-hidalgo", "jesus-bautista-villar", "diego-vela"]
 ---
 
 The drone swarm revolution promises to transform industries from defense to disaster relief, yet a

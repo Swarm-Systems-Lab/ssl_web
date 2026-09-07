@@ -1,3 +1,8 @@
-cover.png:
-  focus: 40% 100%
-  zoom: 1.2
+videos:
+  - youtube: https://www.youtube.com/watch?v=G_lXujpkPJw
+    caption: Aerosense - UGR Press Video
+    cover: true
+  - youtube: https://www.youtube.com/watch?v=TSMp9xttffo
+    caption: "Aerosense: enjambres de drones coordinados como bandadas de pájaros - Local Andalusian TV: Canal Sur (EnRed) Press Video"
+  - youtube: https://www.youtube.com/watch?v=_HtnZke-wfs
+    caption: Aerosense in the field

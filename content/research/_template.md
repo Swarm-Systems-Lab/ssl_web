@@ -40,7 +40,16 @@ order: 10          # lower numbers appear first
 # person; anything else is shown as written.
 # members: ["hector-garcia-de-marina", "A collaborator elsewhere"]
 
+# Anything else worth pointing at: the project's own site, the code, a dataset,
+# a television piece that cannot be embedded.
+# links:
+#   - label: Canal Sur, EnRed
+#     href: https://www.canalsurmas.es/videos/380711-enred-aerosense
+
 # image: ./01-field.jpg            # the picture beside the project in the list
+#                                  # (a video can lead instead - put it in
+#                                  #  images.yaml under `videos:` with
+#                                  #  `cover: true`)
 # imageAlt: "What the picture shows"
 # tags: ["control", "uav"]
 # draft: true

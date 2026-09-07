@@ -1,5 +1,5 @@
 import { site } from "./data";
-import { photoEntries, assetEntries, type Picture } from "./images";
+import { photoEntries, assetEntries, type Media } from "./images";
 
 /**
  * The picture across the top of a page.
@@ -17,13 +17,13 @@ import { photoEntries, assetEntries, type Picture } from "./images";
 
 const FOLDER = "/content/covers/";
 
-const byPage = new Map<string, Picture>(
-  ([...photoEntries, ...assetEntries] as [string, Picture][])
+const byPage = new Map<string, Media>(
+  ([...photoEntries, ...assetEntries] as [string, Media][])
     .filter(([path]) => path.startsWith(FOLDER) && !path.slice(FOLDER.length).includes("/"))
     .map(([path, src]) => [path.slice(FOLDER.length).replace(/\.[^.]+$/, ""), src]),
 );
 
-export type Cover = { src: Picture; caption?: string };
+export type Cover = { src: Media; caption?: string };
 
 export function coverFor(page: string): Cover | undefined {
   const src = byPage.get(page);

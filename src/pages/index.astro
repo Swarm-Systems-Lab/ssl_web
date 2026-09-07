@@ -6,7 +6,7 @@ import Picture from "@/components/Picture.astro";
 import Logo from "@/components/Logo.astro";
 import VideoGrid from "@/components/VideoGrid.astro";
 import { logoFor } from "@/lib/logos";
-import { getNews, newsSummary, newsPictures, formatDate } from "@/lib/collections";
+import { getNews, newsSummary, newsMedia, formatDate } from "@/lib/collections";
 import { site, featuredVideos } from "@/lib/data";
 import { coverFor } from "@/lib/covers";
 import { gallery } from "@/lib/media";
@@ -18,7 +18,7 @@ const { Content } = home ? await render(home) : { Content: null };
 const news = (await getNews()).slice(0, 4).map((entry) => ({
   entry,
   summary: newsSummary(entry),
-  thumbnail: newsPictures(entry).header,
+  thumbnail: newsMedia(entry).header,
 }));
 
 // content/covers/home.*, falling back to the newest photo in the gallery.
@@ -222,6 +222,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
                       alt={entry.data.imageAlt ?? entry.data.title}
                       widths={[96, 192]}
                       sizes="96px"
+                      still
                       class="size-24 border border-border object-cover"
                     />
                   </a>

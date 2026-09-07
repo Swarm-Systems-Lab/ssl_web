@@ -1,16 +1,10 @@
 import { getCollection, type CollectionEntry } from "astro:content";
-import {
-  postPictures,
-  firstFolderPicture,
-  folderPictures,
-  type PostPictures,
-} from "./folder-pictures";
-import { describeFile } from "./filenames";
+import { postMedia, firstFolderFile, folderMedia, type PostMedia } from "./folder-media";
 import type { Slide } from "@/components/Carousel.astro";
 import { summarise } from "./summary";
 import { publications, type Publication } from "./data";
 import { url } from "./url";
-import type { Picture } from "./images";
+import type { Media } from "./images";
 
 /** Drafts are visible while running `bun run dev` and dropped from builds. */
 const visible = ({ data }: { data: { draft?: boolean } }) => import.meta.env.DEV || !data.draft;
@@ -34,12 +28,12 @@ export function newsSummary(entry: CollectionEntry<"news">): string {
   return entry.data.summary ?? summarise(entry.body ?? "");
 }
 
-export function newsPictures(entry: CollectionEntry<"news">): PostPictures {
-  return postPictures("news", entry.id, entry.data);
+export function newsMedia(entry: CollectionEntry<"news">): PostMedia {
+  return postMedia("news", entry.id, entry.data);
 }
 
-export function researchPictures(entry: CollectionEntry<"research">): PostPictures {
-  return postPictures("research", entry.id, entry.data);
+export function researchMedia(entry: CollectionEntry<"research">): PostMedia {
+  return postMedia("research", entry.id, entry.data);
 }
 
 // -- team --------------------------------------------------------------------
@@ -66,7 +60,7 @@ export type TeamMember = {
    * than only as a line on the team page.
    */
   hasPage: boolean;
-  photo?: Picture;
+  photo?: Media;
 };
 
 /**
@@ -103,7 +97,7 @@ export async function getTeam(): Promise<TeamMember[]> {
 
   return entries
     .map((entry) => {
-      const photo = entry.data.photo ?? firstFolderPicture("team", entry.id);
+      const photo = entry.data.photo ?? firstFolderFile("team", entry.id);
       return {
         entry,
         slug: entry.id.split("/").pop()!,
@@ -127,10 +121,7 @@ export async function getTeam(): Promise<TeamMember[]> {
  * An empty folder simply means no carousel.
  */
 export function getTeamPhotos(): Slide[] {
-  return folderPictures("team", "photos").map(([path, src]) => {
-    const { caption } = describeFile(path);
-    return { src, alt: caption ?? "The lab", caption };
-  });
+  return folderMedia("team", "photos", "The lab");
 }
 
 // -- projects ----------------------------------------------------------------

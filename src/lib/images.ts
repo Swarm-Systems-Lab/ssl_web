@@ -7,7 +7,7 @@ import type { ImageMetadata } from "astro";
  * works inside a content collection. The YAML files are not collections, so
  * this module does the same job for them: it indexes everything under
  * content/ at build time and hands back either an `ImageMetadata` (which the
- * <Picture> component optimises) or a plain URL for formats that must be
+ * <Media> component optimises) or a plain URL for formats that must be
  * served untouched.
  */
 
@@ -24,8 +24,12 @@ const assets = import.meta.glob<string>("/content/**/*.{gif,mp4,webm,svg}", {
   import: "default",
 });
 
-/** Either an optimisable image or the URL of an asset served as-is. */
-export type Picture = ImageMetadata | string;
+/**
+ * One piece of media: an optimisable image, or a string - the URL of an asset
+ * served as it is (a GIF, an SVG, an .mp4), or "youtube:<id>" for a video that
+ * has no file at all. See lib/video.ts.
+ */
+export type Media = ImageMetadata | string;
 
 /**
  * WebP quality for every picture on the site. Astro's default is 80, which on
@@ -49,7 +53,7 @@ function normalise(path: string): string {
  * Paths are relative to content/. Throws a message naming the file and the
  * closest matches, so a typo is obvious in the build log.
  */
-export function picture(path: string): Picture {
+export function picture(path: string): Media {
   const key = normalise(path);
   const found = photos[key]?.default ?? assets[key];
   if (found) return found;
@@ -67,7 +71,7 @@ export function picture(path: string): Picture {
 }
 
 /** Same, but returns undefined instead of throwing when the field is unset. */
-export function optionalPicture(path?: string): Picture | undefined {
+export function optionalPicture(path?: string): Media | undefined {
   return path ? picture(path) : undefined;
 }
 
@@ -83,11 +87,11 @@ const PANORAMIC_RATIO = 0.8;
  * True for a wide picture, false for a passport-style one. Formats served
  * as-is carry no dimensions, so they take the narrow layout.
  */
-export function isPanoramic(picture: Picture): boolean {
+export function isPanoramic(picture: Media): boolean {
   return typeof picture === "string" ? false : picture.width / picture.height > PANORAMIC_RATIO;
 }
 
 /** The URL of a picture, for <meta> tags and plain links. */
-export function pictureUrl(value: Picture): string {
+export function pictureUrl(value: Media): string {
   return typeof value === "string" ? value : value.src;
 }

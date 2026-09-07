@@ -46,6 +46,19 @@ Only `name` is needed. `logo:` is a file name in `content/affiliations/`, and
 shows the mark next to the name. Use `partners:` for the companies and groups
 we run a project with, `funding:` for whoever pays.
 
+## Links
+
+```yaml
+links:
+  - label: Canal Sur, EnRed
+    href: https://www.canalsurmas.es/videos/380711-enred-aerosense
+```
+
+For anything the project should point at that is not a paper: its own site, the
+code, a dataset, or a video that lives somewhere it cannot be embedded from.
+YouTube videos are different - those play on the page, so they go in
+`images.yaml` under `videos:`.
+
 ## People
 
 ```yaml
@@ -59,7 +72,8 @@ when they have one. Anything else is shown as written.
 
 `image:` is the picture shown beside the project in the list. Every other
 picture in the folder appears as a carousel at the end of the project's page,
-in file-name order. Cropping and captions work as everywhere else - see
+in file-name order. A video can lead instead - a `.mp4` in the folder, or a
+YouTube link in `images.yaml` under `videos:` with `cover: true`. Cropping and captions work as everywhere else - see
 [`content/README.md`](../README.md).
 
 Projects are ordered by the `order` field - lower numbers first.

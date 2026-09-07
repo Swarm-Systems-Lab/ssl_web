@@ -2,7 +2,7 @@
 import Picture from "@/components/Picture.astro";
 import Slider from "@/components/Slider.astro";
 import { displayFor } from "@/lib/display";
-import type { Picture as PictureSource } from "@/lib/images";
+import type { Media } from "@/lib/images";
 
 /**
  * Horizontal picture carousel used wherever several pictures belong together:
@@ -14,7 +14,7 @@ import type { Picture as PictureSource } from "@/lib/images";
  */
 
 export interface Slide {
-  src: PictureSource;
+  src: Media;
   alt: string;
   caption?: string;
 }

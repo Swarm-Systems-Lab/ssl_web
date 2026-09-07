@@ -7,13 +7,7 @@ import Logo from "@/components/Logo.astro";
 import Rule from "@/components/Rule.astro";
 import PublicationEntry from "@/components/PublicationEntry.astro";
 import PeopleList from "@/components/PeopleList.astro";
-import {
-  getResearch,
-  researchPictures,
-  worksByRef,
-  teamLookup,
-  backerLabel,
-} from "@/lib/collections";
+import { getResearch, researchMedia, worksByRef, teamLookup, backerLabel } from "@/lib/collections";
 import { socialImage } from "@/lib/social-image";
 import { url } from "@/lib/url";
 
@@ -25,7 +19,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
-const { header, slides } = researchPictures(entry);
+const { header, slides } = researchMedia(entry);
 const { data } = entry;
 
 // Papers are named by reference, so a project never restates what
@@ -35,7 +29,12 @@ const person = await teamLookup();
 const people = data.members.map(person);
 
 // The fact sheet is only worth drawing when there is a fact to put in it.
-const facts = data.funding.length + data.partners.length + people.length + (data.period ? 1 : 0);
+const facts =
+  data.funding.length +
+  data.partners.length +
+  data.links.length +
+  people.length +
+  (data.period ? 1 : 0);
 ---
 
 <Base title={entry.data.title} description={entry.data.summary} image={await socialImage(header)}>
@@ -144,6 +143,25 @@ const facts = data.funding.length + data.partners.length + people.length + (data
             </div>
           )}
 
+          {data.links.length > 0 && (
+            <div class="flex flex-col gap-4 p-6 sm:flex-row sm:gap-8">
+              <dt class="shrink-0 font-display text-[10px] tracking-widest text-muted uppercase sm:w-28">
+                Elsewhere
+              </dt>
+              <dd class="flex flex-1 flex-wrap gap-x-6 gap-y-2">
+                {data.links.map((item) => (
+                  <a
+                    href={item.href}
+                    rel="noopener"
+                    class="text-accent transition-colors hover:underline"
+                  >
+                    {item.label} →
+                  </a>
+                ))}
+              </dd>
+            </div>
+          )}
+
           {people.length > 0 && (
             <div class="flex flex-col gap-4 p-6 sm:flex-row sm:gap-8">
               <dt class="shrink-0 font-display text-[10px] tracking-widest text-muted uppercase sm:w-28">
@@ -161,6 +179,17 @@ const facts = data.funding.length + data.partners.length + people.length + (data
     <div class="prose-lab mt-10"><Content /></div>
 
     {
+      slides.length > 0 && (
+        <Carousel
+          slides={slides}
+          label={`Pictures for ${entry.data.title}`}
+          class="mt-12"
+          sizes="(min-width: 768px) 768px, 100vw"
+        />
+      )
+    }
+
+    {
       works.length > 0 && (
         <section class="mt-14">
           <Rule
@@ -172,17 +201,6 @@ const facts = data.funding.length + data.partners.length + people.length + (data
             ))}
           </ol>
         </section>
-      )
-    }
-
-    {
-      slides.length > 0 && (
-        <Carousel
-          slides={slides}
-          label={`Pictures for ${entry.data.title}`}
-          class="mt-12"
-          sizes="(min-width: 768px) 768px, 100vw"
-        />
       )
     }
   </article>

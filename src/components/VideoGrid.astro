@@ -1,4 +1,6 @@
 ---
+import YouTube from "@/components/YouTube.astro";
+
 /**
  * A row of YouTube videos, used on the front page and on the media page.
  *
@@ -29,42 +31,19 @@ const {
   aboveTheFold = 0,
   class: className,
 } = Astro.props;
-
-// nocookie for the player, and the thumbnail comes from the image host, so
-// nothing is loaded from youtube.com itself until the player is asked for.
-const thumbnail = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-const watch = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 ---
 
 <ul class:list={["grid gap-px", columns, className]}>
   {
     videos.map((video, index) => (
       <li class="border border-border bg-surface/30 transition-colors hover:border-accent/50">
-        <div class="relative aspect-video border-b border-border bg-mat" data-player>
-          {/* A link, so it still leads to the video with no JavaScript and can
-              be opened in a new tab. The script turns it into the player. */}
-          <a
-            href={watch(video.youtube)}
-            rel="noopener"
-            data-play={video.youtube}
-            aria-label={`Play ${video.title}`}
-            class="group/play absolute inset-0 block"
-          >
-            <img
-              src={thumbnail(video.youtube)}
-              alt=""
-              width="480"
-              height="360"
-              loading={index < aboveTheFold ? "eager" : "lazy"}
-              decoding="async"
-              class="h-full w-full object-cover opacity-90 transition-opacity group-hover/play:opacity-100"
-            />
-            <span class="absolute inset-0 grid place-items-center">
-              <span class="grid size-14 place-items-center rounded-full border border-white/40 bg-black/60 pl-1 text-xl text-white backdrop-blur transition-colors group-hover/play:border-accent group-hover/play:text-accent">
-                ▶
-              </span>
-            </span>
-          </a>
+        <div class="aspect-video border-b border-border">
+          <YouTube
+            id={video.youtube}
+            label={video.title}
+            loading={index < aboveTheFold ? "eager" : "lazy"}
+            class="h-full w-full"
+          />
         </div>
         <div class="p-5">
           {video.date && (
@@ -76,24 +55,3 @@ const watch = (id: string) => `https://www.youtube.com/watch?v=${id}`;
     ))
   }
 </ul>
-
-<script>
-  // Swap the thumbnail for the real player on the first click. Until then the
-  // link is a plain link to YouTube, which is what it falls back to.
-  document.addEventListener("click", (event) => {
-    const node = event.target;
-    if (!(node instanceof Element)) return;
-    const trigger = node.closest<HTMLElement>("[data-play]");
-    const id = trigger?.dataset.play;
-    if (!trigger || !id) return;
-
-    event.preventDefault();
-    const frame = document.createElement("iframe");
-    frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
-    frame.title = trigger.getAttribute("aria-label") ?? "";
-    frame.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
-    frame.allowFullscreen = true;
-    frame.className = "h-full w-full";
-    trigger.closest("[data-player]")?.replaceChildren(frame);
-  });
-</script>

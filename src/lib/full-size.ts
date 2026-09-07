@@ -1,5 +1,5 @@
 import { getImage } from "astro:assets";
-import { IMAGE_QUALITY, type Picture } from "./images";
+import { IMAGE_QUALITY, type Media } from "./images";
 
 /**
  * The widest a picture is ever shown at. Big enough to fill a laptop screen,
@@ -12,7 +12,7 @@ const MAX_WIDTH = 1600;
  * The URL of a picture at viewing size, for the lightbox and for plain
  * "view full size" links. Undefined for video, which has nothing to open.
  */
-export async function fullSize(picture: Picture): Promise<string | undefined> {
+export async function fullSize(picture: Media): Promise<string | undefined> {
   // GIFs and vectors are served as they are, so their own URL is the full size.
   if (typeof picture === "string") {
     return /\.(mp4|webm)$/.test(picture) ? undefined : picture;

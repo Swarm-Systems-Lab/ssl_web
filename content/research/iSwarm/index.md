@@ -4,7 +4,7 @@ summary: "A rigorous control theory to unleash and ally with imperfections, such
 acronym: "iSwarm"
 period: "2023 - 2028"
 order: 0
-image: cover.png
+image: ./cover.png
 funding:
   - name: ERC
     programme: Starting Grant

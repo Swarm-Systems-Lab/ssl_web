@@ -74,6 +74,7 @@ names the file and field, so bad content cannot reach production.
 | `PressShelf.astro`       | coverage from `press.yaml` as a shelf of cards, newest first                                                                       |
 | `PublicationEntry.astro` | one paper as the publications page draws it; a project page shows its own papers with the same component                           |
 | `PeopleList.astro`       | a comma-separated run of people, linked where they have a page                                                                     |
+| `YouTube.astro`          | a video as its own still until someone presses play, then the embed; used by `Picture` and by the media page's grid                |
 | `FilterBar.astro`        | client-side filter over an already-rendered list                                                                                   |
 | `Text.astro`             | renders one line of YAML text through the inline Markdown parser                                                                   |
 | `PageHeader.astro`       | the eyebrow + big title block at the top of a page                                                                                 |
@@ -157,6 +158,31 @@ one: both are listed in YAML, which carries no captions.
 
 Keys that name a missing file, unknown settings, and malformed `focus` values
 all stop the build with the file and field named.
+
+### Video as media
+
+A collection's media is not only pictures. A `.gif` or an `.mp4` in a folder is
+served as it is; a YouTube video has no file, so it is declared in that folder's
+`images.yaml` under `videos:` and carried through the site as the string
+`youtube:<id>` - the same shape a GIF's URL takes. That is why it needs no
+special case in the collection plumbing: `folderMedia()` mixes declared videos
+in with the folder's files, so a video can be a page's cover, a carousel slide,
+or a listing thumbnail wherever a picture could.
+
+`Picture` turns that string into a player, or into YouTube's own still when the
+caller asks for one with `still` - which is what a listing wants, where the
+click belongs to the card around it, and what `socialImage()` uses for link
+previews. `lib/video.ts` owns every URL shape involved.
+
+Scrolling a carousel stops whatever it scrolled past: `Slider` pauses any clip
+and sends a pause to any YouTube embed that is no longer in view, measured
+against the strip rather than counted by slide, so it is right whether a slide
+fills the strip or three of them share it. That is why the embed URL carries
+`enablejsapi=1` - without it the player ignores the message.
+
+The still is `hqdefault.jpg`, the one size YouTube guarantees for every video.
+It is 4:3 with black bars, so `YouTube` frames itself at 16:9 unless the caller
+has already given it a shape, and the bars are cropped off.
 
 ### Opening a picture full size
 

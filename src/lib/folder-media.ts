@@ -1,9 +1,10 @@
 import type { Slide } from "@/components/Carousel.astro";
 import { describeFile } from "./filenames";
-import { photoEntries, assetEntries, type Picture } from "./images";
+import { videosIn } from "./display";
+import { photoEntries, assetEntries, type Media } from "./images";
 
 /**
- * Pictures that live next to the Markdown file they belong to.
+ * Media that lives next to the Markdown file it belongs to.
  *
  * Anything with pictures of its own gets a folder:
  *
@@ -15,15 +16,43 @@ import { photoEntries, assetEntries, type Picture } from "./images";
  * Everything in that folder is picked up automatically, in file-name order, so
  * there is nothing to list. Files starting with "_" are skipped, and a nested
  * folder is ignored - somewhere to stash originals.
+ *
+ * A video with no file to drop in - a YouTube link - is written in the
+ * folder's images.yaml instead, and joins the media as if it were there.
  */
 
-const samePicture = (a: Picture, b: Picture) =>
+const samePicture = (a: Media, b: Media) =>
   (typeof a === "string" ? a : a.src) === (typeof b === "string" ? b : b.src);
 
-/** Pictures sitting directly inside one entry's folder, in file-name order. */
-export function folderPictures(collection: string, id: string): [string, Picture][] {
+/**
+ * Everything belonging to one entry: the pictures in its folder, in file-name
+ * order, and the videos its images.yaml declares. A video marked `cover:`
+ * leads; the rest follow the pictures.
+ */
+export function folderMedia(collection: string, id: string, fallbackAlt: string): Slide[] {
+  const files = folderFiles(collection, id).map(([path, src]) => {
+    const { caption } = describeFile(path);
+    return { src, alt: caption ?? fallbackAlt, caption };
+  });
+
+  const videos = videosIn(`/content/${collection}/${id}/`);
+  const asSlide = (video: (typeof videos)[number]) => ({
+    src: video.src,
+    alt: video.alt ?? video.caption ?? fallbackAlt,
+    caption: video.caption,
+  });
+
+  return [
+    ...videos.filter((video) => video.cover).map(asSlide),
+    ...files,
+    ...videos.filter((video) => !video.cover).map(asSlide),
+  ];
+}
+
+/** Files sitting directly inside one entry's folder, in file-name order. */
+export function folderFiles(collection: string, id: string): [string, Media][] {
   const folder = `/content/${collection}/${id}/`;
-  const entries = [...photoEntries, ...assetEntries] as [string, Picture][];
+  const entries = [...photoEntries, ...assetEntries] as [string, Media][];
 
   return entries
     .filter(([path]) => {
@@ -35,13 +64,13 @@ export function folderPictures(collection: string, id: string): [string, Picture
 }
 
 /** The first picture in an entry's folder, used when none is named explicitly. */
-export function firstFolderPicture(collection: string, id: string): Picture | undefined {
-  return folderPictures(collection, id)[0]?.[1];
+export function firstFolderFile(collection: string, id: string): Media | undefined {
+  return folderFiles(collection, id)[0]?.[1];
 }
 
-export type PostPictures = {
+export type PostMedia = {
   /** Shown at the top of the page and as the thumbnail in listings. */
-  header?: Picture;
+  header?: Media;
   /** Everything else, as a carousel. Never repeats the header. */
   slides: Slide[];
 };
@@ -53,15 +82,15 @@ export type PostPictures = {
  * promoted to the header. `gallery:` in the frontmatter replaces the automatic
  * folder scan when the order or the captions matter.
  */
-export function postPictures(
+export function postMedia(
   collection: "news" | "research",
   id: string,
   data: {
     title: string;
-    image?: Picture;
-    gallery: { src: Picture; caption?: string }[];
+    image?: Media;
+    gallery: { src: Media; caption?: string }[];
   },
-): PostPictures {
+): PostMedia {
   const listed: Slide[] =
     data.gallery.length > 0
       ? data.gallery.map((item) => ({
@@ -69,12 +98,12 @@ export function postPictures(
           alt: item.caption ?? data.title,
           caption: item.caption,
         }))
-      : folderPictures(collection, id).map(([path, src]) => {
-          const { caption } = describeFile(path);
-          return { src, alt: caption ?? data.title, caption };
-        });
+      : folderMedia(collection, id, data.title);
 
-  const header = data.image ?? listed[0]?.src;
+  // A video marked `cover:` outranks `image:` in the frontmatter - it is the
+  // only way to say that a video leads, since `image:` cannot name one.
+  const leading = videosIn(`/content/${collection}/${id}/`).find((video) => video.cover);
+  const header = leading?.src ?? data.image ?? listed[0]?.src;
 
   return {
     header,

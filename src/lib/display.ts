@@ -1,6 +1,7 @@
 import { parse } from "yaml";
 import { z } from "astro:content";
-import { photoEntries, assetEntries, type Picture } from "./images";
+import { photoEntries, assetEntries, type Media } from "./images";
+import { youtubeRef } from "./video";
 
 /**
  * Per-picture display settings, written next to the pictures they describe.
@@ -14,6 +15,11 @@ import { photoEntries, assetEntries, type Picture } from "./images";
  *       focus: top          # keep the faces in frame when the picture is cropped
  *       zoom: 1.4           # and crop in closer than the frame would
  *       caption: The lab in May
+ *
+ *     videos:               # media with no file to drop in the folder
+ *       - youtube: https://youtu.be/55N0cbsjq08
+ *         caption: The swarm in the field
+ *         cover: true       # lead the page with it
  *
  * The settings travel with the file, so the same picture is framed the same
  * way wherever it is shown - a gallery, a thumbnail, a page cover.
@@ -56,7 +62,25 @@ const settings = z
 
 export type Display = z.infer<typeof settings>;
 
-const sheet = z.record(z.string(), settings);
+/**
+ * A video that belongs to this folder but has no file in it. It joins the
+ * folder's media, so it can be the page's cover or one of its slides.
+ */
+const video = z
+  .object({
+    /** The id, or any link YouTube gives you. */
+    youtube: z.string(),
+    caption: z.string().optional(),
+    alt: z.string().optional(),
+    /** Lead the page with it, instead of the first picture. */
+    cover: z.boolean().default(false),
+  })
+  .strict();
+
+export type FolderVideo = { src: string; caption?: string; alt?: string; cover: boolean };
+
+/** `videos:` is the one key that is not a file name; the rest are. */
+const sheet = z.object({ videos: z.array(video).default([]) }).catchall(settings);
 
 // Every folder under content/ may hold one. Read as text and parsed here, the
 // same way the top-level YAML files are, so the messages match.
@@ -66,7 +90,7 @@ const sheets = import.meta.glob<string>("/content/**/images.yaml", {
   import: "default",
 });
 
-const pictures = [...photoEntries, ...assetEntries] as [string, Picture][];
+const pictures = [...photoEntries, ...assetEntries] as [string, Media][];
 const known = new Set(pictures.map(([path]) => path));
 
 function read(sheetPath: string, raw: string): [string, Display][] {
@@ -80,7 +104,8 @@ function read(sheetPath: string, raw: string): [string, Display][] {
     throw new Error(`${sheetPath.replace(/^\//, "")} is not valid:\n${problems}\n`);
   }
 
-  return Object.entries(result.data).map(([file, value]) => {
+  return Object.entries(result.data).flatMap(([file, value]) => {
+    if (file === "videos") return [];
     if (!known.has(folder + file)) {
       const here = [...known]
         .filter((path) => path.startsWith(folder) && !path.slice(folder.length).includes("/"))
@@ -90,7 +115,7 @@ function read(sheetPath: string, raw: string): [string, Display][] {
           `Pictures here: ${here.join(", ") || "(none)"}\n`,
       );
     }
-    return [folder + file, value];
+    return [[folder + file, value] as [string, Display]];
   });
 }
 
@@ -98,15 +123,38 @@ const byPath = new Map<string, Display>(
   Object.entries(sheets).flatMap(([path, raw]) => read(path, raw)),
 );
 
+/** The videos each folder declares, in the order written. */
+const videosByFolder = new Map<string, FolderVideo[]>(
+  Object.entries(sheets).map(([sheetPath, raw]) => {
+    const folder = sheetPath.slice(0, sheetPath.lastIndexOf("/") + 1);
+    const parsed = sheet.safeParse(parse(raw) ?? {});
+    const listed = parsed.success ? parsed.data.videos : [];
+    return [
+      folder,
+      listed.map((entry) => ({
+        src: youtubeRef(entry.youtube),
+        caption: entry.caption,
+        alt: entry.alt,
+        cover: entry.cover,
+      })),
+    ];
+  }),
+);
+
+/** Videos belonging to a folder, e.g. "/content/news/a-post/". */
+export function videosIn(folder: string): FolderVideo[] {
+  return videosByFolder.get(folder) ?? [];
+}
+
 /** Built URL back to the file it came from, so a picture can find its own row. */
 const pathByUrl = new Map(pictures.map(([path, value]) => [urlOf(value), path]));
 
-function urlOf(picture: Picture): string {
+function urlOf(picture: Media): string {
   return typeof picture === "string" ? picture : picture.src;
 }
 
 /** Settings for a picture, wherever it was resolved from. */
-export function displayFor(picture?: Picture): Display | undefined {
+export function displayFor(picture?: Media): Display | undefined {
   if (!picture) return undefined;
   const path = pathByUrl.get(urlOf(picture));
   return path ? byPath.get(path) : undefined;

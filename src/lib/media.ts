@@ -1,6 +1,6 @@
 import { mediaConfig } from "./data";
 import { describeFile } from "./filenames";
-import { photoEntries, assetEntries, type Picture } from "./images";
+import { photoEntries, assetEntries, type Media } from "./images";
 
 /**
  * The media gallery is built by scanning content/media/ at build time.
@@ -22,7 +22,7 @@ export type MediaItem = {
   date?: string;
   /** Photos are optimised; animations and clips are served as they are. */
   kind: "photo" | "animation" | "video";
-  src: Picture;
+  src: Media;
 };
 
 function describe(path: string) {
@@ -40,11 +40,11 @@ export const gallery: MediaItem[] = [
   ...inFolder(photoEntries).map(([path, image]) => ({
     ...describe(path),
     kind: "photo" as const,
-    src: image as Picture,
+    src: image as Media,
   })),
   ...inFolder(assetEntries).map(([path, url]) => ({
     ...describe(path),
     kind: (path.endsWith(".gif") ? "animation" : "video") as "animation" | "video",
-    src: url as Picture,
+    src: url as Media,
   })),
 ].sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));

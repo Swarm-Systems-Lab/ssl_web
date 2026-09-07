@@ -300,6 +300,31 @@ photos, `media/`, `covers/`, `images/`. Naming a file that is not in that folder
 stops the build and tells you which names it can see, so a typo cannot pass
 quietly.
 
+### A video instead of a picture
+
+A `.mp4` or a `.gif` dropped in a folder is picked up like any picture. A
+YouTube video has no file to drop, so it is written in the same `images.yaml`
+under `videos:`:
+
+```yaml
+videos:
+  - youtube: https://www.youtube.com/watch?v=55N0cbsjq08
+    caption: Fully autonomous fixed-wing aerobatics
+    cover: true          # lead the page with it
+```
+
+Paste the link from the browser or just the id - both work. `cover: true` makes
+it the media at the top of the page; without it the video joins the carousel
+after the pictures.
+
+It plays where it sits, and nothing is loaded from YouTube until someone presses
+play. Everywhere the page is only *mentioned* - the news list, the front page,
+a link preview shared on Slack - the video shows as its own still instead, since
+the click there belongs to the entry, not the video.
+
+This works in any folder that holds media: a news post, a research project, the
+team photos.
+
 ### What to hand over
 
 | Format | Use it for                   |

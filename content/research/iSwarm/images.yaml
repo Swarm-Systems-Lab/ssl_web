@@ -1,13 +1,7 @@
 cover.png:
   focus: 40% 100%
   zoom: 1.2
-example1.png:
-  caption: "Perception discrepancy in symmetrical interaction algorithms."
-example2.png:
-  caption: "Richer emergent behaviors with complex self-dynamics."
-example3.png:
-  caption: "Consensus algorithms with shared inconsistent information."
-example4.png:
-  caption: "Dropouts for the mixing of unstable and stable modes."
-example5.png:
-  caption: "Delays for the modulation of chattering."
+  
+videos:
+  - youtube: https://www.youtube.com/watch?v=6_ctatig6dI
+    caption: "Colmena de robots imperfectos - Local Andalusian TV: Canal Sur (ConCiencia) Press Video"

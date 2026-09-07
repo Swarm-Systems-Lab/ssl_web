@@ -2,10 +2,15 @@
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
 import Picture from "@/components/Picture.astro";
-import { getResearch, backerLabel } from "@/lib/collections";
+import { getResearch, researchMedia, backerLabel } from "@/lib/collections";
 import { url } from "@/lib/url";
 
-const projects = await getResearch();
+// The same picture the project's own page leads with, which may be the still
+// of a video.
+const projects = (await getResearch()).map((entry) => ({
+  entry,
+  cover: researchMedia(entry).header,
+}));
 /**
  * How many pictures are on screen before any scrolling. Those are fetched
  * straight away; everything further down stays lazy, which is the default.
@@ -28,7 +33,7 @@ const ABOVE_THE_FOLD = 2;
   <section class="mx-auto max-w-5xl px-6 pb-16">
     <ol class="border-t border-border">
       {
-        projects.map((project, index) => {
+        projects.map(({ entry: project, cover }, index) => {
           const { data } = project;
           const here = url(`/research/${project.id}`);
           return (
@@ -65,11 +70,12 @@ const ABOVE_THE_FOLD = 2;
                 </div>
               </div>
 
-              {data.image && (
+              {cover && (
                 <a href={here} class="block">
                   <Picture
-                    src={data.image}
+                    src={cover}
                     alt={data.imageAlt ?? data.title}
+                    still
                     widths={[320, 640]}
                     sizes="(min-width: 640px) 320px, 100vw"
                     loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}

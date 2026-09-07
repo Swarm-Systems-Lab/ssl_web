@@ -1,11 +1,14 @@
 ---
 import { Image } from "astro:assets";
-import { IMAGE_QUALITY, type Picture } from "@/lib/images";
+import { IMAGE_QUALITY, type Media } from "@/lib/images";
 import { fullSize } from "@/lib/full-size";
 import { displayFor, objectPosition } from "@/lib/display";
+import { youtubeId } from "@/lib/video";
+import { youtubeStill } from "@/lib/poster";
+import YouTube from "@/components/YouTube.astro";
 
 interface Props {
-  src: Picture;
+  src: Media;
   alt: string;
   widths?: number[];
   sizes?: string;
@@ -22,6 +25,11 @@ interface Props {
    * belongs to the link, not to the picture.
    */
   zoom?: boolean;
+  /**
+   * Show a video as its own still rather than as something to play: what a
+   * listing thumbnail wants, where the click belongs to the entry around it.
+   */
+  still?: boolean;
   /**
    * Which part of the picture to keep when the frame crops it, as a keyword
    * like "top" or percentages like "50% 20%". Normally left out: a picture
@@ -40,13 +48,21 @@ const {
   loading = "lazy",
   priority = false,
   zoom = false,
+  still = false,
   focus,
   class: className,
 } = Astro.props;
 
+// A YouTube video travels as "youtube:<id>". Asked for as a still it becomes
+// its poster frame, and everything below treats it as the picture it now is;
+// only a video that is meant to be played renders a player.
+const video = youtubeId(src);
+const play = video && !still ? video : undefined;
+const source: Media = video ? await youtubeStill(video) : src;
+
 // What the picture's own folder says about it. Cropping only happens with
 // object-cover, so the focus is inert everywhere else.
-const settings = displayFor(src);
+const settings = displayFor(source);
 const position = objectPosition(focus ?? settings?.focus);
 
 /*
@@ -78,7 +94,7 @@ const description = settings?.alt ?? alt;
  */
 const frame = magnified ? ["block overflow-hidden", className] : "contents";
 const paint = magnified ? "h-full w-full object-cover" : className;
-const isVideo = typeof src === "string" && /\.(mp4|webm)$/.test(src);
+const isVideo = typeof source === "string" && /\.(mp4|webm)$/.test(source);
 
 // Astro emits the fallback `src` at the picture's own resolution unless it is
 // told otherwise, which for a 6 MB photo means shipping a 2 MB variant nobody
@@ -91,7 +107,7 @@ const speed = priority ? { priority: true } : { loading };
 
 // The lightbox finds a picture by this attribute alone. The role and tabindex
 // put it in the tab order, which a bare <img> never is.
-const full = zoom && !isVideo ? await fullSize(src) : undefined;
+const full = zoom && !isVideo && !video ? await fullSize(source) : undefined;
 const zoomAttrs = {
   "data-zoom": full,
   role: full ? ("button" as const) : undefined,
@@ -105,15 +121,27 @@ const zoomAttrs = {
 ---
 
 {
-  isVideo ? (
-    <video src={src as string} muted loop playsinline controls preload="none" class={className} />
+  play ? (
+    /* A video meant to be played; asked for as a still it falls through to the
+       branches below, as its poster frame. */
+    <YouTube id={play} label={description} loading={loading} class:list={className} />
+  ) : isVideo ? (
+    <video
+      src={source as string}
+      muted
+      loop
+      playsinline
+      controls
+      preload="none"
+      class={className}
+    />
   ) : (
     <span class:list={frame}>
-      {typeof src === "string" ? (
+      {typeof source === "string" ? (
         /* GIFs and vectors are served untouched, so this is a plain <img>:
            there is no format to convert to and no size to resize to. */
         <img
-          src={src}
+          src={source}
           alt={description}
           style={style || undefined}
           loading={priority ? "eager" : loading}
@@ -124,7 +152,7 @@ const zoomAttrs = {
         />
       ) : (
         <Image
-          src={src}
+          src={source}
           alt={description}
           style={style || undefined}
           widths={widths}
