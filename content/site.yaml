@@ -80,7 +80,7 @@ social:
 affiliations:
   - label: Unisersity of Granada (UGR)
     href: https://www.ugr.es
-    logo: ugr
+    logo: ugr/squared
   - label: European Research Council (ERC)
     href: https://erc.europa.eu
     logo: erc
@@ -92,4 +92,4 @@ affiliations:
     logo: imag
   - label: Ministerio de Ciencia, Innovación y Universidades, Gobierno de España
     href: https://www.ciencia.gob.es
-    logo: spain
+    logo: miciu-aei-ge

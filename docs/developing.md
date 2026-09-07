@@ -112,7 +112,11 @@ crops to a banner.
 ### Logos
 
 `content/logos/<link>.*` and `content/affiliations/<name>.*` are matched by the
-slugified label, or by an explicit `logo:` in `site.yaml`; `Logo.astro` takes a
+slugified label, or by an explicit `logo:` in `site.yaml`. Subfolders are
+indexed too, so a downloaded brand pack can be kept intact and referenced by
+path (`ugr/vertical/UGR-MARCA-01-color`); each file also gets a bare-name alias
+where that name is still free, and the build warns when two files normalise to
+one key. `Logo.astro` takes a
 `folder` prop to pick between them. SVGs are served untouched — rasterising a
 vector is pointless — while PNG and JPG go through the image pipeline, since an
 institutional logo often arrives several thousand pixels wide for a 40 px slot.

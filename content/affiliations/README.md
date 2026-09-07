@@ -23,10 +23,34 @@ names like `ugr` or `erc` are easier to type, which is what `logo:` is for.
 
 ```
 content/affiliations/
-  ugr.svg
-  erc.svg
-  ministerio-ciencia.svg
+  erc.jpg
+  imag.png
 ```
+
+### Folders
+
+Institutions often publish a whole pack — vertical and horizontal, colour and
+mono. Keep the pack as it comes and name the one you want by its path:
+
+```
+content/affiliations/
+  ugr/
+    vertical/UGR-MARCA-01-color.svg
+    horizontal/UGR-MARCA-02-color.svg
+```
+
+```yaml
+  - label: Universidad de Granada
+    logo: ugr/vertical/UGR-MARCA-01-color
+```
+
+Capitals, spaces, and underscores do not matter — `UGR-MARCA-01-color`,
+`ugr marca 01 color`, and `UGR_MARCA_01_COLOR` all find the same file. Leave the
+extension off.
+
+If a file's name is unique across the whole folder you can use it on its own,
+without the path. Where two files would end up with the same name the build
+prints a warning naming both, and you should use the full path for those.
 
 Until the file exists the institution's **name is shown as text** in its place,
 so the band is useful straight away and it is obvious which artwork is still
