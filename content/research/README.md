@@ -10,7 +10,7 @@ content/research/aerosense/
   01-avionics.jpg
 ```
 
-→ `/research/aerosense`
+-> `/research/aerosense`
 
 This section is about the **funded projects** the lab runs: what each one set
 out to do, who pays for it, who is on it, and the papers that came out of it.

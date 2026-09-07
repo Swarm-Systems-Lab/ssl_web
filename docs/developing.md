@@ -33,7 +33,7 @@ src/
 Two mechanisms, chosen by whether an item needs its own page:
 
 - **Markdown** in `content/news`, `content/research`, `content/team`,
-  `content/pages` → Astro content collections, declared in
+  `content/pages` -> Astro content collections, declared in
   `src/content.config.ts`. Each entry becomes a route. Files starting with `_`
   are templates and are skipped by the glob.
 
@@ -52,7 +52,7 @@ Two mechanisms, chosen by whether an item needs its own page:
   stays `/team/<name>`, and throws with the file path if a member is missing a
   `group:`.
 
-- **YAML** in `content/*.yaml` → loaded and validated in `src/lib/data.ts`.
+- **YAML** in `content/*.yaml` -> loaded and validated in `src/lib/data.ts`.
   These render onto a single shared page (publications, positions, projects,
   awards, media).
 
@@ -347,15 +347,15 @@ compress before committing and keep long video on YouTube.
 ## Deployment
 
 `.github/workflows/deploy.yml` builds on every push to the default branch and
-publishes through GitHub Pages. Enable it once under **Settings → Pages →
-Source → GitHub Actions**.
+publishes through GitHub Pages. Enable it once under **Settings -> Pages ->
+Source -> GitHub Actions**.
 
 `.github/workflows/new-post.yml` is the form-based authoring path for editors;
 it runs `.github/scripts/new_post.py`, commits the file, and lets the deploy
 workflow take over.
 
-The build reads two optional repository variables (**Settings → Secrets and
-variables → Actions → Variables**):
+The build reads two optional repository variables (**Settings -> Secrets and
+variables -> Actions -> Variables**):
 
 | Variable    | Default                          | Use                                        |
 | ----------- | -------------------------------- | ------------------------------------------ |
@@ -366,7 +366,7 @@ variables → Actions → Variables**):
 
 The site does not ship a `public/CNAME`, because `swarmsystemslab.eu` still
 points at the current Google Sites page. To cut over: set the domain under
-**Settings → Pages → Custom domain** (which creates the `CNAME` file), point the
+**Settings -> Pages -> Custom domain** (which creates the `CNAME` file), point the
 DNS records at GitHub, and leave `SITE_URL` as it is.
 
 ## Filling in DOIs and PDFs

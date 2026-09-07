@@ -13,7 +13,7 @@ content/team/
 ```
 
 The folder name inside the category becomes the address:
-`members/diego-vela/` → `/team/diego-vela`.
+`members/diego-vela/` -> `/team/diego-vela`.
 
 Copy `_template.md` into a new folder, save it as `index.md`, and fill it in.
 
