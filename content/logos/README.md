@@ -1,45 +1,53 @@
 # Logos
 
-The small marks beside our outside links - on the front page under **Find us
-elsewhere**, and in the **Elsewhere** column of the footer.
+Two kinds of mark live here, found the same way:
 
-## Adding one
+- **our outside links** — GitHub, YouTube, Discord — shown beside the link
+- **institutions and funders** — the university, the institutes, the ERC —
+  shown in the band on the front page and beside a project's funding
 
-Name the file after the link and drop it in here:
+Drop the official file in, named after the label it belongs to:
 
 ```
 content/logos/
   github.svg
-  youtube.svg
-  discord.svg
+  erc.png
+  ugr/squared.png          an institution that publishes a whole set
+  ec/horizontal/…
 ```
 
-The name is the link's label, lowercased with dashes for spaces, so a link
-labelled `Google Scholar` looks for `google-scholar.svg`. If the file has to be
-called something else, say so in `../site.yaml`:
+The name is matched loosely, so `MICIU_AEI_GE.svg`, `miciu-aei-ge.svg` and
+`MICIU AEI GE.svg` all answer to the same label. A file in a subfolder can be
+named by its path — `logo: ugr/squared` — or by its bare name where that is
+still free.
+
+Any of `.svg .png .webp .avif .jpg` works. SVGs are served untouched; anything
+else is resized, so hand over the largest version you have.
+
+## Using one
+
+For an outside link, in `../site.yaml` under `elsewhere:`, the logo is found
+from the label — no extra line needed. Add `logo:` only when the file is named
+differently.
+
+For an institution, in `../site.yaml` under `affiliations:`:
 
 ```yaml
-social:
-  - label: Our code
-    href: https://github.com/Swarm-Systems-Lab
-    logo: github
+affiliations:
+  - label: European Research Council (ERC)
+    href: https://erc.europa.eu
+    logo: erc
 ```
 
-A link with no matching file simply shows its text, which is what happened
-before any of these existed.
+and on a project, under `funding:` or `partners:` in its `index.md`.
 
-## Colour does not matter
+Without a file the label is shown as text, so the list is useful before any
+artwork has been collected.
 
-Whatever colour the brand publishes, the site renders the mark **pure white** -
-there is no need to find or make a white version. Hand over the official file as
-downloaded.
+## How they are drawn
 
-`.svg` is best because it stays sharp at any size. `.png` and `.webp` work too;
-use one with a transparent background.
-
-## Where these came from
-
-The three above are the official marks from
-[Simple Icons](https://simpleicons.org), which publishes them under CC0. The
-logos themselves remain the trademarks of their owners - fine for linking to our
-own profiles, which is all we do with them.
+An institution's logo sits on a white plate, which is what makes a PNG
+downloaded from a university look right whether or not it has a transparent
+background. A clean transparent file can instead be flattened to a single mark
+in the theme's ink — black on the light page, white on the dark one — with
+`mono: true`.

@@ -27,7 +27,7 @@ items:
     awarder: European Research Council
     year: 2023
     members: [hector-garcia-de-marina]
-    image: affiliations/erc.png
+    image: logos/erc.png
     links:
       - label: CORDIS project
         href: https://cordis.europa.eu/project/id/101076091

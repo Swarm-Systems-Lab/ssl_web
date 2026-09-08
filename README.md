@@ -18,10 +18,10 @@ the site rebuilds and republishes itself within a couple of minutes.
 | a TFM/TFG project     | add it to [`content/projects.yaml`](content/projects.yaml)                               |
 | a cover for a page    | drop it in [`content/covers/`](content/covers), named after the page                     |
 | a logo for a link     | drop it in [`content/logos/`](content/logos), named after the link                       |
-| an affiliation logo   | list it in `site.yaml`, drop the file in [`content/affiliations/`](content/affiliations) |
+| an affiliation logo   | list it in `site.yaml`, drop the file in [`content/logos/`](content/logos)               |
 | an award              | add it to [`content/awards.yaml`](content/awards.yaml)                                   |
 | press or TV coverage  | add it to [`content/press.yaml`](content/press.yaml)                                     |
-| a crop or caption fix | add `images.yaml` next to the picture - see [`content/README.md`](content/README.md)     |
+| a crop or caption fix | add `media.yaml` next to the picture - see [`content/README.md`](content/README.md)      |
 | a YouTube video       | add it to [`content/media.yaml`](content/media.yaml)                                     |
 
 News posts, research topics, people, and papers each get their own page; for the

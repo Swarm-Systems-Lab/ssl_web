@@ -65,6 +65,21 @@ const siteSchema = z.object({
    * "home", "news", "join-us", and so on. Optional; the picture shows either way.
    */
   coverCaptions: z.record(z.string(), z.string()).default({}),
+  /**
+   * The strip of media on the front page: what it is called, and which pieces
+   * of the media gallery it shows, named one by one and in the order they
+   * should appear.
+   */
+  fromTheField: z
+    .object({
+      heading: z.string().default("From the field"),
+      /**
+       * Each one is either a file name in content/media/ - "2025-10-14.png" -
+       * or a YouTube id or link. A name that matches nothing stops the build.
+       */
+      items: z.array(z.string()).default([]),
+    })
+    .default({}),
   nav: z.array(navItem),
   /** Featured on the front page as well as in the footer. */
   community: z
@@ -84,7 +99,7 @@ const siteSchema = z.object({
       z.object({
         label: z.string(),
         href: z.string().optional(),
-        /** File name in content/affiliations/, when it differs from the label. */
+        /** File name in content/logos/, when it differs from the label. */
         logo: z.string().optional(),
         /**
          * Show the logo as a plain single-colour mark instead of on a white
@@ -326,24 +341,5 @@ export const mediaConfig = load(
     perPage: z.number().default(24),
     /** The YouTube channel, linked from the top of the media page. */
     channel: z.object({ href: z.string(), label: z.string(), description: z.string() }).optional(),
-    videos: z.array(
-      z.object({
-        youtube: z.string(),
-        title: z.string(),
-        date: z.string().optional(),
-        /** Pulled out onto the front page. */
-        featured: z.boolean().default(false),
-      }),
-    ),
-    captions: z.record(z.string(), z.string()).default({}),
   }),
 );
-
-/**
- * The videos shown on the front page: the ones marked `featured: true`, or the
- * three most recent when nobody has marked any.
- */
-export const featuredVideos = (() => {
-  const chosen = mediaConfig.videos.filter((video) => video.featured);
-  return chosen.length > 0 ? chosen : mediaConfig.videos.slice(0, 3);
-})();

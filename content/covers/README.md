@@ -22,11 +22,11 @@ has no cover, which is fine - none of them are required.
 
 ## Captions, cropping, and alt text
 
-An `images.yaml` in this folder works exactly as it does anywhere else, so a
+An `media.yaml` in this folder works exactly as it does anywhere else, so a
 cover can say how it should be cropped and what it should be called:
 
 ```yaml
-# content/covers/images.yaml
+# content/covers/media.yaml
 research.jpg:
   focus: top          # keep the top of the picture when it is cropped
   zoom: 1.2           # or 0.8 to show it whole, smaller than the banner

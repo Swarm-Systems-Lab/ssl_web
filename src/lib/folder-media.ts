@@ -18,7 +18,7 @@ import { photoEntries, assetEntries, type Media } from "./images";
  * folder is ignored - somewhere to stash originals.
  *
  * A video with no file to drop in - a YouTube link - is written in the
- * folder's images.yaml instead, and joins the media as if it were there.
+ * folder's media.yaml instead, and joins the media as if it were there.
  */
 
 const samePicture = (a: Media, b: Media) =>
@@ -26,7 +26,7 @@ const samePicture = (a: Media, b: Media) =>
 
 /**
  * Everything belonging to one entry: the pictures in its folder, in file-name
- * order, and the videos its images.yaml declares. A video marked `cover:`
+ * order, and the videos its media.yaml declares. A video marked `cover:`
  * leads; the rest follow the pictures.
  */
 export function folderMedia(collection: string, id: string, fallbackAlt: string): Slide[] {

@@ -7,14 +7,18 @@ import { displayForPath } from "./display";
  * both follow the same convention:
  *
  *   2026-04-17_group-photo.jpg  →  "Group photo", dated 2026-04-17
+ *   2026-04-17.jpg              →  dated 2026-04-17, and nothing else to say
  *   02-busan-keynote.jpg        →  "Busan keynote"
  *   IMG_4231.jpg                →  no caption; the name says nothing useful
  *
- * A caption written in the folder's images.yaml wins over the file name, for
- * the pictures whose name cannot say what needs saying.
+ * A caption written in the folder's media.yaml wins over the file name, for
+ * the pictures whose name cannot say what needs saying - that sheet is the
+ * only other place a caption can come from.
  */
 
-const DATED = /^(\d{4}-\d{2}-\d{2})[_-](.*)$/;
+// The words after the date are optional: a file may be named for its date
+// alone, in which case the date is all it has to tell us.
+const DATED = /^(\d{4}-\d{2}-\d{2})(?:[_-](.*))?$/;
 const ORDER_PREFIX = /^\d{1,3}[_-]/;
 const CAMERA_NAME = /^(img|dsc|dscn|dji|gopro|photo|image|screenshot|p)[ _-]?\d+$/i;
 
@@ -25,14 +29,16 @@ export type FileDescription = {
   caption?: string;
 };
 
-export function describeFile(path: string, captions: Record<string, string> = {}): FileDescription {
+export function describeFile(path: string): FileDescription {
   const file = path.split("/").pop() ?? path;
   const stem = file.replace(/\.[^.]+$/, "");
   const dated = DATED.exec(stem);
-  const words = (dated?.[2] ?? stem).replace(ORDER_PREFIX, "").replace(/[_-]+/g, " ").trim();
+  const rest = dated ? (dated[2] ?? "") : stem;
+  const words = rest.replace(ORDER_PREFIX, "").replace(/[_-]+/g, " ").trim();
 
-  const auto = CAMERA_NAME.test(words) ? undefined : words.charAt(0).toUpperCase() + words.slice(1);
+  const auto =
+    !words || CAMERA_NAME.test(words) ? undefined : words.charAt(0).toUpperCase() + words.slice(1);
   const sheet = displayForPath(path);
 
-  return { file, date: dated?.[1], caption: sheet?.caption ?? captions[file] ?? auto };
+  return { file, date: dated?.[1], caption: sheet?.caption ?? auto };
 }

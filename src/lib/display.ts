@@ -6,11 +6,11 @@ import { youtubeRef } from "./video";
 /**
  * Per-picture display settings, written next to the pictures they describe.
  *
- * Any folder holding pictures may carry an `images.yaml`. It is optional, and
+ * Any folder holding pictures may carry an `media.yaml`. It is optional, and
  * it only has to mention the pictures that need something other than the
  * default - everything else is left alone:
  *
- *   content/team/photos/images.yaml
+ *   content/team/photos/media.yaml
  *     01-lab-retreat.jpg:
  *       focus: top          # keep the faces in frame when the picture is cropped
  *       zoom: 1.4           # and crop in closer than the frame would
@@ -77,21 +77,31 @@ const video = settings
     youtube: z.string(),
     /** Lead the page with it, instead of the first picture. */
     cover: z.boolean().default(false),
+    /** When it was published, as YYYY-MM-DD - a file gets this from its name. */
+    date: z.string().optional(),
   })
   .strict();
 
-export type FolderVideo = { src: string; cover: boolean };
+export type FolderVideo = { src: string; cover: boolean; date?: string };
 
 /** `videos:` is the one key that is not a file name; the rest are. */
 const sheet = z.object({ videos: z.array(video).default([]) }).catchall(settings);
 
 // Every folder under content/ may hold one. Read as text and parsed here, the
 // same way the top-level YAML files are, so the messages match.
-const sheets = import.meta.glob<string>("/content/**/images.yaml", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-});
+//
+// `**` also matches nothing, so the glob picks up content/media.yaml - the
+// media *page's* settings, an entirely different file that happens to share
+// the name. Only sheets inside a folder count.
+const sheets = Object.fromEntries(
+  Object.entries(
+    import.meta.glob<string>("/content/**/media.yaml", {
+      eager: true,
+      query: "?raw",
+      import: "default",
+    }),
+  ).filter(([path]) => path !== "/content/media.yaml"),
+);
 
 const pictures = [...photoEntries, ...assetEntries] as [string, Media][];
 const known = new Set(pictures.map(([path]) => path));
@@ -152,7 +162,7 @@ const videosByFolder = new Map<string, FolderVideo[]>(
             alt: entry.alt,
           });
         }
-        return { src, cover: entry.cover };
+        return { src, cover: entry.cover, date: entry.date };
       }),
     ];
   }),

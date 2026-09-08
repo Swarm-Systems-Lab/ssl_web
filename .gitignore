@@ -2,6 +2,11 @@ node_modules
 .mypy_cache
 __pycache__
 dist
+
+# Stills pulled out of clips by tools/clip-posters.mjs before each build.
+# Generated from the clip next to them, so they are build output rather than
+# content: regenerated whenever a clip is added or changed.
+content/**/_poster.*
 .astro
 *.log
 .DS_Store

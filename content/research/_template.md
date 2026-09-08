@@ -19,7 +19,7 @@ order: 10          # lower numbers appear first
 # period: "2023 - 2028"
 
 # Who pays for it. `name` is the only part you need; add the rest when it is
-# worth showing. `logo:` is a file name in content/affiliations/.
+# worth showing. `logo:` is a file name in content/logos/.
 # funding:
 #   - name: ERC
 #     programme: Starting Grant
@@ -48,7 +48,7 @@ order: 10          # lower numbers appear first
 
 # image: ./01-field.jpg            # the picture beside the project in the list
 #                                  # (a video can lead instead - put it in
-#                                  #  images.yaml under `videos:` with
+#                                  #  media.yaml under `videos:` with
 #                                  #  `cover: true`)
 # imageAlt: "What the picture shows"
 # tags: ["control", "uav"]

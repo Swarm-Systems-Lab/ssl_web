@@ -4,8 +4,9 @@ import { IMAGE_QUALITY, type Media } from "@/lib/images";
 import { fullSize } from "@/lib/full-size";
 import { displayFor, objectPosition } from "@/lib/display";
 import { youtubeId } from "@/lib/video";
-import { youtubeStill } from "@/lib/poster";
-import YouTube from "@/components/YouTube.astro";
+import { youtubeStill, clipStill } from "@/lib/poster";
+import { pictureUrl } from "@/lib/images";
+import Player from "@/components/Player.astro";
 
 interface Props {
   src: Media;
@@ -33,7 +34,7 @@ interface Props {
   /**
    * Which part of the picture to keep when the frame crops it, as a keyword
    * like "top" or percentages like "50% 20%". Normally left out: a picture
-   * that always wants the same framing says so in its folder's images.yaml,
+   * that always wants the same framing says so in its folder's media.yaml,
    * which this overrides for one place on the site.
    */
   focus?: string;
@@ -58,7 +59,20 @@ const {
 // only a video that is meant to be played renders a player.
 const video = youtubeId(src);
 const play = video && !still ? video : undefined;
-const source: Media = video ? await youtubeStill(video) : src;
+
+/*
+ * A clip of ours has a still of its own, pulled from its first frame before
+ * the build. It stands in for the clip in a listing, and is the frame the
+ * player shows until someone presses play.
+ */
+const clip = typeof src === "string" && /\.(mp4|webm)$/.test(src) ? src : undefined;
+const opening = clip ? clipStill(clip) : undefined;
+// With a still to show, a clip is played the way a YouTube video is: press the
+// button and the player appears. Without one there is nothing to show but the
+// video element itself.
+const playClip = clip && !still && opening ? clip : undefined;
+
+const source: Media = video ? await youtubeStill(video) : clip && still && opening ? opening : src;
 
 // What the picture's own folder says about it. Cropping only happens with
 // object-cover, so the focus is inert everywhere else.
@@ -128,10 +142,23 @@ const zoomAttrs = {
   play ? (
     /* A video meant to be played; asked for as a still it falls through to the
        branches below, as its poster frame. */
-    <YouTube id={play} label={description} loading={loading} class:list={className} />
+    <Player id={play} label={description} loading={loading} class:list={className} />
+  ) : playClip ? (
+    <Player
+      clip={playClip}
+      poster={opening}
+      label={description}
+      loading={loading}
+      class:list={className}
+    />
   ) : isVideo ? (
+    /* preload="none" with a poster: the still is all that loads until someone
+       presses play. */
+    /* preload="none" with a poster: nothing but the still loads until someone
+       presses play. */
     <video
       src={source as string}
+      poster={opening ? pictureUrl(opening) : undefined}
       muted
       loop
       playsinline

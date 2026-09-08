@@ -12,7 +12,7 @@ import { photoEntries, assetEntries, type Media } from "./images";
  *   content/covers/news.jpg      /news
  *   content/covers/join-us.jpg   /join-us
  *
- * A caption comes from the folder's images.yaml, the same file that sets the
+ * A caption comes from the folder's media.yaml, the same file that sets the
  * crop, or from `coverCaptions:` in site.yaml - whichever is written. It
  * doubles as the alt text.
  */

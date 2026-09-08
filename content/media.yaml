@@ -1,16 +1,8 @@
-# The media page.
+# Settings for the media page itself.
 #
-# PHOTOS, GIFS AND CLIPS are picked up automatically from content/media/.
-# Just drop a file in there - nothing to add here. Name it as
-#
-#     YYYY-MM-DD_short-caption.jpg
-#
-# and the date and caption are taken from the filename. Supported extensions:
-# .jpg .jpeg .png .webp .avif .gif .mp4 .webm
-#
-# VIDEOS on YouTube are listed below, because they are not files in the repo.
-# The front page shows the ones marked `featured: true`; if none are marked it
-# shows the first three in this list.
+# The media it shows lives in content/media/ - photos, GIFs and clips are the
+# files in that folder, and the YouTube videos are declared in its media.yaml.
+# Nothing about an individual picture or video belongs here.
 
 intro: Field tests, prototypes, and life around the lab. Long videos live on our YouTube channel.
 
@@ -23,19 +15,3 @@ channel:
   label: "@SwarmSystemsLab"
   description: >-
     Every video we publish, including the long cuts that do not fit on this page.
-
-# Add `featured: true` to a video to pin it to the front page.
-videos:
-  - youtube: 55N0cbsjq08
-    title: Fully autonomous Fixed-wing aerobatics (without GPS)
-    date: "2026-08-01"
-  - youtube: v8to32dYVnc
-    title: Two fixed-wing drones rendezvous, fly in formation, split, and meet again
-    date: "2025-08-12"
-  - youtube: 8VweHQ4zHbs
-    title: 3D square formation with four flying wings
-    date: "2025-07-27"
-
-# Optional: override the caption a filename would produce.
-#   "2026-04-17_group-photo.jpg": "Group photo in Granada, April 2026"
-captions: {}

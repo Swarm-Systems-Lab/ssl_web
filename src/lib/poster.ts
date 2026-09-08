@@ -1,5 +1,5 @@
 import { getImage } from "astro:assets";
-import { IMAGE_QUALITY } from "./images";
+import { IMAGE_QUALITY, photoEntries, type Media } from "./images";
 
 /**
  * The still for a YouTube video, cropped to 16:9 and served from our own files.
@@ -54,4 +54,30 @@ export function youtubeStill(id: string): Promise<string> {
   const made = cache.get(id) ?? render(id);
   cache.set(id, made);
   return made;
+}
+
+/**
+ * The still pulled out of one of our own clips before the build, sitting next
+ * to it as `_poster.<name>.jpg`. Undefined when there is none - no ffmpeg when
+ * the clip was added - and the clip is then shown as a video element instead.
+ */
+const posters = new Map(
+  photoEntries
+    .filter(([path]) => path.includes("/_poster."))
+    .map(([path, image]) => [path, image] as const),
+);
+
+export function clipStill(clip: string): Media | undefined {
+  // The clip arrives as a built URL; its name is what ties the two together.
+  const name = clip
+    .split("/")
+    .pop()
+    ?.replace(/\.[^.]+$/, "");
+  if (!name) return undefined;
+  // Vite appends a hash to the built name, so match on the part before it.
+  const stem = name.replace(/\.[A-Za-z0-9_-]{8}$/, "");
+  for (const [path, image] of posters) {
+    if (path.includes(`/_poster.${stem}.`)) return image;
+  }
+  return undefined;
 }

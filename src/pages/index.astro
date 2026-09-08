@@ -8,9 +8,9 @@ import Watermark from "@/components/Watermark.astro";
 import VideoGrid from "@/components/VideoGrid.astro";
 import { logoFor } from "@/lib/logos";
 import { getNews, newsSummary, newsMedia, formatDate } from "@/lib/collections";
-import { site, featuredVideos } from "@/lib/data";
+import { site } from "@/lib/data";
 import { coverFor } from "@/lib/covers";
-import { gallery } from "@/lib/media";
+import { gallery, fromTheField } from "@/lib/media";
 import { url } from "@/lib/url";
 
 const home = await getEntry("pages", "home");
@@ -23,7 +23,7 @@ const news = (await getNews()).slice(0, 4).map((entry) => ({
 }));
 
 // content/covers/home.*, falling back to the newest photo in the gallery.
-const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
+const cover = coverFor("home") ?? gallery.find((item) => item.kind === "image");
 ---
 
 <Base>
@@ -109,7 +109,6 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
                 <Logo
                   label={item.label}
                   name={item.logo}
-                  folder="affiliations"
                   mono={item.mono}
                   size="h-20 w-auto max-w-[16rem]"
                   widths={[240, 480, 640]}
@@ -124,7 +123,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
                   {item.label}
                 </span>
               );
-              const content = logoFor(item.label, item.logo, "affiliations") ? mark : fallback;
+              const content = logoFor(item.label, item.logo) ? mark : fallback;
 
               return (
                 <li>
@@ -173,10 +172,10 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "photo");
   }
 
   {
-    featuredVideos.length > 0 && (
+    fromTheField.length > 0 && (
       <section class="mx-auto max-w-7xl px-6 py-16">
-        <Rule label="From the field" />
-        <VideoGrid videos={featuredVideos} />
+        <Rule label={site.fromTheField.heading} />
+        <VideoGrid videos={fromTheField} />
         <a
           href={url("/media")}
           class="mt-8 inline-block font-display text-[11px] tracking-widest text-accent uppercase"

@@ -1,0 +1,125 @@
+---
+import { youtubeWatch } from "@/lib/video";
+import { youtubeStill } from "@/lib/poster";
+import { displayFor, objectPosition } from "@/lib/display";
+import { pictureUrl, type Media } from "@/lib/images";
+
+/**
+ * A video shown as its own still until someone asks to watch, whether it is
+ * ours or YouTube's. One press swaps the still for the real player.
+ *
+ * For YouTube that saves about half a megabyte and a good deal of main-thread
+ * work before anything can paint; for a clip of ours it saves the download.
+ * Either way it is a picture inside a plain link until then, which is also
+ * what it stays without JavaScript.
+ */
+
+interface Props {
+  /** A YouTube video id… */
+  id?: string;
+  /** …or the URL of a clip of ours, with the still pulled from its first frame. */
+  clip?: string;
+  poster?: Media;
+  /** Describes the video, e.g. its title. */
+  label: string;
+  loading?: "lazy" | "eager";
+  class?: string;
+}
+
+const { id, clip, poster, label, loading = "lazy", class: className } = Astro.props;
+
+/*
+ * A player is 16:9, so unless the caller has already given it a shape it takes
+ * one. The still YouTube keeps is 4:3 with black bars down the top and bottom;
+ * the frame crops them off.
+ */
+const FRAMED = /(^|\s)(aspect-|size-|h-(?!auto\b))/;
+const shape = FRAMED.test(className ?? "") ? undefined : "aspect-video";
+
+const still = id ? await youtubeStill(id) : poster ? pictureUrl(poster) : undefined;
+
+// The same framing a picture gets, for the still the player is built on.
+const settings = displayFor(id ? `youtube:${id}` : (clip ?? ""));
+const position = objectPosition(settings?.focus);
+const scale = settings?.zoom && settings.zoom !== 1 ? settings.zoom : undefined;
+const style = [
+  position && `object-position: ${position}`,
+  scale && `transform: scale(${scale}); transform-origin: ${position ?? "center"}`,
+]
+  .filter(Boolean)
+  .join("; ");
+---
+
+<a
+  href={id ? youtubeWatch(id) : clip}
+  rel="noopener"
+  data-play={id}
+  data-clip={clip}
+  aria-label={`Play ${label}`}
+  class:list={["group/play relative block overflow-hidden bg-mat", shape, className]}
+>
+  {
+    still && (
+      <img
+        src={still}
+        alt=""
+        width="1280"
+        height="720"
+        loading={loading}
+        decoding="async"
+        style={style || undefined}
+        class:list={[
+          "h-full w-full opacity-90 transition-opacity group-hover/play:opacity-100",
+          scale && scale < 1 ? "object-contain" : "object-cover",
+        ]}
+      />
+    )
+  }
+  <span class="absolute inset-0 grid place-items-center">
+    <span
+      class="grid size-14 place-items-center rounded-full border border-white/40 bg-black/60 pl-1 text-xl text-white backdrop-blur transition-colors group-hover/play:border-accent group-hover/play:text-accent"
+    >
+      ▶
+    </span>
+  </span>
+</a>
+
+<script>
+  import { youtubeEmbed } from "@/lib/video";
+
+  // Swap the still for the real player on the first press. Until then the link
+  // is a plain link to the video, which is what it falls back to.
+  document.addEventListener("click", (event) => {
+    const node = event.target;
+    if (!(node instanceof Element)) return;
+    const trigger = node.closest<HTMLElement>("[data-play], [data-clip]");
+    if (!trigger) return;
+
+    const { play, clip } = trigger.dataset;
+    if (!play && !clip) return;
+
+    event.preventDefault();
+
+    let player: HTMLElement;
+    if (clip) {
+      const video = document.createElement("video");
+      video.src = clip;
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.className = "absolute inset-0 h-full w-full bg-mat object-contain";
+      player = video;
+    } else {
+      const frame = document.createElement("iframe");
+      frame.src = youtubeEmbed(play!);
+      frame.title = trigger.getAttribute("aria-label") ?? "";
+      frame.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+      frame.allowFullscreen = true;
+      frame.className = "absolute inset-0 h-full w-full";
+      player = frame;
+    }
+
+    trigger.replaceChildren(player);
+    trigger.removeAttribute("href");
+  });
+</script>

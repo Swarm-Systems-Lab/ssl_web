@@ -40,7 +40,7 @@ const backer = z.object({
   /** Grant or contract number, shown as written. */
   reference: z.string().optional(),
   href: z.string().optional(),
-  /** File name in content/affiliations/, when there is a logo for it. */
+  /** File name in content/logos/, when there is a logo for it. */
   logo: z.string().optional(),
 });
 

@@ -2,13 +2,12 @@ import type { ImageMetadata } from "astro";
 import type { Media } from "./images";
 
 /**
- * Logos, kept in two folders:
+ * Logos: our outside links, and the institutions and funders behind the lab.
  *
- *   content/logos/         GitHub, YouTube, Discord - our outside links
- *   content/affiliations/  the university, institutes, and funders
- *
- * Drop the official file in, named after the label it belongs to, and it is
- * used.
+ * They live together in content/logos/, because they are found the same way -
+ * drop the official file in, named after the label it belongs to, and it is
+ * used. Subfolders are for the institutions that publish a whole set, and a
+ * file inside one can be named by its path.
  *
  * SVGs are served untouched - resizing a vector is meaningless, and the image
  * pipeline would rasterise it. Everything else goes through the pipeline like
@@ -17,33 +16,27 @@ import type { Media } from "./images";
  */
 
 // Vite rewrites these at build time, so the arguments have to be literals.
-const vector = {
-  logos: import.meta.glob<string>("/content/logos/**/*.svg", {
-    eager: true,
-    query: "?url",
-    import: "default",
-  }),
-  affiliations: import.meta.glob<string>("/content/affiliations/**/*.svg", {
-    eager: true,
-    query: "?url",
-    import: "default",
-  }),
-};
+const vector = import.meta.glob<string>("/content/logos/**/*.svg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
 
-const raster = {
-  logos: import.meta.glob<{ default: ImageMetadata }>(
-    "/content/logos/**/*.{png,webp,avif,jpg,jpeg}",
-    {
-      eager: true,
-    },
-  ),
-  affiliations: import.meta.glob<{ default: ImageMetadata }>(
-    "/content/affiliations/**/*.{png,webp,avif,jpg,jpeg}",
-    { eager: true },
-  ),
-};
+const raster = import.meta.glob<{ default: ImageMetadata }>(
+  "/content/logos/**/*.{png,webp,avif,jpg,jpeg}",
+  { eager: true },
+);
 
-export type LogoFolder = keyof typeof vector;
+const FOLDER = "/content/logos/";
+
+/** "Google Scholar" -> "google-scholar", so the file name is predictable. */
+function slugify(label: string): string {
+  return label
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
 /**
  * File names and labels are normalised the same way, so a file may be called
@@ -54,16 +47,15 @@ function key(value: string): string {
   return value.split("/").map(slugify).filter(Boolean).join("/");
 }
 
-function build(folder: LogoFolder): Map<string, Media> {
-  const prefix = `/content/${folder}/`;
+const index = (() => {
   const files: [string, Media][] = [
-    ...Object.entries(vector[folder]).map(([path, url]) => [path, url] as [string, Media]),
-    ...Object.entries(raster[folder]).map(([path, mod]) => [path, mod.default] as [string, Media]),
+    ...Object.entries(vector).map(([path, url]) => [path, url] as [string, Media]),
+    ...Object.entries(raster).map(([path, mod]) => [path, mod.default] as [string, Media]),
   ];
 
   const paths = files.map(
     ([path, picture]) =>
-      [path.slice(prefix.length).replace(/\.[^.]+$/, ""), picture] as [string, Media],
+      [path.slice(FOLDER.length).replace(/\.[^.]+$/, ""), picture] as [string, Media],
   );
 
   const map = new Map<string, Media>();
@@ -78,7 +70,7 @@ function build(folder: LogoFolder): Map<string, Media> {
     const clash = seen.get(id);
     if (clash) {
       console.warn(
-        `[logos] content/${folder}/${relative} and content/${folder}/${clash} ` +
+        `[logos] content/logos/${relative} and content/logos/${clash} ` +
           `are both "${id}". Rename one, or refer to them by full path.`,
       );
     }
@@ -91,30 +83,13 @@ function build(folder: LogoFolder): Map<string, Media> {
     if (!map.has(bare)) map.set(bare, picture);
   }
   return map;
-}
-
-const index = new Map<LogoFolder, Map<string, Media>>(
-  (Object.keys(vector) as LogoFolder[]).map((folder) => [folder, build(folder)]),
-);
-
-/** "Google Scholar" -> "google-scholar", so the file name is predictable. */
-function slugify(label: string): string {
-  return label
-    .normalize("NFKD")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
+})();
 
 /**
  * The logo for a label, by its explicit file name or by the label itself.
  * `name` may be a bare name ("erc") or a path into a subfolder
  * ("ugr/vertical/UGR-MARCA-01-color").
  */
-export function logoFor(
-  label: string,
-  name?: string,
-  folder: LogoFolder = "logos",
-): Media | undefined {
-  return index.get(folder)?.get(key(name ?? label));
+export function logoFor(label: string, name?: string): Media | undefined {
+  return index.get(key(name ?? label));
 }

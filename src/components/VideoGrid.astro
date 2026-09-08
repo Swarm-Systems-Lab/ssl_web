@@ -1,18 +1,25 @@
 ---
-import YouTube from "@/components/YouTube.astro";
+import Picture from "@/components/Picture.astro";
+import { youtubeRef } from "@/lib/video";
+import type { Media } from "@/lib/images";
 
 /**
- * A row of YouTube videos, used on the front page and on the media page.
+ * A row of videos, used on the front page and on the media page. They can be
+ * ours or YouTube's - `Picture` knows the difference and draws each one the
+ * way it should be drawn, so this only has to lay them out.
  *
- * Nothing is embedded until someone asks to watch. Each video shows its own
- * thumbnail with a play button, and the player is inserted on the first click.
- * A YouTube embed costs about half a megabyte and a good deal of main-thread
- * work before it can show a single frame, so three of them on one page is the
- * difference between a page that opens instantly and one that does not.
+ * Nothing is fetched until someone asks to watch: a YouTube video shows its
+ * still until the play button is pressed, and a clip of ours shows the frame
+ * it opens on. A YouTube embed costs about half a megabyte before it can paint
+ * anything, so three of them on one page is the difference between a page that
+ * opens instantly and one that does not.
  */
 
 export interface Video {
-  youtube: string;
+  /** A YouTube id or link, for a video that lives there. */
+  youtube?: string;
+  /** Or one of ours, already resolved. */
+  src?: Media;
   title: string;
   date?: string;
 }
@@ -37,12 +44,12 @@ const {
   {
     videos.map((video, index) => (
       <li class="border border-border bg-surface/30 transition-colors hover:border-accent/50">
-        <div class="aspect-video border-b border-border">
-          <YouTube
-            id={video.youtube}
-            label={video.title}
+        <div class="aspect-video border-b border-border bg-mat">
+          <Picture
+            src={video.src ?? youtubeRef(video.youtube ?? "")}
+            alt={video.title}
             loading={index < aboveTheFold ? "eager" : "lazy"}
-            class="h-full w-full"
+            class="h-full w-full object-cover"
           />
         </div>
         <div class="p-5">

@@ -9,8 +9,8 @@ Everything on the website is generated from this folder.
 | `team/`            | one folder per person, by category  | its own page           |
 | `media/`           | photos, GIFs, and short clips       | the media page         |
 | `covers/`          | the picture at the top of a page    | that page              |
-| `logos/`           | marks for GitHub, YouTube, Discord  | front page and footer  |
-| `affiliations/`    | university, institute, funder logos | front page             |
+| `logos/`           | marks for our links, and for the    | front page, footer,    |
+|                    | institutions and funders behind us  | project pages          |
 | `pages/home.md`    | the text on the front page          | the front page         |
 | `publications.yaml`| every paper                         | the publications page  |
 | `positions.yaml`   | open positions                      | Join us -> Open positions   |
@@ -215,42 +215,54 @@ for a white version - the official file as downloaded is fine. See
 
 The band at the foot of the front page - the university, the institutes, the
 ERC, the ministry. List it under `affiliations:` in `site.yaml`, then drop the
-file in `affiliations/` named to match.
+file in `logos/` named to match. They share that folder with the marks above,
+because both are found the same way: by the label they belong to.
 
 Until the file is there the institution's name is shown as text instead, so the
 band works before anyone has collected the artwork. See
-[`affiliations/README.md`](affiliations/README.md).
+[`logos/README.md`](logos/README.md).
 
 ### A video on YouTube
 
 Long videos do not belong in the repository. Upload them to
 [our channel](https://www.youtube.com/@SwarmSystemsLab) and add the id - the part
-of the address after `v=` - to `media.yaml`:
+of the address after `v=` - to `media/media.yaml`, beside the files:
 
 ```yaml
 videos:
   - youtube: G_lXujpkPJw
-    title: Fixed-wing aerobatics - fully autonomous, no GPS
+    caption: Fixed-wing aerobatics - fully autonomous, no GPS
     date: "2026-08-01"
-    featured: true
 ```
 
-`featured: true` also puts the video on the **front page**, under *From the
-field*. Mark as many as you want to show there; if you mark none, the front page
-falls back to the first three in the list.
+It then appears on the media page with the clips of our own, newest first.
 
-### Cropping, captions, and alt text: `images.yaml`
+To put something on the **front page**, under *From the field*, name it in
+`site.yaml` - a file in `content/media/`, or one of those videos:
+
+```yaml
+fromTheField:
+  heading: From the field
+  items:
+    - 55N0cbsjq08
+    - 2024-08-20_Taking-off-over-the-lake-of-Cubillas.mp4
+```
+
+They appear in the order written. A name that matches nothing stops the build,
+so the strip cannot quietly go empty.
+
+### Cropping, captions, and alt text: `media.yaml`
 
 A picture shown in a square card, a wide banner, and a 4:3 thumbnail is cropped
 differently in each, and the crop is taken from the middle - which is wrong for
 a group photo where the faces sit high, or a plot with a label down one side.
 
-Put an `images.yaml` next to the pictures and say so. It is optional, only has
+Put an `media.yaml` next to the pictures and say so. It is optional, only has
 to mention the pictures that need something, and applies **everywhere that
 picture appears**:
 
 ```yaml
-# content/team/photos/images.yaml
+# content/team/photos/media.yaml
 group-launch-at-the-beach.png:
   focus: top
   caption: Launching at the beach
@@ -314,7 +326,7 @@ quietly.
 ### A video instead of a picture
 
 A `.mp4` or a `.gif` dropped in a folder is picked up like any picture. A
-YouTube video has no file to drop, so it is written in the same `images.yaml`
+YouTube video has no file to drop, so it is written in the same `media.yaml`
 under `videos:`:
 
 ```yaml

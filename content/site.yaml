@@ -71,8 +71,22 @@ social:
   - label: Discord
     href: https://discord.gg/peMNWpe4YT
 
+# The strip of media on the front page.
+#
+# `items` names what it shows, one per line and in the order they appear.
+# Each is either a file in content/media/ - "2025-10-14.png" - or a YouTube
+# video listed in that folder's media.yaml, by id or by link. A name that
+# matches nothing stops the build, so the strip can never go quietly empty.
+fromTheField:
+  heading: From the field
+  items:
+    - 55N0cbsjq08
+    - v8to32dYVnc 
+    - 8VweHQ4zHbs
+
+
 # The university, institutes, and funders shown at the foot of the front page.
-# Put the logo in content/affiliations/ named after the label - "ERC" looks for
+# Put the logo in content/logos/ named after the label - "ERC" looks for
 # erc.svg - and it replaces the text. Without a file the name is shown instead,
 # so this list is useful before any logo has been collected.
 #

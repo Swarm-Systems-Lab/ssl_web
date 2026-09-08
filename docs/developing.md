@@ -126,7 +126,7 @@ link to YouTube, which is what happens without JavaScript.
 
 ### Per-picture settings
 
-`lib/display.ts` reads every `content/**/images.yaml` at build time and keys the
+`lib/display.ts` reads every `content/**/media.yaml` at build time and keys the
 settings by the picture's built URL, so a picture can find its own row no matter
 how it was resolved - the YAML picture index, a Markdown `image:` field, or a
 folder scan. `Picture` looks that up itself, which is why one line in one file
@@ -162,11 +162,71 @@ one: both are listed in YAML, which carries no captions.
 Keys that name a missing file, unknown settings, and malformed `focus` values
 all stop the build with the file and field named.
 
+### Media, as one thing
+
+A collection's media is whatever sits in its folder plus whatever its
+`media.yaml` declares, and `lib/media-item.ts` gives all of it one shape:
+
+| kind    | what it is                         | how it is drawn                   |
+| ------- | ---------------------------------- | --------------------------------- |
+| `image` | a photo, a plot, a GIF, a vector   | a picture                         |
+| `clip`  | an `.mp4` or `.webm` of ours       | a player, showing its first frame |
+| `video` | a video hosted elsewhere (YouTube) | a still, then the embed on click  |
+
+`Picture` takes any of the three and draws it correctly, which is what lets one
+component serve a cover, a carousel slide, a listing thumbnail and the video
+shelf. A page's job is only to decide _which_ media it wants: the first item
+for a cover, the rest for a carousel, or a split by kind as the media page does
+
+- pictures into the grid, clips and YouTube into the shelf together.
+
+A GIF counts as an image, not a clip: nothing to press, no sound, no controls -
+a picture that happens to move.
+
+### Where media is declared
+
+`content/media.yaml` is the media _page_: its intro, its page size, the channel
+box. `content/media/media.yaml` is that folder's media - the same per-file
+sheet every folder can have, plus the YouTube videos, which have no file to
+drop in. Nothing about an individual picture or video belongs in the page
+config, and nothing about the page belongs in the folder.
+
+`lib/media.ts` builds the gallery from both halves: the files in the folder and
+the videos it declares, in one list sorted newest first. The media page splits
+it by kind - pictures into the grid, clips and YouTube into the shelf.
+
+The front page's strip is named rather than derived: `fromTheField` in
+site.yaml lists the pieces it shows, by file name or by YouTube id, in the
+order they should appear. A name that matches nothing throws, listing what the
+gallery does hold, so the strip cannot quietly go empty.
+
+### Stills for clips
+
+`tools/clip-posters.mjs` runs before every build and pulls the opening frame
+out of each `.mp4`/`.webm` under `content/`, writing it beside the clip as
+`_poster.<name>.jpg`. The leading underscore keeps it out of the folder scans
+while leaving it an ordinary file that Astro optimises like any other picture.
+
+That still is the clip's `poster`, so a clip shows its opening frame with
+`preload="none"` - nothing but the still is fetched until someone presses play
+
+- and it is what a listing gets when it asks for `still`.
+
+It only runs for clips whose still is missing or older than the clip, so a
+rebuild costs nothing.
+
+The stills are build output, not content: `.gitignore` keeps them out of the
+repository, and every build - local or in CI - makes any that are missing. The
+deploy workflow installs ffmpeg if the runner does not already carry it.
+Without ffmpeg the step says so and carries on; a clip with no still is then a
+plain video element with the browser's own controls, which is what it was
+before any of this.
+
 ### Video as media
 
 A collection's media is not only pictures. A `.gif` or an `.mp4` in a folder is
 served as it is; a YouTube video has no file, so it is declared in that folder's
-`images.yaml` under `videos:` and carried through the site as the string
+`media.yaml` under `videos:` and carried through the site as the string
 `youtube:<id>` - the same shape a GIF's URL takes. That is why it needs no
 special case in the collection plumbing: `folderMedia()` mixes declared videos
 in with the folder's files, so a video can be a page's cover, a carousel slide,
@@ -292,7 +352,7 @@ crops to a banner.
 
 ### Logos
 
-`content/logos/<link>.*` and `content/affiliations/<name>.*` are matched by the
+`content/logos/<link>.*` and `content/logos/<name>.*` are matched by the
 slugified label, or by an explicit `logo:` in `site.yaml`. Subfolders are
 indexed too, so a downloaded brand pack can be kept intact and referenced by
 path (`ugr/vertical/UGR-MARCA-01-color`); each file also gets a bare-name alias

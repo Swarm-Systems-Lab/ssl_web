@@ -1,0 +1,30 @@
+#
+2025-10-14.png:
+  caption: "RC Flight Club - Ciudad de la Alhambra. Our testbed for autonomous flight of drones in outdoor environments"
+2025-09-15.png:
+  caption: "Diego performing flight checks on our fleet of Sonic fixed-wing drones before heading out to fly"
+  focus: 0% 10%
+2025-01-31.jpg:
+  caption: "Jesus and Jose at the RC Flight Club"
+  focus: 0% 30%
+2024-11-24.jpg:
+  caption: "Hector's plenary talk at the Autonomous Robotic Technology Seminar (ARTS 2024), Shenzhen, China"
+2024-10-02.jpg:
+  caption: "Sonic fixed-wing drone under center-of-mass configuration"
+2023-10-17.jpg:
+  caption: "Our fleet of three steering-wheel rovers, used to test and validate the algorithms before taking the drones to the skies"
+
+# Videos that live on YouTube. They are part of this folder's media just as the
+# files are, and appear on the media page beside the clips of our own, newest
+# first. To put one on the front page, name it under `fromTheField` in
+# ../site.yaml.
+videos:
+  - youtube: 55N0cbsjq08
+    caption: Fully autonomous Fixed-wing aerobatics (without GPS)
+    date: "2026-08-01"
+  - youtube: v8to32dYVnc
+    caption: Two fixed-wing drones rendezvous, fly in formation, split, and meet again
+    date: "2025-08-12"
+  - youtube: 8VweHQ4zHbs
+    caption: 3D square formation with four flying wings
+    date: "2025-07-27"

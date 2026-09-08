@@ -26,6 +26,11 @@ jobs:
         with:
           bun-version: latest
 
+      # The build pulls a still out of every clip. The runner images normally
+      # carry ffmpeg; installing it only when they do not keeps this a no-op.
+      - name: Make sure ffmpeg is available
+        run: command -v ffmpeg || sudo apt-get install -y --no-install-recommends ffmpeg
+
       - run: bun install --frozen-lockfile
 
       - name: Build

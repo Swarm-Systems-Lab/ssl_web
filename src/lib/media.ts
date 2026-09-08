@@ -1,6 +1,9 @@
-import { mediaConfig } from "./data";
+import { site } from "./data";
 import { describeFile } from "./filenames";
+import { videosIn, displayFor } from "./display";
+import { youtubeRef } from "./video";
 import { photoEntries, assetEntries, type Media } from "./images";
+import { kindOf, type MediaKind } from "./media-item";
 
 /**
  * The media gallery is built by scanning content/media/ at build time.
@@ -20,15 +23,27 @@ export type MediaItem = {
   file: string;
   caption: string;
   date?: string;
-  /** Photos are optimised; animations and clips are served as they are. */
-  kind: "photo" | "animation" | "video";
+  /** What it is, and so where the page puts it. See lib/media-item.ts. */
+  kind: MediaKind;
   src: Media;
 };
 
 function describe(path: string) {
-  const { file, date, caption } = describeFile(path, mediaConfig.captions);
+  const { file, date, caption } = describeFile(path);
   return { file, date, caption: caption ?? file };
 }
+
+/** The YouTube videos this folder declares, alongside the files in it. */
+const declared = videosIn(FOLDER).map((video) => {
+  const said = displayFor(video.src);
+  return {
+    file: video.src,
+    caption: said?.caption ?? said?.alt ?? "Video",
+    date: video.date,
+    kind: "video" as const,
+    src: video.src as Media,
+  };
+});
 
 const listed = (path: string) =>
   path.startsWith(FOLDER) && !(path.split("/").pop() ?? "").startsWith("_");
@@ -39,12 +54,54 @@ const inFolder = <T>(entries: readonly (readonly [string, T])[]) =>
 export const gallery: MediaItem[] = [
   ...inFolder(photoEntries).map(([path, image]) => ({
     ...describe(path),
-    kind: "photo" as const,
+    kind: kindOf(image as Media),
     src: image as Media,
   })),
   ...inFolder(assetEntries).map(([path, url]) => ({
     ...describe(path),
-    kind: (path.endsWith(".gif") ? "animation" : "video") as "animation" | "video",
+    kind: kindOf(url as Media),
     src: url as Media,
   })),
-].sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+  ...declared,
+  // Newest first. Anything without a date in its name has nowhere to sit in
+  // that order, so it goes at the end rather than at the front.
+].sort((a, b) => {
+  if (!a.date || !b.date) return Number(Boolean(b.date)) - Number(Boolean(a.date));
+  return b.date.localeCompare(a.date);
+});
+
+/**
+ * Everything to press play on, ours and YouTube's together, newest first.
+ * Where it is hosted is not something a reader cares about.
+ */
+export const videos = gallery
+  .filter((item) => item.kind !== "image")
+  .map((item) => ({ src: item.src, title: item.caption, date: item.date }));
+
+/**
+ * What the front page shows in its strip of media: the pieces named in
+ * `fromTheField` in site.yaml, in the order they are named there.
+ *
+ * Each is either a file in content/media/ or a YouTube video declared beside
+ * it. A name that matches nothing stops the build rather than quietly leaving
+ * a hole in the front page.
+ */
+export const fromTheField = site.fromTheField.items.map((wanted) => {
+  const ref = (() => {
+    try {
+      return youtubeRef(wanted);
+    } catch {
+      return undefined;
+    }
+  })();
+
+  const found = gallery.find((item) => item.file === wanted || (ref && item.file === ref));
+  if (!found) {
+    throw new Error(
+      `content/site.yaml asks the front page for "${wanted}", which is not in the media gallery.\n` +
+        `Name a file in content/media/, or a YouTube video listed in its media.yaml.\n` +
+        `Available: ${gallery.map((item) => item.file).join(", ")}\n`,
+    );
+  }
+  return { src: found.src, title: found.caption, date: found.date };
+});

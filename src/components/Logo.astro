@@ -1,13 +1,12 @@
 ---
 import Picture from "@/components/Picture.astro";
-import { logoFor, type LogoFolder } from "@/lib/logos";
+import { logoFor } from "@/lib/logos";
 
 interface Props {
   /** The label, used to find <folder>/<label>.svg. */
   label: string;
   /** Overrides the file name when it differs from the label. */
   name?: string;
-  folder?: LogoFolder;
   /**
    * Flatten the logo to a single mark in the theme's ink colour: black on the
    * light theme, white on the dark one. Only safe for artwork on a transparent
@@ -26,7 +25,6 @@ interface Props {
 const {
   label,
   name,
-  folder = "logos",
   mono = false,
   size = "h-10 w-auto",
   widths = [80, 160, 320],
@@ -34,7 +32,7 @@ const {
   class: className,
 } = Astro.props;
 
-const src = logoFor(label, name, folder);
+const src = logoFor(label, name);
 ---
 
 {
