@@ -1,11 +1,17 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
-/** Matches a post either as one file or as index.md inside its own folder. */
+/**
+ * Matches a post either as one file or as index.md inside its own folder.
+ *
+ * A leading underscore keeps something out of the site, whether it is a file
+ * or a folder: `_template/` is a folder meant to be copied, not published, and
+ * without the second rule its index.md would become a page like any other.
+ */
 const posts = (base: string) =>
   glob({
     base,
-    pattern: ["**/[!_]*.md", "!**/README.md"],
+    pattern: ["**/[!_]*.md", "!**/_*/**", "!**/README.md"],
     // "a-post/index.md" and "a-post.md" must land on the same address.
     generateId: ({ entry }) => entry.replace(/\.md$/, "").replace(/\/index$/, ""),
   });

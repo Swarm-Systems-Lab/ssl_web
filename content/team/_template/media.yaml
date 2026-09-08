@@ -1,0 +1,18 @@
+# How this person's photo is shown. Everything works without this file, so if
+# the photo does not need it, delete it.
+#
+# One block per picture, named exactly as the file is named. Only mention the
+# ones that need something other than the default; the rest are left alone. A
+# name that is not in the folder stops the build, which is how a typo in here
+# gets caught rather than quietly ignored.
+#
+# jane.jpg:
+#   focus: top                 # which part to keep when the frame crops it:
+#                              # top, bottom, left, right, center, or a pair
+#                              # of percentages like "50% 20%"
+#   zoom: 1.4                  # crop in closer than the frame would, anchored
+#                              # on focus. Below 1 instead shows the picture
+#                              # whole, with the ground around it - for a plot
+#                              # or a poster that a crop would ruin.
+#   caption: Jane in the field # instead of the one worked out from the name
+#   alt: What the picture shows

@@ -34,13 +34,22 @@ Two mechanisms, chosen by whether an item needs its own page:
 
 - **Markdown** in `content/news`, `content/research`, `content/team`,
   `content/pages` -> Astro content collections, declared in
-  `src/content.config.ts`. Each entry becomes a route. Files starting with `_`
-  are templates and are skipped by the glob.
+  `src/content.config.ts`. Each entry becomes a route. A leading underscore
+  keeps something out of the site, and the glob skips it whether it is a file
+  or a folder - which is what `_template/` relies on.
 
   An entry is either one file (`a-post.md`) or a folder holding `index.md`
   beside its pictures (`a-post/index.md`). A custom `generateId` strips the
   trailing `/index`, so both land on the same address and the folder move did
   not change any URL.
+
+  Every collection carries a `_template/` folder, which is the way a new entry
+  is made: copy it, rename the copy, fill it in. It holds an `index.md` whose
+  frontmatter comments explain each field, and a `media.yaml` commented out in
+  full, so a copy that is left alone parses to nothing and changes nothing.
+  Adding a field to a schema means adding it to that `index.md` too - the
+  template is the only documentation an editor reads at the moment they need
+  it.
 
   People go one level deeper - `team/members/`, `team/visitors/`,
   `team/alumni/`. Anyone with a photo or body text gets a page; on it,
@@ -462,10 +471,6 @@ compress before committing and keep long video on YouTube.
 `.github/workflows/deploy.yml` builds on every push to the default branch and
 publishes through GitHub Pages. Enable it once under **Settings -> Pages ->
 Source -> GitHub Actions**.
-
-`.github/workflows/new-post.yml` is the form-based authoring path for editors;
-it runs `.github/scripts/new_post.py`, commits the file, and lets the deploy
-workflow take over.
 
 The build reads two optional repository variables (**Settings -> Secrets and
 variables -> Actions -> Variables**):

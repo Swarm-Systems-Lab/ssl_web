@@ -1,14 +1,19 @@
 ---
 # HOW TO ADD SOMEONE
 #
-# Make a folder for them inside the right category and put this file in it as
-# index.md, with their photo next to it:
+# Copy this whole folder into the category they belong to, and name the copy
+# after them:
 #
-#   content/team/members/jane-doe/index.md     ← this file, renamed
-#   content/team/members/jane-doe/jane.jpg     ← picked up automatically
+#   content/team/members/jane-doe/
+#     index.md        ← this file, already named right
+#     media.yaml      ← how their photo is framed; delete it if not needed
+#     jane.jpg        ← their photo, picked up automatically
 #
-# Categories: members/ (current), visitors/, alumni/
-# The folder name becomes the address: /team/jane-doe
+# Categories: members/ (current), visitors/, alumni/ - this template sits one
+# level up, outside all three, so it is never mistaken for a person.
+#
+# The folder name becomes the address: /team/jane-doe - so keep it lowercase
+# with dashes.
 
 name: "Jane Doe"
 role: "Ph.D. student"        # free text, shown above the name

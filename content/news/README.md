@@ -1,7 +1,7 @@
 # News
 
-One folder per post. Copy `_template.md` into a new folder named
-`YYYY-MM-DD-a-few-words`, save it as `index.md`, and fill it in. The folder name
+One folder per post. Copy the `_template/` folder here, rename the copy
+`YYYY-MM-DD-a-few-words`, and fill in the `index.md` inside it. The folder name
 becomes the address:
 
 ```

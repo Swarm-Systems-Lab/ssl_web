@@ -1,8 +1,8 @@
 # Research
 
-One folder per project. Copy `_template.md` into a new folder named after the
-project, save it as `index.md`, and fill it in. The folder name becomes the
-address:
+One folder per project. Copy the `_template/` folder here, rename the copy
+after the project, and fill in the `index.md` inside it. The folder name
+becomes the address:
 
 ```
 content/research/aerosense/

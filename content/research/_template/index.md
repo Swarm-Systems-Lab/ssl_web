@@ -1,13 +1,16 @@
 ---
 # HOW TO ADD A PROJECT
 #
-# Make a folder in content/research/ named after the project, and put this file
-# in it as index.md:
+# Copy this whole folder, leave the copy here beside the others, and name it
+# after the project:
 #
-#   content/research/aerosense/index.md      ← this file, renamed
-#   content/research/aerosense/01-field.jpg  ← pictures, if any
+#   content/research/aerosense/
+#     index.md        ← this file, already named right
+#     media.yaml      ← how the pictures are framed; delete it if not needed
+#     01-field.jpg    ← pictures you add yourself, if any
 #
-# The folder name becomes the address: /research/aerosense
+# The folder name becomes the address: /research/aerosense - so keep it
+# lowercase with dashes.
 
 title: "Name of the project"
 summary: "One or two sentences shown on the projects list."

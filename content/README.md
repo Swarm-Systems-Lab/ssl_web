@@ -32,9 +32,21 @@ content/news/2026-09-04-new-paper/
   02-second-photo.jpg
 ```
 
-Copy the `_template.md` from the relevant folder into your new folder, save it
-as `index.md`, and fill it in. The folder name becomes the address, so keep it
-lowercase with dashes: the example above is at `/news/2026-09-04-new-paper`.
+Do not build that folder by hand. Every collection keeps a `_template/` folder
+next to its entries - copy the whole thing and rename the copy:
+
+```
+content/news/_template/  ->  content/news/2026-09-04-new-paper/
+```
+
+The copy already holds `index.md`, with every field explained in comments, and
+a `media.yaml` for the times a picture needs framing. Fill in `index.md`,
+delete the `media.yaml` if you do not need it, and drop your pictures beside
+them.
+
+The folder name becomes the address, so keep it lowercase with dashes: the
+example above is at `/news/2026-09-04-new-paper`. Anything whose name starts
+with `_` is left out of the site, which is what keeps the templates off it.
 
 People are filed one level deeper, by what they are to the lab -
 `team/members/`, `team/visitors/`, `team/alumni/`. See

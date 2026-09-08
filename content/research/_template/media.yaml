@@ -1,0 +1,25 @@
+# How the pictures in this folder are shown. Everything works without this
+# file, so if none of your pictures need it, delete it.
+#
+# One block per picture, named exactly as the file is named. Only mention the
+# ones that need something other than the default; the rest are left alone. A
+# name that is not in the folder stops the build, which is how a typo in here
+# gets caught rather than quietly ignored.
+#
+# 01-field.jpg:
+#   focus: top                 # which part to keep when the frame crops it:
+#                              # top, bottom, left, right, center, or a pair
+#                              # of percentages like "50% 20%"
+#   zoom: 1.4                  # crop in closer than the frame would, anchored
+#                              # on focus. Below 1 instead shows the picture
+#                              # whole, with the ground around it - for a plot
+#                              # or a poster that a crop would ruin.
+#   caption: The lab in May    # instead of the one worked out from the name
+#   alt: What the picture shows
+#
+# A video belongs to the folder too, though it has no file to drop in:
+#
+# videos:
+#   - youtube: https://youtu.be/VIDEO_ID
+#     caption: The swarm in the field
+#     cover: true              # lead the page with it
