@@ -44,17 +44,49 @@ const preview = image ? new URL(image, Astro.site).href : undefined;
     <link rel="icon" href={url("/favicon.svg")} type="image/svg+xml" />
     <link rel="alternate icon" href={url("/favicon-32.png")} sizes="32x32" />
     <link rel="apple-touch-icon" href={url("/apple-touch-icon.png")} />
+    {
+      /* The page is at home in either theme. Browsers use this to pick the
+        colours for form controls and scrollbars before the CSS arrives, and
+        extensions read it to see that the site handles dark itself. */
+    }
+    <meta name="color-scheme" content="light dark" />
+    {
+      /* Dark Reader's own opt-out: the site already has a dark theme, so the
+        extension leaves it alone instead of inverting it a second time. */
+    }
+    <meta name="darkreader-lock" />
     <meta name="theme-color" content="#ffffff" />
 
     {
-      /* Runs before the body is painted, so a visitor who chose the dark theme
-        never sees a white flash on the way in. */
+      /* Runs before the body is painted, so nobody sees the wrong theme flash
+        on the way in. A choice made here wins; otherwise the system's setting
+        decides, and keeps deciding if it changes while the page is open. */
     }
     <script is:inline>
-      try {
-        const saved = localStorage.getItem("theme");
-        if (saved === "dark" || saved === "light") document.documentElement.dataset.theme = saved;
-      } catch {}
+      (() => {
+        const root = document.documentElement;
+        const system = matchMedia("(prefers-color-scheme: dark)");
+
+        const stored = () => {
+          try {
+            const saved = localStorage.getItem("theme");
+            return saved === "dark" || saved === "light" ? saved : null;
+          } catch {
+            return null;
+          }
+        };
+
+        const apply = (theme) => {
+          root.dataset.theme = theme;
+          const tag = document.querySelector('meta[name="theme-color"]');
+          if (tag) tag.setAttribute("content", theme === "dark" ? "#09090b" : "#ffffff");
+        };
+
+        apply(stored() ?? (system.matches ? "dark" : "light"));
+        system.addEventListener("change", (event) => {
+          if (!stored()) apply(event.matches ? "dark" : "light");
+        });
+      })();
     </script>
 
     <meta property="og:site_name" content={site.title} />

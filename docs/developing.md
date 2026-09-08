@@ -191,6 +191,30 @@ The still is `hqdefault.jpg`, the one size YouTube guarantees for every video.
 It is 4:3 with black bars, so `YouTube` frames itself at 16:9 unless the caller
 has already given it a shape, and the bars are cropped off.
 
+### Themes
+
+The palette is chosen in three steps, in this order: a choice someone made
+here, then the system's `prefers-color-scheme`, then light.
+
+A stored choice and the system setting are both read by the inline script in
+`Base.astro`, which stamps `data-theme` on `<html>` before the body paints -
+no flash of the wrong theme, and the toggle always has an attribute to flip.
+The system setting is _also_ handled in CSS, by repeating the dark palette
+under `@media (prefers-color-scheme: dark)` for `html:not([data-theme])`, so a
+visitor with scripts off still gets the theme their machine asked for. The two
+copies of the dark palette have to be kept in step; CSS offers no way to say
+"this rule, and also under these conditions".
+
+Changing the system setting while a page is open moves the page with it, unless
+a choice has been stored, in which case the choice stands.
+
+Two tags in the head matter here. `<meta name="color-scheme" content="light
+dark">` tells the browser the page handles both, which is what form controls
+and scrollbars read before the CSS arrives. `<meta name="darkreader-lock">` is
+Dark Reader's documented opt-out: the extension sees that the site has a dark
+theme of its own and leaves it alone rather than inverting an already dark
+page.
+
 ### Opening a picture full size
 
 `<Picture zoom />` makes a picture clickable: it gains `data-zoom` pointing at a

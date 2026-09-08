@@ -33,6 +33,36 @@
   --watermark-opacity: 0.07;
 }
 
+/*
+ * The dark palette applies two ways: to anyone who chose it, and to anyone
+ * whose system asks for it and who has not chosen otherwise. The second is
+ * what a visitor gets before any script runs, so the page is already right by
+ * the time it paints.
+ *
+ * The two blocks are the same declarations twice - CSS has no way to say "this
+ * rule, under these conditions, as well" - so they have to be kept in step.
+ */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    color-scheme: dark;
+
+    --background: #09090b;
+    --foreground: #f4f4f5;
+    --muted: #71717a;
+    --muted-foreground: #a1a1aa;
+    --accent: #22d3ee;
+    --accent-foreground: #09090b;
+    --border: #27272a;
+    --surface: #121214;
+
+    --mat: #000000;
+    --watermark-opacity: 0.11;
+    --grid-line: #27272a;
+    --grid-opacity: 0.07;
+    --logo-invert: 1;
+  }
+}
+
 html[data-theme="dark"] {
   color-scheme: dark;
 
