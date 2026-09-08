@@ -437,12 +437,18 @@ ready yet.
 
 ### Custom domain
 
-The site does not ship a `public/CNAME`, because `swarmsystemslab.eu` still
-points at the current Google Sites page. To cut over: **delete both repository
-variables** so the defaults apply, set the domain under **Settings -> Pages ->
-Custom domain** (which creates the `CNAME` file), and point the DNS records at
-GitHub. Leaving `BASE_PATH` set to `/ssl_web/` on the custom domain would break
-every link and asset on the site.
+`public/CNAME` holds `www.swarmsystemslab.eu`, which is what pins the domain on
+GitHub's side. It has to be part of the built artifact rather than only a
+setting in the repository, because a deploy replaces the whole site and can
+otherwise drop the domain with it.
+
+DNS lives at GoDaddy: `www` is a CNAME to `swarm-systems-lab.github.io`, and
+the apex has A records at `185.199.108-111.153` so `swarmsystemslab.eu`
+redirects to `www`.
+
+There are no repository variables in normal operation - the defaults in
+`astro.config.mjs` are the live site. Setting `BASE_PATH` while on the custom
+domain would break every link and asset.
 
 ## Filling in DOIs and PDFs
 
