@@ -3,7 +3,6 @@ import { render } from "astro:content";
 import Base from "@/layouts/Base.astro";
 import Picture from "@/components/Picture.astro";
 import { getTeam } from "@/lib/collections";
-import { isPanoramic } from "@/lib/images";
 import { socialImage } from "@/lib/social-image";
 import { url } from "@/lib/url";
 
@@ -18,30 +17,12 @@ const { member } = Astro.props;
 const { entry, photo } = member;
 const { Content } = await render(entry);
 const hasText = Boolean(entry.body?.trim());
-
-// A passport-style photo sits beside the name; a wide one taken in the field
-// would be shrunk to nothing there, so it goes underneath at full width.
-const wide = photo ? isPanoramic(photo) : false;
 ---
 
 <Base title={entry.data.name} description={entry.data.summary} image={await socialImage(photo)}>
   <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
     <header class="border-b border-border pb-10">
-      <div class:list={["flex flex-col gap-8", !wide && "sm:flex-row sm:items-start"]}>
-        {
-          photo && !wide && (
-            <Picture
-              src={photo}
-              alt={entry.data.name}
-              widths={[200, 400]}
-              sizes="200px"
-              priority
-              zoom
-              class="w-40 shrink-0 border border-border object-cover"
-            />
-          )
-        }
-
+      <div class="flex flex-col gap-8">
         <div>
           <div class="font-display text-[10px] tracking-widest text-accent uppercase">
             {entry.data.role}
@@ -69,7 +50,7 @@ const wide = photo ? isPanoramic(photo) : false;
         </div>
 
         {
-          photo && wide && (
+          photo && (
             <Picture
               src={photo}
               alt={entry.data.name}
