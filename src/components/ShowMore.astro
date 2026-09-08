@@ -1,0 +1,106 @@
+---
+/**
+ * Folds a long list down to its opening entries, with a button to unfold it.
+ *
+ * The whole list is in the page either way - a search engine and a reader
+ * without JavaScript get all of it - so the folding is done by the script, and
+ * the button stays hidden until that script runs. A button that cannot unfold
+ * anything is worse than no button.
+ *
+ * Three parts, the way the carousel and the filter bar are built:
+ *
+ *   <section data-collapsible>          the group the script works within
+ *     <ol>
+ *       <li data-entry>…</li>           every entry that may be folded
+ *     </ol>
+ *     <ShowMore limit={30} total={72} noun="papers" />
+ *   </section>
+ *
+ * The fold follows whatever is on show. On a filtered list it counts only the
+ * entries the filter allows, so the button appears when a filter matches more
+ * than the limit and stays away when it matches fewer. Unfolding is final: the
+ * list never folds itself again, whatever the filter does afterwards.
+ */
+
+interface Props {
+  /** How many entries to open with. */
+  limit: number;
+  /** How many there are altogether, for the wording before the script runs. */
+  total: number;
+  /** What they are, e.g. "posts" or "papers". */
+  noun: string;
+  class?: string;
+}
+
+const { limit, total, noun, class: className } = Astro.props;
+---
+
+<button
+  type="button"
+  data-show-all
+  data-limit={limit}
+  data-noun={noun}
+  hidden
+  class:list={[
+    "mt-10 border border-border px-5 py-3 font-display text-xs tracking-widest uppercase transition-colors hover:border-accent/50 hover:text-accent",
+    className,
+  ]}
+>
+  Show all {total}
+  {noun}
+</button>
+
+<script>
+  for (const group of document.querySelectorAll<HTMLElement>("[data-collapsible]")) {
+    const button = group.querySelector<HTMLButtonElement>("[data-show-all]");
+    const entries = [...group.querySelectorAll<HTMLElement>("[data-entry]")];
+    if (!button || entries.length === 0) continue;
+
+    const limit = Number(button.dataset.limit ?? 0);
+    const noun = button.dataset.noun ?? "entries";
+    const headings = [...group.querySelectorAll<HTMLElement>("[data-filter-group]")];
+    let unfolded = false;
+
+    /**
+     * Works out what should be on screen right now: the entries a filter
+     * allows, cut to the limit unless the reader has asked for all of them.
+     */
+    const sync = () => {
+      const allowed = entries.filter((entry) => !entry.hidden);
+      const beyond = allowed.length > limit;
+
+      for (const entry of entries) entry.removeAttribute("data-folded");
+      if (!unfolded && beyond) {
+        for (const entry of allowed.slice(limit)) entry.setAttribute("data-folded", "");
+      }
+
+      button.hidden = unfolded || !beyond;
+      button.textContent = `Show all ${allowed.length} ${noun}`;
+
+      // A heading with nothing left under it goes too, whether its entries
+      // were taken away by the filter or by the fold.
+      for (const heading of headings) {
+        heading.hidden = !heading.querySelector("[data-entry]:not([hidden]):not([data-folded])");
+      }
+    };
+
+    button.addEventListener("click", () => {
+      const first = entries.find((entry) => entry.hasAttribute("data-folded"));
+      unfolded = true;
+      sync();
+      // Leave the reader where they were rather than at the top of the list.
+      first?.scrollIntoView({ block: "nearest" });
+    });
+
+    /*
+     * Filtering changes what is on show, so the fold is worked out again -
+     * caught on the way up, after the filter has had its say about which
+     * entries match.
+     */
+    group.addEventListener("click", (event) => {
+      if (event.target instanceof Element && event.target.closest("[data-filter]")) sync();
+    });
+
+    sync();
+  }
+</script>

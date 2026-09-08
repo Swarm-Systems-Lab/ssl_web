@@ -227,6 +227,16 @@ html[data-theme="dark"] {
 }
 
 @layer base {
+  /*
+   * Folded away by ShowMore. Deliberately not the `hidden` attribute: a filter
+   * owns that, and the two must be able to hide the same row without either
+   * undoing the other. A row shows only when neither applies.
+   */
+  [data-folded] {
+    /* Forced, the way the base layer forces `hidden`: a row carrying a display
+       utility - `flex`, say - would otherwise outrank a plain base rule. */
+    display: none !important;
+  }
   html {
     scroll-behavior: smooth;
   }

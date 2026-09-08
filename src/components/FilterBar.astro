@@ -63,7 +63,9 @@ const chips = [{ value: "all", label: allLabel, count: total }, ...options];
         item.hidden = value !== "all" && item.dataset.kind !== value;
       }
       for (const group of groups) {
-        group.hidden = !group.querySelector<HTMLElement>("[data-kind]:not([hidden])");
+        group.hidden = !group.querySelector<HTMLElement>(
+          "[data-kind]:not([hidden]):not([data-folded])",
+        );
       }
       for (const chip of chips) {
         chip.setAttribute("aria-pressed", String(chip.dataset.filter === value));

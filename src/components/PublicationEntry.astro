@@ -21,7 +21,7 @@ const { pub, loading = "lazy" } = Astro.props;
 const thumb = optionalPicture(pub.image);
 ---
 
-<li class="flex gap-5" data-kind={pub.kind}>
+<li class="flex gap-5" data-kind={pub.kind} data-entry>
   {/* The reference number always stays on the left. */}
   <span class="w-12 shrink-0 pt-1 font-display text-xs text-muted">[{pub.ref}]</span>
 

@@ -74,6 +74,7 @@ names the file and field, so bad content cannot reach production.
 | `PressShelf.astro`       | coverage from `press.yaml` as a shelf of cards, newest first                                                                       |
 | `PublicationEntry.astro` | one paper as the publications page draws it; a project page shows its own papers with the same component                           |
 | `PeopleList.astro`       | a comma-separated run of people, linked where they have a page                                                                     |
+| `ShowMore.astro`         | folds a long list to its opening entries, with a button to unfold it                                                               |
 | `YouTube.astro`          | a video as its own still until someone presses play, then the embed; used by `Picture` and by the media page's grid                |
 | `FilterBar.astro`        | client-side filter over an already-rendered list                                                                                   |
 | `Text.astro`             | renders one line of YAML text through the inline Markdown parser                                                                   |
@@ -234,6 +235,34 @@ lightbox takes the click when its script has run.
 outlets. The file is unordered - `lib/data.ts` sorts it by date, newest first -
 so whoever adds a piece can paste it anywhere. `kind: video` changes the card's
 wording from "Read" to "Watch", and `programme:` names the show it went out on.
+
+### ShowMore
+
+Mark the group with `data-collapsible`, mark every foldable entry with
+`data-entry`, and put `<ShowMore limit={30} total={n} noun="papers" />` inside
+the group. The limit is the page's to choose - only it knows how many entries
+fill a screen - and each page keeps it in an `AT_FIRST` constant at the top.
+
+Everything is rendered either way; the script folds the tail on load and the
+button is `hidden` until then, so without JavaScript the full list is simply
+there. Lazy pictures inside folded entries are not fetched until the list is
+unfolded, so the fold costs page weight as well as height.
+
+The fold follows whatever is on show, which is what makes it work alongside the
+filter on the publications page. After a filter runs, `ShowMore` counts only
+the entries the filter allows and cuts _those_ to the limit: filtering to a
+kind with fewer than the limit shows all of them and no button, and coming back
+to everything folds again and brings the button back. Pressing the button is
+final - the list never folds itself again, whatever the filter does afterwards.
+
+Two details make that cooperation work. Folding marks entries `data-folded`
+rather than using the `hidden` attribute, since the filter owns `hidden` and
+the two must be able to hide the same row without undoing each other; the rule
+is forced with `!important` for the same reason Tailwind's preflight forces
+`[hidden]`, as a row carrying a display utility would otherwise outrank it. And
+`ShowMore` recomputes on the way _up_ from a filter click, after the filter has
+decided which entries match, then has the last word on which headings still
+have anything under them.
 
 ### FilterBar
 

@@ -2,6 +2,7 @@
 import Base from "@/layouts/Base.astro";
 import PageHeader from "@/components/PageHeader.astro";
 import PublicationEntry from "@/components/PublicationEntry.astro";
+import ShowMore from "@/components/ShowMore.astro";
 import FilterBar from "@/components/FilterBar.astro";
 import { publications, publicationKinds, type Publication } from "@/lib/data";
 
@@ -36,6 +37,9 @@ const options = publicationKinds.map(({ key, label }) => ({
   label,
   count: publications.filter((entry) => entry.kind === key).length,
 }));
+/** How many papers the page opens with, of whatever the filter is showing. */
+const AT_FIRST = 30;
+
 /**
  * How many pictures are on screen before any scrolling. Those are fetched
  * straight away; everything further down stays lazy, which is the default.
@@ -55,7 +59,7 @@ const ABOVE_THE_FOLD = 4;
     description="Peer-reviewed work in IEEE Transactions on Automatic Control, Transactions on Robotics, Automatica, ICRA, IROS, CDC, and IFAC."
   />
 
-  <div class="mx-auto max-w-7xl px-6 pb-16" data-filterable>
+  <div class="mx-auto max-w-7xl px-6 pb-16" data-filterable data-collapsible>
     <FilterBar options={options} allLabel="Everything" class="mb-14 border-y border-border py-4" />
 
     {
@@ -77,5 +81,7 @@ const ABOVE_THE_FOLD = 4;
         </section>
       ))
     }
+
+    <ShowMore limit={AT_FIRST} total={publications.length} noun="papers" />
   </div>
 </Base>

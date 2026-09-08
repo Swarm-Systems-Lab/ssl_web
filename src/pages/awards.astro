@@ -7,6 +7,7 @@ import { awards } from "@/lib/data";
 import { picture } from "@/lib/images";
 import { hasTransparency } from "@/lib/transparency";
 import PeopleList from "@/components/PeopleList.astro";
+import ShowMore from "@/components/ShowMore.astro";
 import { teamLookup } from "@/lib/collections";
 import { url } from "@/lib/url";
 
@@ -15,6 +16,11 @@ const items = [...awards.items].sort((a, b) => b.year - a.year);
 // `members` holds either the file name of someone in content/team - in which
 // case we show their name - or plain text for anyone not listed there.
 const person = await teamLookup();
+/**
+ * How many awards the page opens with. The rest are in the page too; the
+ * script folds them away behind a button.
+ */
+const AT_FIRST = 10;
 /**
  * How many pictures are on screen before any scrolling. Those are fetched
  * straight away; everything further down stays lazy, which is the default.
@@ -34,8 +40,8 @@ const ABOVE_THE_FOLD = 2;
     description={awards.intro}
   />
 
-  <div class="mx-auto max-w-4xl px-6 pb-16">
-    <ol class="border-t border-border">
+  <div class="mx-auto max-w-7xl px-6 pb-16" data-collapsible>
+    <ol class="grid border-t border-border sm:grid-cols-2 sm:gap-x-12">
       {
         items.map((item, row) => {
           // One picture or several: `images` wins, `image` is the shorthand.
@@ -48,7 +54,7 @@ const ABOVE_THE_FOLD = 2;
           // so it sits on a white ground and is shown whole rather than cropped.
           const plate = item.plate ?? paths.some(hasTransparency);
           return (
-            <li class="flex flex-col gap-5 border-b border-border py-8 sm:flex-row">
+            <li class="flex flex-col gap-5 border-b border-border py-8 sm:flex-row" data-entry>
               {/* The year keeps the left column whether or not there is a picture. */}
               <span class="w-16 shrink-0 pt-1 font-display text-sm text-accent">{item.year}</span>
 
@@ -93,11 +99,11 @@ const ABOVE_THE_FOLD = 2;
                   slides={slides}
                   label={`Pictures for ${item.title}`}
                   aspect="aspect-[4/3]"
-                  widths={[320, 640]}
-                  sizes="(min-width: 640px) 288px, 100vw"
+                  widths={[224, 448]}
+                  sizes="(min-width: 640px) 208px, 100vw"
                   loading={row < ABOVE_THE_FOLD ? "eager" : "lazy"}
                   plate={plate}
-                  class="w-full shrink-0 sm:w-72"
+                  class="w-full shrink-0 self-start sm:w-52"
                 />
               )}
             </li>
@@ -105,5 +111,7 @@ const ABOVE_THE_FOLD = 2;
         })
       }
     </ol>
+
+    {items.length > 0 && <ShowMore limit={AT_FIRST} total={items.length} noun="awards" />}
   </div>
 </Base>

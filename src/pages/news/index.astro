@@ -4,6 +4,7 @@ import PageHeader from "@/components/PageHeader.astro";
 import Picture from "@/components/Picture.astro";
 import Rule from "@/components/Rule.astro";
 import PressShelf from "@/components/PressShelf.astro";
+import ShowMore from "@/components/ShowMore.astro";
 import { press } from "@/lib/data";
 import { getNews, newsSummary, newsMedia, formatDate } from "@/lib/collections";
 import { url } from "@/lib/url";
@@ -41,20 +42,20 @@ const ABOVE_THE_FOLD = 2;
 
   {
     press.items.length > 0 && (
-      <section class="mx-auto max-w-4xl px-6 pb-14">
+      <section class="mx-auto max-w-7xl px-6 pb-14">
         <Rule label="In the press" />
         <PressShelf />
       </section>
     )
   }
 
-  <section class="mx-auto max-w-4xl px-6 pb-16">
+  <section class="mx-auto max-w-7xl px-6 pb-16" data-collapsible>
     <ol class="border-t border-border">
       {
         news.map(({ entry, summary, thumbnail }, index) => (
           <li
-            class="grid gap-6 border-b border-border py-9 sm:grid-cols-[1fr_15rem]"
-            data-later={index >= AT_FIRST ? "" : undefined}
+            class="grid gap-8 border-b border-border py-9 sm:grid-cols-[minmax(0,1fr)_20rem]"
+            data-entry
           >
             <div>
               <div class="mb-3 flex items-center gap-3 font-display text-[10px] tracking-widest">
@@ -78,8 +79,8 @@ const ABOVE_THE_FOLD = 2;
                 <Picture
                   src={thumbnail}
                   alt={entry.data.imageAlt ?? entry.data.title}
-                  widths={[240, 480]}
-                  sizes="(min-width: 640px) 240px, 100vw"
+                  widths={[320, 640]}
+                  sizes="(min-width: 640px) 320px, 100vw"
                   still
                   loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                   class="aspect-[4/3] w-full border border-border object-cover transition-colors hover:border-accent/50"
@@ -91,38 +92,8 @@ const ABOVE_THE_FOLD = 2;
       }
     </ol>
 
-    {
-      news.length > AT_FIRST && (
-        /* Hidden until its script runs: without JavaScript nothing is folded
-           away, so a button to unfold it would have nothing to do. */
-        <button
-          type="button"
-          data-show-all
-          hidden
-          class="mt-10 border border-border px-5 py-3 font-display text-xs tracking-widest uppercase transition-colors hover:border-accent/50 hover:text-accent"
-        >
-          Show all {news.length} posts
-        </button>
-      )
-    }
+    {news.length > 0 && <ShowMore limit={AT_FIRST} total={news.length} noun="posts" />}
 
     {news.length === 0 && <p class="text-muted-foreground">No news posts yet.</p>}
   </section>
 </Base>
-
-<script>
-  const button = document.querySelector<HTMLButtonElement>("[data-show-all]");
-  const later = document.querySelectorAll<HTMLElement>("[data-later]");
-
-  if (button && later.length > 0) {
-    for (const post of later) post.hidden = true;
-    button.hidden = false;
-
-    button.addEventListener("click", () => {
-      for (const post of later) post.hidden = false;
-      button.hidden = true;
-      // Leave the reader where they were rather than at the top of the list.
-      later[0]?.scrollIntoView({ block: "nearest" });
-    });
-  }
-</script>
