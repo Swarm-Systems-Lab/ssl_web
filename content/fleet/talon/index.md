@@ -4,7 +4,7 @@ name: "Talon"
 role: "Payload carrier"
 group: fixed-wing
 order: 5
-summary: "Our first go at a printed carrier. It lifts a great deal, and with the right battery and a launcher it should stay up for a very long time. Four days on the printer - but the material costs under 10 euros."
+summary: "Our first go at a printed carrier. It lifts a great deal, and with the right battery and a launcher it should stay up for a very long time. ~80 hours on the printer - but the material costs under 15 euros."
 count: 1
 
 specs:
@@ -19,7 +19,7 @@ specs:
   - label: Material
     value: LW-PLA
   - label: Print time
-    value: 4 days, one printer
+    value: 80h, one printer
   - label: Autopilot
     value: Paparazzi
 
@@ -29,8 +29,6 @@ links:
   - label: Design
     href: https://flightory.com/product/talon-1400
 ---
-
-https://flightory.com/product/talon-1400
 
 <!-- Anything written here becomes the machine's own page: how it came to be, what
 it is good and bad at, what we learned flying it. Leave this part empty and no

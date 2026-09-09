@@ -19,7 +19,7 @@ specs:
   - label: Material
     value: ASA AERO
   - label: Print time
-    value: 2 days, one printer
+    value: 48h, one printer
   - label: Autopilot
     value: Paparazzi
 

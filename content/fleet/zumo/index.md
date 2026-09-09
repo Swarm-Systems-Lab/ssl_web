@@ -9,8 +9,6 @@ count: 8
 projects: ["iSwarm", "aerosense"]
 
 specs:
-  - label: Controller
-    value: Raspberry Pi Pico
   - label: Firmware
     value: Custom, on ChibiOS
 ---
