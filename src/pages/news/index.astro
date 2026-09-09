@@ -79,7 +79,7 @@ const ABOVE_THE_FOLD = 2;
                 <Picture
                   src={thumbnail}
                   alt={entry.data.imageAlt ?? entry.data.title}
-                  widths={[320, 640]}
+                  widths={[640, 960]}
                   sizes="(min-width: 640px) 320px, 100vw"
                   still
                   loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}

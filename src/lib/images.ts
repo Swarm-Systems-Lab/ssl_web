@@ -32,11 +32,9 @@ const assets = import.meta.glob<string>("/content/**/*.{gif,mp4,webm,svg}", {
 export type Media = ImageMetadata | string;
 
 /**
- * WebP quality for every picture on the site. Astro's default is 80, which on
- * photographs costs roughly a third more bytes than 72 for a difference nobody
- * sees at the sizes these are shown at. The team page alone drops by megabytes.
+ * WebP quality for every picture on the site.
  */
-export const IMAGE_QUALITY = 72;
+export const IMAGE_QUALITY = 80;
 
 export const photoEntries = Object.entries(photos).map(
   ([path, mod]) => [path, mod.default] as const,

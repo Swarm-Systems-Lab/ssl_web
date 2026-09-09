@@ -59,7 +59,7 @@ const ABOVE_THE_FOLD = photos.length > 0 ? 0 : 3;
           slides={photos}
           label="Photos of the lab"
           aspect="aspect-[3/2] sm:aspect-[21/9]"
-          widths={[720, 1080, 1440, 1920]}
+          widths={[1080, 1440, 1920]}
           sizes="(min-width: 1280px) 1216px, 100vw"
           priority={!coverFor("team")}
         />
@@ -82,7 +82,7 @@ const ABOVE_THE_FOLD = photos.length > 0 ? 0 : 3;
                     <Picture
                       src={photo}
                       alt={entry.data.name}
-                      widths={[480, 960]}
+                      widths={[960]}
                       sizes="(min-width: 768px) 600px, 100vw"
                       loading={group.before + index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                       class="aspect-video w-full border-b border-border object-cover"
@@ -142,7 +142,7 @@ const ABOVE_THE_FOLD = photos.length > 0 ? 0 : 3;
                     <Picture
                       src={photo}
                       alt={entry.data.name}
-                      widths={[80, 160]}
+                      widths={[160, 340]}
                       sizes="80px"
                       loading={group.before + index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                       class="size-20 shrink-0 border border-border object-cover"
