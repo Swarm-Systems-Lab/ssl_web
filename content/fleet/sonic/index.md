@@ -21,8 +21,6 @@ projects: ["iSwarm","aerosense"]
 
 ---
 
-https://flightory.com/product/pico-talon
-
 <!-- Anything written here becomes the machine's own page: how it came to be, what
 it is good and bad at, what we learned flying it. Leave this part empty and no
 page is created - the card on the fleet page just won't link anywhere, which is
