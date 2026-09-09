@@ -52,10 +52,9 @@ Two mechanisms, chosen by whether an item needs its own page:
   it.
 
   People go one level deeper - `team/members/`, `team/visitors/`,
-  `team/alumni/`. Anyone with a photo or body text gets a page; on it,
-  `isPanoramic()` in `lib/images.ts` compares the photo's own width and height
-  against a 1.1 ratio and picks between the portrait-beside-the-name layout and
-  the wide-picture-underneath one. The folder is the category; `group:` only splits the members
+  `team/alumni/`. Anyone with a photo or body text gets a page, and the photo is
+  shown wide above the text, the same way every other page shows one. The folder
+  is the category; `group:` only splits the members
   into the PI, postdocs, Ph.D. students, and assistants. `getTeam()` in
   `lib/collections.ts` derives the group, flattens the id to a slug so the URL
   stays `/team/<name>`, and throws with the file path if a member is missing a
@@ -378,9 +377,11 @@ wording from "Read" to "Watch", and `programme:` names the show it went out on.
 ### ShowMore
 
 Mark the group with `data-collapsible`, mark every foldable entry with
-`data-entry`, and put `<ShowMore limit={30} total={n} noun="papers" />` inside
-the group. The limit is the page's to choose - only it knows how many entries
-fill a screen - and each page keeps it in an `AT_FIRST` constant at the top.
+`data-entry`, and put `<ShowMore limit={30} total={n} noun={label(text, "more",
+"publications")} />` inside the group. The noun is a label in `pages.yaml`, like
+every other word on the page. The limit is the page's to choose - only it knows
+how many entries fill a screen - and each page keeps it in an `AT_FIRST`
+constant at the top.
 
 Everything is rendered either way; the script folds the tail on load and the
 button is `hidden` until then, so without JavaScript the full list is simply
