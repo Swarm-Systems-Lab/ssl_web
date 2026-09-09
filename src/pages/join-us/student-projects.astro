@@ -32,7 +32,7 @@ const ABOVE_THE_FOLD = 2;
                 <Picture
                   src={photo}
                   alt={item.imageAlt ?? item.title}
-                  widths={[480, 960]}
+                  widths={[960]}
                   sizes="(min-width: 768px) 50vw, 100vw"
                   loading={index < ABOVE_THE_FOLD ? "eager" : "lazy"}
                   zoom

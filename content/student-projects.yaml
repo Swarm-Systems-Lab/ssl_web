@@ -15,6 +15,7 @@
 items:
   - title: Onboard geolocalisation of a fixed-wing aircraft
     level: TFM
+    image: images/student-projects/loc.png
     summary: >-
       Within the topic of autonomous navigation for fixed-wing aircraft. The
       project takes photos from the sky and compares them against a dataset to
@@ -26,6 +27,7 @@ items:
 
   - title: Guiding vector fields
     level: TFG / TFM
+    image: images/student-projects/pprz.png
     summary: >-
       Coordinating different aerial vehicles through guiding vector fields,
       within the open-source Paparazzi project. Depending on the candidate this
@@ -36,6 +38,7 @@ items:
 
   - title: Data representation and post-processing tools
     level: TFG
+    image: images/student-projects/vista.png
     summary: >-
       Front-end development for the data analysis of our experiments and flights
       with robot swarms. We generate a lot of data and need automated tools to
@@ -46,6 +49,7 @@ items:
 
   - title: Implementation of distributed algorithms over wireless networks
     level: TFG
+    image: images/student-projects/uwb.jpg
     summary: >-
       Coordinating robot swarms over wireless networks. Want to know how the
       "magic" of networked robot coordination actually works? You will learn both
