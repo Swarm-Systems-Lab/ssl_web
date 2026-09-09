@@ -1,0 +1,44 @@
+---
+import Rule from "@/components/Rule.astro";
+import Text from "@/components/Text.astro";
+import type { Block } from "@/lib/data";
+
+/**
+ * Renders the prose a page declares in pages.yaml, in the order written.
+ *
+ * Every kind here works on any page, which is the point: a footnote under the
+ * news list, or a paragraph on the front page, is a few lines of YAML rather
+ * than a change to the page. Anything tied to one page - the publication
+ * filter, the fleet grid - stays in that page and is not a block.
+ *
+ * Adding a kind means a member in `block` in lib/data.ts, a branch here, and a
+ * line in the comment at the top of pages.yaml.
+ */
+
+interface Props {
+  blocks: Block[];
+  /** Left out, the blocks sit in the page's usual column. */
+  class?: string;
+}
+
+const { blocks, class: className } = Astro.props;
+---
+
+{
+  blocks.length > 0 && (
+    <div class:list={["mx-auto max-w-7xl px-6 pb-16", className]}>
+      {blocks.map((block) =>
+        "heading" in block ? (
+          <Rule label={block.heading} />
+        ) : "note" in block ? (
+          <Text
+            text={block.note}
+            class="border-t border-border pt-6 text-sm text-muted-foreground"
+          />
+        ) : (
+          <Text text={block.prose} class="max-w-3xl leading-relaxed text-muted-foreground" />
+        ),
+      )}
+    </div>
+  )
+}

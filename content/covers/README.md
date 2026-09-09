@@ -13,7 +13,7 @@ content/covers/
   fleet.jpg         /fleet
   join-us.jpg       /join-us
   positions.jpg     /join-us/positions
-  projects.jpg      /join-us/projects
+  student-projects.jpg  /join-us/student-projects
   awards.jpg        /awards
   media.jpg         /media
 ```

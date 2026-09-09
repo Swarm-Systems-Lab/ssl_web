@@ -1,20 +1,24 @@
 ---
-import Base from "@/layouts/Base.astro";
+import Page from "@/layouts/Page.astro";
+import { pageText, label } from "@/lib/data";
 import { url } from "@/lib/url";
+const text = pageText("not-found");
 ---
 
-<Base title="Page not found" description="This page does not exist.">
+<Page name="not-found">
   <div class="mx-auto flex max-w-md flex-col items-center px-6 py-32 text-center">
-    <div class="font-display text-xs tracking-[0.3em] text-accent">ERR_NO_ROUTE</div>
+    <div class="font-display text-xs tracking-[0.3em] text-accent">
+      {label(text, "code", "not-found")}
+    </div>
     <h1 class="mt-4 font-display text-6xl font-bold tracking-tighter">404</h1>
     <p class="mt-4 text-muted-foreground">
-      This page has drifted out of range. It may have moved or never existed.
+      {label(text, "lead", "not-found")}
     </p>
     <a
       href={url("/")}
       class="mt-8 border border-accent/30 px-4 py-2 font-display text-xs tracking-widest text-accent uppercase transition-colors hover:bg-accent/10"
     >
-      Return to base
+      {label(text, "back", "not-found")}
     </a>
   </div>
-</Base>
+</Page>

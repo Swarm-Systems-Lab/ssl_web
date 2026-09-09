@@ -1,0 +1,46 @@
+---
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Blocks from "@/components/Blocks.astro";
+import { pageText } from "@/lib/data";
+
+/**
+ * The shell every page shares: the document, the header at the top, and the
+ * prose declared above and below whatever the page itself renders.
+ *
+ * A page passes its name and its own content, and nothing else. Everything the
+ * reader sees around that content comes from its block in pages.yaml, which is
+ * what keeps the words of the site out of the pages and in one file - and what
+ * makes a second language a copy of that file rather than a pass over a dozen
+ * .astro files.
+ */
+
+interface Props {
+  /** The block to read in pages.yaml, and the cover to look for. */
+  name: string;
+  /** Overrides the browser tab, for pages that number themselves. */
+  title?: string;
+}
+
+const { name, title } = Astro.props;
+const text = pageText(name);
+const header = text.header;
+---
+
+<Base title={title ?? text.seo?.title} description={text.seo?.description}>
+  {
+    header && (
+      <PageHeader
+        page={name}
+        eyebrow={header.eyebrow}
+        title={header.title}
+        accent={header.accent}
+        description={header.intro}
+      />
+    )
+  }
+
+  <Blocks blocks={text.before} />
+  <slot />
+  <Blocks blocks={text.after} />
+</Base>

@@ -1,6 +1,6 @@
 ---
-import Base from "@/layouts/Base.astro";
-import PageHeader from "@/components/PageHeader.astro";
+import Page from "@/layouts/Page.astro";
+import { pageText, label } from "@/lib/data";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
 import { getFleet, FLEET_GROUPS } from "@/lib/collections";
@@ -26,17 +26,10 @@ const STRETCH = "after:absolute after:inset-0 after:content-['']";
 
 /** Pictures on screen before any scrolling are fetched straight away. */
 const ABOVE_THE_FOLD = 3;
+const text = pageText("fleet");
 ---
 
-<Base title="Fleet" description="The robots the Swarm Systems Lab flies and drives.">
-  <PageHeader
-    page="fleet"
-    eyebrow="What we fly"
-    title="THE FLEET."
-    accent="FLEET."
-    description="The machines the lab works with, and what each one is for. Nothing here runs on motion capture: indoors the robots localize off each other with aerosense - anchors added only when a room-fixed frame is wanted - and run perception onboard. Outdoors the same stack gains GPS where there is any, and camera SLAM."
-  />
-
+<Page name="fleet">
   <div class="mx-auto max-w-7xl px-6 pb-16">
     {
       shown.map((group) => (
@@ -160,20 +153,11 @@ const ABOVE_THE_FOLD = 3;
     }
 
     {
-      robots.some((robot) => robot.entry.data.specs.some((spec) => spec.label === "Endurance")) && (
-        <p class="border-t border-border pt-6 text-sm text-muted-foreground">
-          * Endurance is measured using LiPo batteries. Different battery chemistries (e.g., Li-ion) may considerably improve these values when endurance is primarily limited by energy capacity rather than peak power/current capability.
-        </p>
-      )
-    }
-
-    {
       robots.length === 0 && (
         <p class="border border-border bg-surface/30 p-8 text-sm text-muted-foreground">
-          Nothing here yet. Copy <code>content/fleet/_template/</code>, name the copy after a
-          machine, and it appears.
+          {label(text, "empty", "fleet")}
         </p>
       )
     }
   </div>
-</Base>
+</Page>

@@ -1,9 +1,8 @@
 ---
-import Base from "@/layouts/Base.astro";
-import PageHeader from "@/components/PageHeader.astro";
+import Page from "@/layouts/Page.astro";
 import Carousel from "@/components/Carousel.astro";
 import Text from "@/components/Text.astro";
-import { awards } from "@/lib/data";
+import { awards, pageText, label } from "@/lib/data";
 import { picture } from "@/lib/images";
 import { hasTransparency } from "@/lib/transparency";
 import PeopleList from "@/components/PeopleList.astro";
@@ -26,20 +25,10 @@ const AT_FIRST = 10;
  * straight away; everything further down stays lazy, which is the default.
  */
 const ABOVE_THE_FOLD = 2;
+const text = pageText("awards");
 ---
 
-<Base
-  title="Awards"
-  description="Grants, prizes, and distinctions awarded to the Swarm Systems Lab."
->
-  <PageHeader
-    page="awards"
-    eyebrow="Recognition"
-    title="AWARDS & GRANTS."
-    accent="GRANTS."
-    description={awards.intro}
-  />
-
+<Page name="awards">
   <div class="mx-auto max-w-7xl px-6 pb-16" data-collapsible>
     <ol class="grid border-t border-border sm:grid-cols-2 sm:gap-x-12">
       {
@@ -112,6 +101,10 @@ const ABOVE_THE_FOLD = 2;
       }
     </ol>
 
-    {items.length > 0 && <ShowMore limit={AT_FIRST} total={items.length} noun="awards" />}
+    {
+      items.length > 0 && (
+        <ShowMore limit={AT_FIRST} total={items.length} noun={label(text, "more", "awards")} />
+      )
+    }
   </div>
-</Base>
+</Page>

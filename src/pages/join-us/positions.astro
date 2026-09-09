@@ -1,12 +1,11 @@
 ---
-import Base from "@/layouts/Base.astro";
-import PageHeader from "@/components/PageHeader.astro";
+import Page from "@/layouts/Page.astro";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
 import Carousel from "@/components/Carousel.astro";
 import Text from "@/components/Text.astro";
 import ApplyBox from "@/components/ApplyBox.astro";
-import { positions } from "@/lib/data";
+import { positions, pageText, label } from "@/lib/data";
 import { optionalPicture, picture } from "@/lib/images";
 import { url } from "@/lib/url";
 
@@ -19,20 +18,10 @@ const granada = (positions.aside?.photos ?? []).map((path) => ({
  * straight away; everything further down stays lazy, which is the default.
  */
 const ABOVE_THE_FOLD = 2;
+const text = pageText("positions");
 ---
 
-<Base
-  title="Open positions"
-  description="Ph.D., postdoctoral, and research positions at the Swarm Systems Lab, University of Granada."
->
-  <PageHeader
-    page="positions"
-    eyebrow="Now recruiting"
-    title="OPEN POSITIONS."
-    accent="POSITIONS."
-    description={positions.intro}
-  />
-
+<Page name="positions">
   <div class="mx-auto max-w-7xl px-6 pb-16">
     <a
       href={url("/join-us")}
@@ -100,7 +89,7 @@ const ABOVE_THE_FOLD = 2;
             {granada.length > 0 && (
               <Carousel
                 slides={granada}
-                label="Photos of Granada"
+                label={label(text, "granada", "positions")}
                 aspect="aspect-[4/3]"
                 sizes="(min-width: 1024px) 600px, 100vw"
               />
@@ -112,4 +101,4 @@ const ABOVE_THE_FOLD = 2;
 
     <ApplyBox class="mt-16" />
   </div>
-</Base>
+</Page>

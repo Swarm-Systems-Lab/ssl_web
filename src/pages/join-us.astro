@@ -1,48 +1,43 @@
 ---
-import Base from "@/layouts/Base.astro";
-import PageHeader from "@/components/PageHeader.astro";
+import Page from "@/layouts/Page.astro";
 import ApplyBox from "@/components/ApplyBox.astro";
-import { positions, projects } from "@/lib/data";
+import { positions, studentProjects, pageText, label } from "@/lib/data";
 import { url } from "@/lib/url";
 
 // The landing page for the two ways into the lab. The lists themselves live on
 // their own pages so each can be linked to on its own.
-const listed = (count: number, unit: string) => `${count} ${unit}${count === 1 ? "" : "s"} listed`;
+const text = pageText("join-us");
 
-const routes = [
-  {
-    href: "/join-us/positions",
-    eyebrow: "Researchers",
-    title: "Open positions",
-    count: positions.items.length,
-    unit: "opening",
+/*
+ * "2 openings listed". Both the noun and the word after it come from
+ * pages.yaml, singular and plural spelled out rather than an "s" appended: a
+ * language that does not form plurals that way would otherwise need this file
+ * opened rather than translated.
+ */
+const listed = (count: number, unit: string) =>
+  `${count} ${label(text, count === 1 ? unit : `${unit}s`, "join-us")} ${label(text, "listed", "join-us")}`;
 
-    body: "Ph.D. and postdoctoral fellowships, visiting researchers, and the funding schemes we can support you through.",
-  },
-  {
-    href: "/join-us/projects",
-    eyebrow: "Students",
-    title: "Master & bachelor projects",
-    count: projects.items.length,
-    unit: "project",
-
-    body: "TFM and TFG topics on guiding vector fields, distributed algorithms, onboard navigation, and the tools behind our experiments.",
-  },
+// Where each card goes and what it counts is the page's business; what it says
+// comes from pages.yaml, in the same order.
+const destinations = [
+  { href: "/join-us/positions", count: positions.items.length, unit: "opening" },
+  { href: "/join-us/student-projects", count: studentProjects.items.length, unit: "project" },
 ];
+
+if ((text.cards ?? []).length !== destinations.length) {
+  throw new Error(
+    `content/pages.yaml: "join-us" needs ${destinations.length} cards, ` +
+      `and has ${(text.cards ?? []).length}.\n`,
+  );
+}
+
+const routes = destinations.map((destination, index) => ({
+  ...destination,
+  ...text.cards![index],
+}));
 ---
 
-<Base
-  title="Join us"
-  description="Open positions and student projects at the Swarm Systems Lab, University of Granada."
->
-  <PageHeader
-    page="join-us"
-    eyebrow="Now recruiting"
-    title="JOIN THE SWARM."
-    accent="SWARM."
-    description="We run a lab with diverse but strong theoretical and practical backgrounds. If your profile does not fit an offer but you think you are a good match, get in touch anyway."
-  />
-
+<Page name="join-us">
   <div class="mx-auto max-w-7xl px-6 pb-16">
     <ul class="grid gap-px md:grid-cols-2">
       {
@@ -71,4 +66,4 @@ const routes = [
 
     <ApplyBox class="mt-16" />
   </div>
-</Base>
+</Page>

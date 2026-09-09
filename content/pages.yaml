@@ -1,0 +1,227 @@
+# The words on every page, in one place.
+#
+# One block per page. Nothing here is code, and nothing in the pages is text:
+# a translation is a copy of this file with the values rewritten, and no .astro
+# has to be opened for it.
+#
+#   seo      what the browser tab and search results say
+#   header   the block at the top of the page
+#   before   prose shown above the page's own content
+#   after    prose shown below it
+#   labels   single words and lines the page's own parts need, by name
+#
+# `before` and `after` take any number of these, in the order written:
+#
+#   - heading: A labelled divider
+#   - note: Small print, under a rule.
+#   - prose: An ordinary paragraph.
+#
+# All three work on any page, so adding a footnote to the news page - or a
+# paragraph to the front page - is a few lines here and nothing else. `labels`
+# is a free-form map for the same reason: a new page, or a new line on an old
+# one, never needs the schema in src/lib/data.ts changed.
+#
+# Links, **bold**, *italics* and `code` work in any of these.
+
+home:
+  # The front page is titled after the site itself - see site.yaml. Its opening
+  # paragraphs are content/pages/home.md; these are the words around them.
+  labels:
+    research: Our research →
+    join: Join us
+    affiliations: Our institutions and funders
+    # "Open GitHub →", once per community link.
+    open: Open
+    media: All photos and videos →
+    news: Latest news
+    newsIntro: Papers, visits, field tests, and milestones from the lab.
+    allNews: Read all news →
+    elsewhere: Find us elsewhere
+
+news:
+  seo:
+    title: News
+    description: Announcements, papers, visits, and field tests from the Swarm Systems Lab.
+  header:
+    eyebrow: News
+    title: LAB NEWS.
+    accent: NEWS.
+    intro: Papers, visits, field tests, and everything else happening in the lab.
+  labels:
+    press: In the press
+    more: posts
+
+research:
+  seo:
+    title: Research
+    description: >-
+      The funded projects behind the lab's work on swarm robotics and distributed
+      coordination.
+  header:
+    eyebrow: Research
+    title: WHAT WE WORK ON.
+    accent: WORK ON.
+    intro: >-
+      The projects behind the work: what each one set out to do, who funds it,
+      who is on it, and the papers that came out of it.
+
+team:
+  seo:
+    title: Team
+    description: People and visitors of the Swarm Systems Lab.
+  header:
+    eyebrow: Team & visitors
+    title: THE LAB.
+    accent: LAB.
+    intro: >-
+      Researchers and students working on swarm robotics and autonomous systems,
+      and the colleagues who come to work with us.
+  labels:
+    photos: Photos of the lab
+
+fleet:
+  seo:
+    title: Fleet
+    description: The robots the Swarm Systems Lab flies and drives.
+  header:
+    eyebrow: What we fly
+    title: THE FLEET.
+    accent: FLEET.
+    intro: >-
+      The machines the lab works with, and what each one is for. Nothing here
+      runs on motion capture: indoors the robots localize off each other with
+      aerosense - anchors added only when a room-fixed frame is wanted - and run
+      perception onboard. Outdoors the same stack gains GPS where there is any,
+      and camera SLAM.
+  after:
+    - note: >-
+        * Endurance is measured using LiPo batteries. Different battery
+        chemistries (e.g., Li-ion) may considerably improve these values when
+        endurance is primarily limited by energy capacity rather than peak
+        power/current capability.
+  labels:
+    empty: >-
+      Nothing here yet. Copy content/fleet/_template/, name the copy after a
+      machine, and it appears.
+
+publications:
+  seo:
+    title: Publications
+    description: Journal and conference publications of the Swarm Systems Lab.
+  header:
+    eyebrow: Archive
+    title: PUBLICATIONS.
+    intro: >-
+      Peer-reviewed work in IEEE Transactions on Automatic Control, Transactions
+      on Robotics, Automatica, ICRA, IROS, CDC, and IFAC.
+  labels:
+    more: papers
+    in-review: In review
+    tech-notes: Tech notes
+
+awards:
+  seo:
+    title: Awards
+    description: Grants, prizes, and distinctions awarded to the Swarm Systems Lab.
+  header:
+    eyebrow: Recognition
+    title: AWARDS & GRANTS.
+    accent: GRANTS.
+    intro: Grants, prizes, and distinctions received by the lab and its members.
+  labels:
+    more: awards
+
+media:
+  seo:
+    title: Media
+    description: Photos, animations, and videos from the Swarm Systems Lab.
+  header:
+    eyebrow: Photo & video
+    title: MEDIA FEED.
+    accent: FEED.
+    intro: >-
+      Field tests, prototypes, and life around the lab. Long videos live on our
+      YouTube channel.
+  labels:
+    # "Media - page 2" on the second and later pages.
+    page: page
+    videos: Videos
+    # Names the pager for screen readers.
+    pager: Media pages
+
+join-us:
+  seo:
+    title: Join us
+    description: >-
+      Open positions and student projects at the Swarm Systems Lab, University of
+      Granada.
+  header:
+    eyebrow: Now recruiting
+    title: JOIN THE SWARM.
+    accent: SWARM.
+    intro: >-
+      We run a lab with diverse but strong theoretical and practical backgrounds.
+      If your profile does not fit an offer but you think you are a good match,
+      get in touch anyway.
+  # The two cards, in the order they are shown. Where each one goes and how many
+  # things it lists is worked out by the page.
+  cards:
+    - eyebrow: Researchers
+      title: Open positions
+      body: >-
+        Ph.D. and postdoctoral fellowships, visiting researchers, and the funding
+        schemes we can support you through.
+    - eyebrow: Students
+      title: Master & bachelor projects
+      body: >-
+        TFM and TFG topics on guiding vector fields, distributed algorithms,
+        onboard navigation, and the tools behind our experiments.
+  labels:
+    # "2 openings listed", "1 project listed".
+    listed: listed
+    opening: opening
+    openings: openings
+    project: project
+    projects: projects
+
+positions:
+  seo:
+    title: Open positions
+    description: >-
+      Ph.D., postdoctoral, and research positions at the Swarm Systems Lab,
+      University of Granada.
+  header:
+    eyebrow: Now recruiting
+    title: OPEN POSITIONS.
+    accent: POSITIONS.
+    intro: >-
+      The Swarm Systems Lab at the University of Granada currently has some
+      openings. If your profile does not fit an offer but you think you are a
+      good match, get in touch anyway - we run a lab with diverse but strong
+      theoretical and practical backgrounds.
+  labels:
+    # Describes the photo carousel for screen readers.
+    granada: Photos of Granada
+
+student-projects:
+  seo:
+    title: Student projects
+    description: Master (TFM) and bachelor (TFG) projects offered by the Swarm Systems Lab.
+  header:
+    eyebrow: TFM / TFG
+    title: STUDENT PROJECTS.
+    accent: PROJECTS.
+    intro: >-
+      The Swarm Systems Lab at the University of Granada seeks outstanding
+      students to carry out their master's and bachelor's projects (TFM and TFG).
+      If you are a student at the University of Granada, feel free to drop by our
+      lab at IMAG.
+
+not-found:
+  seo:
+    title: Page not found
+    description: This page does not exist.
+  labels:
+    code: ERR_NO_ROUTE
+    lead: This page has drifted out of range. It may have moved or never existed.
+    back: Return to base

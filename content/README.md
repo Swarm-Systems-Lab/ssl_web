@@ -15,11 +15,63 @@ Everything on the website is generated from this folder.
 | `pages/home.md`    | the text on the front page          | the front page         |
 | `publications.yaml`| every paper                         | the publications page  |
 | `positions.yaml`   | open positions                      | Join us -> Open positions   |
-| `projects.yaml`    | TFM / TFG offers                    | Join us -> Student projects |
+| `student-projects.yaml` | TFM / TFG offers               | Join us -> Student projects |
 | `images/`          | pictures used by the `.yaml` pages  | wherever they are used |
 | `awards.yaml`      | awards and grants                   | the awards page*       |
 | `media.yaml`       | YouTube videos and gallery settings | the media page         |
 | `site.yaml`        | site title, tabs, footer links      | everywhere             |
+| `pages.yaml`       | the words on each page              | every page             |
+
+## Changing what a page says
+
+Every word on every page is in [`pages.yaml`](pages.yaml), one block per page.
+Nothing in the pages themselves is text, so rewording anything - a heading, the
+line in the browser tab, a footnote - is an edit here and nothing else.
+
+A block looks like this:
+
+```yaml
+fleet:
+  seo:                  # the browser tab and the search-result summary
+    title: Fleet
+    description: The robots the Swarm Systems Lab flies and drives.
+  header:               # the block at the top of the page
+    eyebrow: What we fly
+    title: THE FLEET.
+    accent: FLEET.      # the tail of the title, shown in muted type
+    intro: The machines the lab works with, and what each one is for.
+  after:                # prose under whatever the page itself shows
+    - note: "* Endurance is measured using LiPo batteries."
+  labels:               # single words the page's own parts ask for by name
+    empty: Nothing here yet.
+```
+
+`before` and `after` take any number of blocks, in the order written:
+
+| | |
+| --------- | ------------------------------- |
+| `heading` | a labelled divider |
+| `note`    | small print, under a rule |
+| `prose`   | an ordinary paragraph |
+
+All three work on **any** page. Putting a footnote under the news list, or a
+paragraph on the front page, is those two lines and nothing else - neither page
+had one before. Links, **bold**, *italics* and `code` work in all of them.
+
+`labels` is a free-form map for the same reason. A page asks for a label by
+name, so a new page, or a new line on an old one, never means editing the schema
+in `src/lib/data.ts`.
+
+Mistakes stop the build and say where: a label a page asks for and has not been
+given (`"news" has no label "press"`), a misspelled key, or a block kind that
+does not exist (`fleet.after.0: must be one of: heading, note, prose`).
+
+### Another language
+
+A translation is a copy of this file with the values rewritten. No `.astro`
+holds any of the site's words, so nothing under `src/` has to be opened for it -
+the display titles are here too, split into their plain and accented halves, for
+exactly that reason.
 
 ## Adding something
 

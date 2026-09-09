@@ -1,6 +1,6 @@
 ---
-import Base from "@/layouts/Base.astro";
-import PageHeader from "@/components/PageHeader.astro";
+import Page from "@/layouts/Page.astro";
+import { pageText, label } from "@/lib/data";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
 import Carousel from "@/components/Carousel.astro";
@@ -39,17 +39,10 @@ const STRETCH = "after:absolute after:inset-0 after:content-['']";
  * screen any more and the carousel takes over.
  */
 const ABOVE_THE_FOLD = photos.length > 0 ? 0 : 3;
+const text = pageText("team");
 ---
 
-<Base title="Team" description="People and visitors of the Swarm Systems Lab.">
-  <PageHeader
-    page="team"
-    eyebrow="Team & visitors"
-    title="THE LAB."
-    accent="LAB."
-    description="Researchers and students working on swarm robotics and autonomous systems, and the colleagues who come to work with us."
-  />
-
+<Page name="team">
   {
     photos.length > 0 && (
       <section class="mx-auto max-w-7xl px-6 pb-14">
@@ -57,7 +50,7 @@ const ABOVE_THE_FOLD = photos.length > 0 ? 0 : 3;
             screen: a tall 16/9 would push them off it. */}
         <Carousel
           slides={photos}
-          label="Photos of the lab"
+          label={label(text, "photos", "team")}
           aspect="aspect-[3/2] sm:aspect-[21/9]"
           widths={[1080, 1440, 1920]}
           sizes="(min-width: 1280px) 1216px, 100vw"
@@ -203,4 +196,4 @@ const ABOVE_THE_FOLD = photos.length > 0 ? 0 : 3;
       ))
     }
   </div>
-</Base>
+</Page>

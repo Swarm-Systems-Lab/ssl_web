@@ -1,10 +1,9 @@
 ---
-import Base from "@/layouts/Base.astro";
-import PageHeader from "@/components/PageHeader.astro";
+import Page from "@/layouts/Page.astro";
 import PublicationEntry from "@/components/PublicationEntry.astro";
 import ShowMore from "@/components/ShowMore.astro";
 import FilterBar from "@/components/FilterBar.astro";
-import { publications, publicationKinds, type Publication } from "@/lib/data";
+import { publications, publicationKinds, type Publication, pageText, label } from "@/lib/data";
 
 /**
  * Three zones. Work under review comes first — it is the most recent thing we
@@ -13,6 +12,8 @@ import { publications, publicationKinds, type Publication } from "@/lib/data";
  * arXiv and were never headed for a journal, so they do not belong in the
  * chronology of published work.
  */
+const text = pageText("publications");
+
 const inReview = publications.filter((entry) => entry.kind === "preprint");
 const notes = publications.filter((entry) => entry.kind === "technote");
 
@@ -27,9 +28,9 @@ const byYear = (() => {
 })();
 
 const sections: { title: string; items: Publication[] }[] = [
-  { title: "In review", items: inReview },
+  { title: label(text, "in-review", "publications"), items: inReview },
   ...byYear.map(([year, items]) => ({ title: String(year), items })),
-  { title: "Tech notes", items: notes },
+  { title: label(text, "tech-notes", "publications"), items: notes },
 ].filter((section) => section.items.length > 0);
 
 const options = publicationKinds.map(({ key, label }) => ({
@@ -47,18 +48,7 @@ const AT_FIRST = 30;
 const ABOVE_THE_FOLD = 4;
 ---
 
-<Base
-  title="Publications"
-  description="Journal and conference publications of the Swarm Systems Lab."
->
-  <PageHeader
-    page="publications"
-    eyebrow="Archive"
-    title="PUBLICATIONS."
-    accent=""
-    description="Peer-reviewed work in IEEE Transactions on Automatic Control, Transactions on Robotics, Automatica, ICRA, IROS, CDC, and IFAC."
-  />
-
+<Page name="publications">
   <div class="mx-auto max-w-7xl px-6 pb-16" data-filterable data-collapsible>
     <FilterBar options={options} allLabel="Everything" class="mb-14 border-y border-border py-4" />
 
@@ -82,6 +72,10 @@ const ABOVE_THE_FOLD = 4;
       ))
     }
 
-    <ShowMore limit={AT_FIRST} total={publications.length} noun="papers" />
+    <ShowMore
+      limit={AT_FIRST}
+      total={publications.length}
+      noun={label(text, "more", "publications")}
+    />
   </div>
-</Base>
+</Page>

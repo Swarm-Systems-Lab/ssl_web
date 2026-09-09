@@ -20,8 +20,6 @@
 # A name in `members` that matches a file in content/team/ becomes a link to
 # that person; anything else is shown as plain text.
 
-intro: Grants, prizes, and distinctions received by the lab and its members.
-
 items:
   - title: ERC Starting Grant
     awarder: European Research Council

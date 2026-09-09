@@ -33,6 +33,110 @@ function load<T extends z.ZodTypeAny>(file: string, schema: T): z.infer<T> {
   return result.data;
 }
 
+// -- pages.yaml --------------------------------------------------------------
+
+/**
+ * A piece of prose that can appear on any page. `before` and `after` take a
+ * list of them, so adding a footnote to the news page, or a paragraph to the
+ * front page, is a few lines of YAML and no change here.
+ *
+ * A new kind is added in three places and works everywhere at once: a member
+ * below, a branch in Blocks.astro, and a line in the comment at the top of
+ * pages.yaml.
+ */
+const block = z.union(
+  [
+    /** A labelled divider, as over "In the press". */
+    z.object({ heading: z.string() }).strict(),
+    /** Small print under a rule, as under the fleet listing. */
+    z.object({ note: z.string() }).strict(),
+    /** An ordinary paragraph. */
+    z.object({ prose: z.string() }).strict(),
+  ],
+  // Without this, a mistyped kind reports only "Invalid input", which says
+  // nothing about what was allowed instead.
+  { error: "must be one of: heading, note, prose" },
+);
+
+export type Block = z.infer<typeof block>;
+
+/**
+ * What one page says. Everything is optional because a page declares only what
+ * it shows: the front page has no header, the 404 has no listing.
+ *
+ * `labels` is deliberately a free-form map rather than a named field per page.
+ * The alternative - one optional key here for every string any page happens to
+ * need - grows with the site and makes this schema the union of every page's
+ * requirements, so that adding a page means editing it. A page asks for the
+ * label it wants by name, and `label()` fails the build if it is missing.
+ */
+const pageSchema = z
+  .object({
+    /** The browser tab and the search-result summary. */
+    seo: z.object({ title: z.string().optional(), description: z.string() }).optional(),
+    /**
+     * The block at the top of the page. `title` is here rather than in the page
+     * because it is words, and words get translated - the split into a plain
+     * half and an accented one is spelled out rather than assumed.
+     */
+    header: z
+      .object({
+        eyebrow: z.string(),
+        title: z.string(),
+        /** The tail of `title` shown in muted type. */
+        accent: z.string().optional(),
+        intro: z.string().optional(),
+      })
+      .optional(),
+    /** Prose above and below whatever the page itself renders. */
+    before: z.array(block).default([]),
+    after: z.array(block).default([]),
+    /** Single words and lines the page's own parts ask for by name. */
+    labels: z.record(z.string(), z.string()).default({}),
+    /** join-us: the two cards. The only structured copy tied to one page. */
+    cards: z
+      .array(z.object({ eyebrow: z.string(), title: z.string(), body: z.string() }))
+      .optional(),
+  })
+  .strict();
+
+const pages = load("pages.yaml", z.record(z.string(), pageSchema));
+
+export type PageText = z.infer<typeof pageSchema>;
+
+/**
+ * The text for one page. An unknown name stops the build with the list of what
+ * is there - a page rendering with no words at all is the kind of thing that
+ * reaches the site unnoticed.
+ */
+export function pageText(name: string): PageText {
+  const found = pages[name];
+  if (!found) {
+    throw new Error(
+      `content/pages.yaml has no block named "${name}".\n` +
+        `Available: ${Object.keys(pages).join(", ")}\n`,
+    );
+  }
+  return found;
+}
+
+/**
+ * One of a page's labels, by name.
+ *
+ * Labels are a loose map, so nothing checks at parse time that a page has the
+ * one it needs. This is where that is checked instead: a page asking for a
+ * label it has not been given stops the build naming both, rather than
+ * rendering a blank where a word should be.
+ */
+export function label(text: PageText, name: string, where: string): string {
+  const found = text.labels[name];
+  if (!found) {
+    const had = Object.keys(text.labels).join(", ") || "(none)";
+    throw new Error(`content/pages.yaml: "${where}" has no label "${name}". Has: ${had}\n`);
+  }
+  return found;
+}
+
 const link = z.object({
   label: z.string(),
   href: z.string(),
@@ -228,7 +332,6 @@ export const publicationKinds = PUBLICATION_KINDS.filter(({ key }) =>
 export const press = load(
   "press.yaml",
   z.object({
-    intro: z.string().optional(),
     items: z
       .array(
         z.object({
@@ -258,7 +361,6 @@ press.items.sort((a, b) => b.date.getTime() - a.date.getTime());
 export const awards = load(
   "awards.yaml",
   z.object({
-    intro: z.string().optional(),
     items: z.array(
       z.object({
         title: z.string(),
@@ -292,7 +394,6 @@ export const awards = load(
 export const positions = load(
   "positions.yaml",
   z.object({
-    intro: z.string(),
     items: z.array(
       z.object({
         title: z.string(),
@@ -315,12 +416,12 @@ export const positions = load(
   }),
 );
 
-// -- projects.yaml -----------------------------------------------------------
+// -- student-projects.yaml ---------------------------------------------------
 
-export const projects = load(
-  "projects.yaml",
+/** Master (TFM) and bachelor (TFG) offers. Not the lab's own projects. */
+export const studentProjects = load(
+  "student-projects.yaml",
   z.object({
-    intro: z.string(),
     items: z.array(
       z.object({
         title: z.string(),
@@ -339,7 +440,6 @@ export const projects = load(
 export const mediaConfig = load(
   "media.yaml",
   z.object({
-    intro: z.string().optional(),
     perPage: z.number().default(24),
     /** The YouTube channel, linked from the top of the media page. */
     channel: z.object({ href: z.string(), label: z.string(), description: z.string() }).optional(),

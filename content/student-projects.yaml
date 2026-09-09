@@ -1,6 +1,9 @@
 # Master (TFM) and bachelor (TFG) projects offered to students.
 # These appear at Join us -> Student projects.
 #
+# Named student-projects rather than projects because the lab's own projects -
+# the simulator, the autopilot, the tutorials - are a different thing.
+#
 #   - title: What the project is
 #     level: TFM | TFG | TFG / TFM
 #     summary: One paragraph. Links work - [Paparazzi](https://paparazziuav.org).
@@ -8,11 +11,6 @@
 #       - ...
 #     image: images/projects/geolocalisation.jpg   # optional, relative to content/
 #     imageAlt: "What the picture shows"
-
-intro: >-
-  The Swarm Systems Lab at the University of Granada seeks outstanding students
-  to carry out their master's and bachelor's projects (TFM and TFG). If you are
-  a student at the University of Granada, feel free to drop by our lab at IMAG.
 
 items:
   - title: Onboard geolocalisation of a fixed-wing aircraft

@@ -1,6 +1,6 @@
 ---
-import Base from "@/layouts/Base.astro";
-import PageHeader from "@/components/PageHeader.astro";
+import Page from "@/layouts/Page.astro";
+
 import Picture from "@/components/Picture.astro";
 import { getResearch, researchMedia, backerLabel } from "@/lib/collections";
 import { url } from "@/lib/url";
@@ -18,18 +18,7 @@ const projects = (await getResearch()).map((entry) => ({
 const ABOVE_THE_FOLD = 2;
 ---
 
-<Base
-  title="Research"
-  description="The funded projects behind the lab's work on swarm robotics and distributed coordination."
->
-  <PageHeader
-    page="research"
-    eyebrow="Research"
-    title="WHAT WE WORK ON."
-    accent="WORK ON."
-    description="The projects behind the work: what each one set out to do, who funds it, who is on it, and the papers that came out of it."
-  />
-
+<Page name="research">
   <section class="mx-auto max-w-7xl px-6 pb-16">
     <ol class="border-t border-border">
       {
@@ -90,4 +79,4 @@ const ABOVE_THE_FOLD = 2;
     </ol>
     {projects.length === 0 && <p class="text-muted-foreground">No projects yet.</p>}
   </section>
-</Base>
+</Page>

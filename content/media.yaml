@@ -4,8 +4,6 @@
 # files in that folder, and the YouTube videos are declared in its media.yaml.
 # Nothing about an individual picture or video belongs here.
 
-intro: Field tests, prototypes, and life around the lab. Long videos live on our YouTube channel.
-
 # How many photos to show per page. The rest move to /media/2, /media/3, ...
 perPage: 24
 

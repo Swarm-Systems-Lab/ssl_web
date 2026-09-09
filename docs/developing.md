@@ -12,7 +12,7 @@ docs/               this file
 public/             copied verbatim into the site root (robots.txt, .nojekyll)
 src/
   content.config.ts collections + schemas for the Markdown in content/
-  lib/data.ts       loads and validates the YAML in content/
+  lib/data.ts       loads and validates the YAML in content/, pages.yaml included
   lib/images.ts     resolves picture paths written in YAML
   lib/inline-markdown.ts  links and emphasis inside YAML text
   lib/filenames.ts  file name -> caption and date, shared by both galleries
@@ -62,7 +62,8 @@ Two mechanisms, chosen by whether an item needs its own page:
   `group:`.
 
 - **YAML** in `content/*.yaml` -> loaded and validated in `src/lib/data.ts`.
-  These render onto a single shared page (publications, positions, projects,
+  These render onto a single shared page (publications, positions, student
+  projects,
   awards, media).
 
 Both validate with Zod at build time. A schema failure aborts the build and
@@ -90,6 +91,51 @@ at which a reader stops reading.
 build - the same rule `works:` follows. The list renders through `PeopleList`,
 because a project link and a person link are the same shape and the comma
 between them has to be drawn in CSS rather than written.
+
+### Page text
+
+Every page is `<Page name="…">` wrapping its own content. `layouts/Page.astro`
+reads that name's block from `content/pages.yaml` and renders the document, the
+header, and the prose declared above and below the slot. A page passes its name
+and nothing else; `components/Blocks.astro` draws the prose.
+
+```
+content/pages.yaml   the words
+layouts/Page.astro   the shell every page shares
+components/Blocks.astro   heading / note / prose, usable on any page
+lib/data.ts          pageText(name), label(text, name, where)
+```
+
+The shape is deliberate. An earlier version had one optional field per string
+any page happened to need - `press`, `photos`, `footnote`, `more` - which made
+the schema the union of every page's requirements: adding a page meant editing
+it, and a key existing did not mean any page rendered it. Now there are two
+general mechanisms instead. `before` and `after` take a list of blocks, and
+every block kind works on every page, so a footnote under the news list is two
+lines of YAML. `labels` is a free-form map, so a new string never touches the
+schema at all.
+
+Because `labels` is loose, nothing checks at parse time that a page has what it
+asks for. `label(text, "press", "news")` checks at the point of use and fails
+the build naming both. The block union carries its own message, so a mistyped
+kind reports the kinds that exist rather than "Invalid input".
+
+Adding a block kind is three edits: a member of `block` in `lib/data.ts`, a
+branch in `Blocks.astro`, and a line in the comment at the top of `pages.yaml`.
+Anything tied to one page - the publication filter, the fleet grid - stays in
+that page and is not a block.
+
+### A second language
+
+No `.astro` under `src/pages` holds any of the site's words; the one string
+left is `label="YouTube"`, which names a file in `content/logos/`. The display
+titles are in `pages.yaml` too, spelled out as a plain half and an accented one
+rather than sliced in the page, because "THE FLEET." has to become "LA FLOTA."
+without anyone opening a component.
+
+So a translation is a copy of `pages.yaml` plus the Markdown in `content/`.
+What is left to build when that day comes is routing and a language switch, not
+a hunt through a dozen pages for hard-coded English.
 
 ## Shared components
 
@@ -460,7 +506,7 @@ its own `href`, and the list opens on hover or keyboard focus with CSS only, so
 it works without JavaScript.
 
 **Join us** is the one section with pages under it: `/join-us` is a landing page
-of two cards, and `/join-us/positions` and `/join-us/projects` carry the lists,
+of two cards, and `/join-us/positions` and `/join-us/student-projects` carry the lists,
 so each can be linked to on its own. The shared "how to apply" panel is
 `ApplyBox.astro`.
 

@@ -1,10 +1,9 @@
 ---
-import Base from "@/layouts/Base.astro";
-import PageHeader from "@/components/PageHeader.astro";
+import Page from "@/layouts/Page.astro";
 import Picture from "@/components/Picture.astro";
 import Text from "@/components/Text.astro";
 import ApplyBox from "@/components/ApplyBox.astro";
-import { projects } from "@/lib/data";
+import { studentProjects } from "@/lib/data";
 import { optionalPicture } from "@/lib/images";
 import { url } from "@/lib/url";
 /**
@@ -14,18 +13,7 @@ import { url } from "@/lib/url";
 const ABOVE_THE_FOLD = 2;
 ---
 
-<Base
-  title="Student projects"
-  description="Master (TFM) and bachelor (TFG) projects offered by the Swarm Systems Lab."
->
-  <PageHeader
-    page="projects"
-    eyebrow="TFM / TFG"
-    title="STUDENT PROJECTS."
-    accent="PROJECTS."
-    description={projects.intro}
-  />
-
+<Page name="student-projects">
   <div class="mx-auto max-w-7xl px-6 pb-16">
     <a
       href={url("/join-us")}
@@ -36,7 +24,7 @@ const ABOVE_THE_FOLD = 2;
 
     <ul class="grid gap-px md:grid-cols-2">
       {
-        projects.items.map((item, index) => {
+        studentProjects.items.map((item, index) => {
           const photo = optionalPicture(item.image);
           return (
             <li class="flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
@@ -84,4 +72,4 @@ const ABOVE_THE_FOLD = 2;
 
     <ApplyBox class="mt-16" />
   </div>
-</Base>
+</Page>

@@ -1,6 +1,6 @@
 ---
 import { getEntry, render } from "astro:content";
-import Base from "@/layouts/Base.astro";
+import Page from "@/layouts/Page.astro";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
 import Logo from "@/components/Logo.astro";
@@ -8,7 +8,7 @@ import Watermark from "@/components/Watermark.astro";
 import VideoGrid from "@/components/VideoGrid.astro";
 import { logoFor } from "@/lib/logos";
 import { getNews, newsSummary, newsMedia, formatDate } from "@/lib/collections";
-import { site } from "@/lib/data";
+import { site, pageText, label } from "@/lib/data";
 import { coverFor } from "@/lib/covers";
 import { gallery, fromTheField } from "@/lib/media";
 import { url } from "@/lib/url";
@@ -24,9 +24,10 @@ const news = (await getNews()).slice(0, 4).map((entry) => ({
 
 // content/covers/home.*, falling back to the newest photo in the gallery.
 const cover = coverFor("home") ?? gallery.find((item) => item.kind === "image");
+const text = pageText("home");
 ---
 
-<Base>
+<Page name="home">
   {
     /* The hero holds the watermark, so it is clipped to the section rather than
       spilling into the page. */
@@ -60,13 +61,13 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "image");
           href={url("/research")}
           class="bg-accent px-4 py-3 font-display text-xs tracking-widest text-accent-foreground uppercase transition-opacity hover:opacity-90"
         >
-          Our research →
+          {label(text, "research", "home")}
         </a>
         <a
           href={url("/join-us")}
           class="border border-border px-4 py-3 font-display text-xs tracking-widest uppercase transition-colors hover:border-accent/50 hover:text-accent"
         >
-          Join us
+          {label(text, "join", "home")}
         </a>
       </div>
     </div>
@@ -101,7 +102,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "image");
       <section class="border-t border-border bg-surface/30 py-14">
         <div class="mx-auto max-w-7xl px-6">
           <h2 class="font-display text-[10px] tracking-[0.2em] text-muted uppercase">
-            Our institutions and funders
+            {label(text, "affiliations", "home")}
           </h2>
           <ul class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-8">
             {site.affiliations.map((item) => {
@@ -147,7 +148,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "image");
     site.community.length > 0 && (
       <section class="border-y border-border bg-surface/30 py-16">
         <div class="mx-auto max-w-7xl px-6">
-          <Rule label="Find us elsewhere" />
+          <Rule label={label(text, "elsewhere", "home")} />
           <ul class="grid gap-px md:grid-cols-3">
             {site.community.map((item) => (
               <li class="group border border-border bg-background p-8 transition-colors hover:border-accent/50">
@@ -160,7 +161,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "image");
                     {item.description}
                   </p>
                   <span class="mt-6 inline-block font-display text-[10px] tracking-widest text-accent uppercase">
-                    Open {item.label} →
+                    {label(text, "open", "home")} {item.label} →
                   </span>
                 </a>
               </li>
@@ -180,7 +181,7 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "image");
           href={url("/media")}
           class="mt-8 inline-block font-display text-[11px] tracking-widest text-accent uppercase"
         >
-          All photos and videos →
+          {label(text, "media", "home")}
         </a>
       </section>
     )
@@ -191,15 +192,15 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "image");
       <section class="mx-auto max-w-7xl px-6 pb-20">
         <div class="grid gap-12 lg:grid-cols-12">
           <div class="lg:col-span-4">
-            <Rule label="Latest news" />
+            <Rule label={label(text, "news", "home")} />
             <p class="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Papers, visits, field tests, and milestones from the lab.
+              {label(text, "newsIntro", "home")}
             </p>
             <a
               href={url("/news")}
               class="mt-6 inline-block border-b border-accent/30 pb-1 font-display text-xs tracking-widest text-accent uppercase hover:border-accent"
             >
-              Read all news →
+              {label(text, "allNews", "home")}
             </a>
           </div>
 
@@ -244,4 +245,4 @@ const cover = coverFor("home") ?? gallery.find((item) => item.kind === "image");
       </section>
     )
   }
-</Base>
+</Page>

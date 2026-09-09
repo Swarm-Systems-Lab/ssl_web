@@ -12,12 +12,6 @@
 #
 # Any text field accepts inline links: [Paparazzi](https://paparazziuav.org).
 
-intro: >-
-  The Swarm Systems Lab at the University of Granada currently has some
-  openings. If your profile does not fit an offer but you think you are a good
-  match, get in touch anyway - we run a lab with diverse but strong theoretical
-  and practical backgrounds.
-
 items:
   - title: FPU Ph.D. candidate
     type: PhD

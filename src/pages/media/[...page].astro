@@ -1,13 +1,14 @@
 ---
-import type { GetStaticPaths, Page } from "astro";
-import Base from "@/layouts/Base.astro";
-import PageHeader from "@/components/PageHeader.astro";
+// `Paginated` is Astro's page-of-results type; `Page` is our layout.
+import type { GetStaticPaths, Page as Paginated } from "astro";
+// Astro's own `Page` is the pagination type, so the layout is aliased here.
+import PageShell from "@/layouts/Page.astro";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
 import VideoGrid from "@/components/VideoGrid.astro";
 import Logo from "@/components/Logo.astro";
 import { gallery, videos, type MediaItem } from "@/lib/media";
-import { mediaConfig } from "@/lib/data";
+import { mediaConfig, pageText, label } from "@/lib/data";
 import { fullSize } from "@/lib/full-size";
 import { url } from "@/lib/url";
 
@@ -17,7 +18,8 @@ export const getStaticPaths = (({ paginate }) =>
     { pageSize: mediaConfig.perPage },
   )) satisfies GetStaticPaths;
 
-const { page } = Astro.props as { page: Page<MediaItem> };
+const { page } = Astro.props as { page: Paginated<MediaItem> };
+const text = pageText("media");
 const { channel } = mediaConfig;
 
 // Full size means a large WebP rather than the file as uploaded, so a 7 MB
@@ -35,18 +37,12 @@ const items = await Promise.all(
 );
 ---
 
-<Base
-  title={page.currentPage > 1 ? `Media - page ${page.currentPage}` : "Media"}
-  description="Photos, animations, and videos from the Swarm Systems Lab."
+<PageShell
+  name="media"
+  title={page.currentPage > 1
+    ? `${text.seo?.title} - ${label(text, "page", "media")} ${page.currentPage}`
+    : undefined}
 >
-  <PageHeader
-    page="media"
-    eyebrow="Photo & video"
-    title="MEDIA FEED."
-    accent="FEED."
-    description={mediaConfig.intro}
-  />
-
   <div class="mx-auto max-w-7xl px-6 pb-16">
     {
       page.currentPage === 1 && channel && (
@@ -89,7 +85,7 @@ const items = await Promise.all(
     {
       page.currentPage === 1 && videos.length > 0 && (
         <section class="mb-20">
-          <Rule label="Videos" />
+          <Rule label={label(text, "videos", "media")} />
           {/* Ours and YouTube's in one shelf, newest first. */}
           <VideoGrid videos={videos} aboveTheFold={3} />
         </section>
@@ -146,7 +142,7 @@ const items = await Promise.all(
         page.lastPage > 1 && (
           <nav
             class="mt-12 flex items-center justify-between border-t border-border pt-6 font-display text-[11px] tracking-widest uppercase"
-            aria-label="Media pages"
+            aria-label={label(text, "pager", "media")}
           >
             {page.url.prev ? (
               <a href={url(page.url.prev)} class="text-accent">
@@ -170,4 +166,4 @@ const items = await Promise.all(
       }
     </section>
   </div>
-</Base>
+</PageShell>
