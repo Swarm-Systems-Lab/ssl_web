@@ -7,6 +7,7 @@ Everything on the website is generated from this folder.
 | `news/`            | one folder per post                 | its own page           |
 | `research/`        | one folder per topic                | its own page           |
 | `team/`            | one folder per person, by category  | its own page           |
+| `fleet/`           | one folder per robot                | its own page           |
 | `media/`           | photos, GIFs, and short clips       | the media page         |
 | `covers/`          | the picture at the top of a page    | that page              |
 | `logos/`           | marks for our links, and for the    | front page, footer,    |
@@ -16,7 +17,7 @@ Everything on the website is generated from this folder.
 | `positions.yaml`   | open positions                      | Join us -> Open positions   |
 | `projects.yaml`    | TFM / TFG offers                    | Join us -> Student projects |
 | `images/`          | pictures used by the `.yaml` pages  | wherever they are used |
-| `awards.yaml`      | awards and grants                   | the awards page        |
+| `awards.yaml`      | awards and grants                   | the awards page*       |
 | `media.yaml`       | YouTube videos and gallery settings | the media page         |
 | `site.yaml`        | site title, tabs, footer links      | everywhere             |
 
@@ -51,6 +52,10 @@ with `_` is left out of the site, which is what keeps the templates off it.
 People are filed one level deeper, by what they are to the lab -
 `team/members/`, `team/visitors/`, `team/alumni/`. See
 [`team/README.md`](team/README.md).
+
+Robots are not: a machine's block - fixed-wing, rotorcraft, rover, ground, or
+retired - is a `group:` line in its own `index.md`, so retiring one is a
+one-word edit rather than a move. See [`fleet/README.md`](fleet/README.md).
 
 A post with no pictures can also be a single file, `2026-09-04-new-paper.md`,
 with no folder around it.
@@ -412,7 +417,7 @@ spatial awareness using only local measurements.
 | a news post        | `/news/2026-07-03-…`          |
 | a person           | `/team/hector-garcia-de-marina` |
 | a paper           | `/publications/…`             |
-| a whole section    | `/publications`, `/team`, `/awards` |
+| a whole section    | `/publications`, `/team`, `/fleet`  |
 
 The address is the folder name for anything with its own folder, so
 `content/research/aerosense/` is `/research/aerosense`. Outside links are

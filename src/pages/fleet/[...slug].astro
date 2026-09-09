@@ -1,0 +1,140 @@
+---
+import { render } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import Picture from "@/components/Picture.astro";
+import Carousel from "@/components/Carousel.astro";
+import PeopleList from "@/components/PeopleList.astro";
+import { getFleet, projectsByFolder } from "@/lib/collections";
+import { folderMedia, samePicture } from "@/lib/folder-media";
+import { socialImage } from "@/lib/social-image";
+import { url } from "@/lib/url";
+
+export async function getStaticPaths() {
+  const robots = await getFleet();
+  return robots
+    .filter((robot) => robot.hasPage)
+    .map((robot) => ({ params: { slug: robot.slug }, props: { robot } }));
+}
+
+const { robot } = Astro.props;
+const { entry, photo, slug } = robot;
+const { Content } = await render(entry);
+const hasText = Boolean(entry.body?.trim());
+
+const projects = await projectsByFolder(entry.data.projects, `content/fleet/${slug}/index.md`);
+
+// Every other picture in the folder, shown under the text. The one already at
+// the top of the page is not repeated.
+const rest = folderMedia("fleet", slug, entry.data.name).filter(
+  (slide) => !photo || !samePicture(slide.src, photo),
+);
+---
+
+<Base title={entry.data.name} description={entry.data.summary} image={await socialImage(photo)}>
+  <article class="mx-auto max-w-3xl px-6 pt-20 pb-16">
+    <header class="border-b border-border pb-10">
+      <div class="flex flex-col gap-8">
+        <div>
+          <div class="font-display text-[10px] tracking-widest text-accent uppercase">
+            {entry.data.role}
+          </div>
+          <h1
+            class="mt-2 flex items-baseline gap-3 font-display text-3xl font-bold tracking-tighter"
+          >
+            {entry.data.name}
+            {
+              entry.data.count && (
+                <span class="font-display text-xl font-normal text-muted">
+                  &times;{entry.data.count}
+                </span>
+              )
+            }
+          </h1>
+          <p class="mt-4 leading-relaxed text-muted-foreground">{entry.data.summary}</p>
+          {
+            entry.data.note && (
+              <p class="mt-3 font-display text-[10px] tracking-widest text-muted uppercase">
+                {entry.data.note}
+              </p>
+            )
+          }
+          {
+            entry.data.links.length > 0 && (
+              <div class="mt-5 flex flex-wrap gap-4 font-display text-[10px] tracking-widest uppercase">
+                {entry.data.links.map((l) => (
+                  <a href={l.href} rel="noopener" class="text-accent">
+                    {l.label}
+                  </a>
+                ))}
+              </div>
+            )
+          }
+        </div>
+
+        {
+          photo && (
+            <Picture
+              src={photo}
+              alt={entry.data.name}
+              widths={[640, 960, 1280]}
+              sizes="(min-width: 768px) 768px, 100vw"
+              priority
+              zoom
+              class="h-auto w-full border border-border"
+            />
+          )
+        }
+      </div>
+    </header>
+
+    {/* Under the header, where every list page puts its way back. */}
+    <a
+      href={url("/fleet")}
+      class="mt-10 inline-block font-display text-[10px] tracking-widest text-accent uppercase"
+    >
+      ← All fleet
+    </a>
+
+    {
+      entry.data.specs.length > 0 && (
+        <dl class="mt-10 border-t border-border">
+          {entry.data.specs.map((spec) => (
+            <div class="flex justify-between gap-6 border-b border-border py-3">
+              <dt class="font-display text-[10px] tracking-widest text-muted uppercase">
+                {spec.label}
+              </dt>
+              <dd class="text-right text-sm text-muted-foreground">{spec.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    {
+      hasText && (
+        <div class="prose-lab mt-10">
+          <Content />
+        </div>
+      )
+    }
+
+    {
+      projects.length > 0 && (
+        <p class="mt-10 text-sm text-muted-foreground">
+          {/* The same run-of-links the project pages use for their people:
+              a project and a person are the same shape here, and the comma
+              between them has to be drawn rather than written. */}
+          Used on <PeopleList people={projects} />
+        </p>
+      )
+    }
+
+    {
+      rest.length > 0 && (
+        <div class="mt-10">
+          <Carousel slides={rest} label={`Pictures of ${entry.data.name}`} />
+        </div>
+      )
+    }
+  </article>
+</Base>

@@ -81,6 +81,8 @@ const siteSchema = z.object({
     })
     .default({}),
   nav: z.array(navItem),
+  /** Footer-only links: pages kept, but not worth a tab of their own. */
+  more: z.array(link).default([]),
   /** Featured on the front page as well as in the footer. */
   community: z
     .array(

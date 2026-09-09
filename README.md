@@ -12,6 +12,7 @@ the site rebuilds and republishes itself within a couple of minutes.
 | a news post           | copy `_template/` in [`content/news/`](content/news)                                            |
 | a funded project      | copy `_template/` in [`content/research/`](content/research)                                    |
 | a person              | copy `_template/` in [`content/team/`](content/team) into `members/`, `visitors/`, or `alumni/` |
+| a robot               | copy `_template/` in [`content/fleet/`](content/fleet)                                          |
 | a photo, GIF, or clip | drop the file in [`content/media/`](content/media)                                              |
 | a paper               | add it at the top of [`content/publications.yaml`](content/publications.yaml)                   |
 | an open position      | add it to [`content/positions.yaml`](content/positions.yaml)                                    |

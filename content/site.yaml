@@ -32,6 +32,8 @@ nav:
     href: /publications
   - label: Team
     href: /team
+  - label: Fleet
+    href: /fleet
   - label: Join us
     href: /join-us
     children:
@@ -39,10 +41,14 @@ nav:
         href: /join-us/positions
       - label: Student projects
         href: /join-us/projects
-  - label: Awards
-    href: /awards
   - label: Media
     href: /media
+
+# Pages that are still there but not worth a tab. They appear in the footer
+# only, under the tabs.
+more:
+  - label: Awards
+    href: /awards
 
 # Featured on the front page with a description, and in the footer.
 community:

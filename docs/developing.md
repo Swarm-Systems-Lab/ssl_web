@@ -21,7 +21,7 @@ src/
   lib/covers.ts     the picture at the top of a page, from content/covers/
   lib/logos.ts      marks for links and affiliations, by file name
   lib/media.ts      builds the gallery by scanning content/media/
-  lib/collections.ts sorting, grouping, and the team category rules
+  lib/collections.ts sorting, grouping, and the team and fleet rules
   layouts/Base.astro  <head>, header, footer
   components/       shared building blocks - see below
   pages/            one file per route
@@ -33,7 +33,7 @@ src/
 Two mechanisms, chosen by whether an item needs its own page:
 
 - **Markdown** in `content/news`, `content/research`, `content/team`,
-  `content/pages` -> Astro content collections, declared in
+  `content/fleet`, `content/pages` -> Astro content collections, declared in
   `src/content.config.ts`. Each entry becomes a route. A leading underscore
   keeps something out of the site, and the glob skips it whether it is a file
   or a folder - which is what `_template/` relies on.
@@ -70,6 +70,26 @@ names the file and field, so bad content cannot reach production.
 
 `draft: true` hides an entry from `bun run build` while keeping it visible in
 `bun run dev`.
+
+### The fleet
+
+`content/fleet/` is the team collection with the people swapped for machines,
+and it is worth saying why it is not filed the same way. A person's category is
+a fact about the lab - they are a visitor, or they are alumni - so the folder
+carries it. A machine's is a fact about the machine, and it changes: `group:`
+lives in its own `index.md`, so retiring a rover is a one-word edit instead of
+a move, and its address never changes.
+
+`specs` is free text on both sides on purpose. "Endurance / 45 min" reads the
+way someone would say it, and a schema that insisted on units would be wrong
+for half the entries. The page is a description of what the lab flies, not an
+inventory: `role` and `summary` carry the weight, and three specs is the point
+at which a reader stops reading.
+
+`projects:` names folders in `content/research/`, and an unknown name stops the
+build - the same rule `works:` follows. The list renders through `PeopleList`,
+because a project link and a person link are the same shape and the comma
+between them has to be drawn in CSS rather than written.
 
 ## Shared components
 
@@ -429,6 +449,11 @@ anchor links are never touched.
    page) or a collection to `src/content.config.ts` (one page per entry).
 3. Add the tab to `nav:` in `content/site.yaml`. Header and footer both read
    from there.
+
+To retire a tab without deleting the page, move its line from `nav:` to
+`more:`. The footer lists both, one after the other, so the page stays
+reachable and keeps its address while the header gets its room back - which is
+what happened to the awards page when the fleet took its place.
 
 A tab with `children` in `site.yaml` renders as a drop-down. The parent keeps
 its own `href`, and the list opens on hover or keyboard focus with CSS only, so

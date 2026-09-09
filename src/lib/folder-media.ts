@@ -21,7 +21,8 @@ import { photoEntries, assetEntries, type Media } from "./images";
  * folder's media.yaml instead, and joins the media as if it were there.
  */
 
-const samePicture = (a: Media, b: Media) =>
+/** The same file, whether it arrived as a path or as an imported picture. */
+export const samePicture = (a: Media, b: Media) =>
   (typeof a === "string" ? a : a.src) === (typeof b === "string" ? b : b.src);
 
 /**

@@ -61,10 +61,10 @@ const thumb = optionalPicture(pub.image);
         <Picture
           src={thumb}
           alt={pub.imageAlt ?? pub.title}
-          widths={[96, 192]}
-          sizes="96px"
+          widths={[160, 240]}
+          sizes="80px"
           loading={loading}
-          class="size-24 border border-border object-cover transition-colors hover:border-accent/50"
+          class="aspect-[4/3] w-20 border border-border object-cover transition-colors hover:border-accent/50"
         />
       </a>
     )

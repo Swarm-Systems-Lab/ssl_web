@@ -140,6 +140,80 @@ export function getTeamPhotos(): Slide[] {
   return folderMedia("team", "photos", "The lab");
 }
 
+// -- fleet -------------------------------------------------------------------
+
+export const FLEET_GROUPS = [
+  { key: "fixed-wing", label: "Fixed-wing" },
+  { key: "rotorcraft", label: "Rotorcraft" },
+  { key: "rover", label: "Rovers" },
+  { key: "ground", label: "Ground and comms" },
+  { key: "retired", label: "Retired" },
+] as const;
+
+export type FleetGroup = (typeof FLEET_GROUPS)[number]["key"];
+
+export type Robot = {
+  entry: CollectionEntry<"fleet">;
+  /** Folder name, and the address: /fleet/<slug>. */
+  slug: string;
+  group: FleetGroup;
+  /** Whether there is a page worth visiting, on the same rule as a person. */
+  hasPage: boolean;
+  photo?: Media;
+};
+
+/**
+ * The robots, in the order the fleet page shows them.
+ *
+ * One folder each, straight under content/fleet/ - unlike people, who are
+ * filed by category, a machine's block is a property of the machine and moves
+ * with it: a rover that is retired changes one line rather than moving folder.
+ */
+export async function getFleet(): Promise<Robot[]> {
+  const entries = await getCollection("fleet", visible);
+
+  return entries
+    .map((entry) => {
+      const photo = entry.data.photo ?? firstFolderFile("fleet", entry.id);
+      return {
+        entry,
+        slug: entry.id.split("/").pop()!,
+        group: entry.data.group,
+        hasPage: Boolean(entry.body?.trim()) || Boolean(photo),
+        photo,
+      };
+    })
+    .sort(
+      (a, b) =>
+        a.entry.data.order - b.entry.data.order ||
+        a.entry.data.name.localeCompare(b.entry.data.name),
+    );
+}
+
+/**
+ * The projects a robot lists, by the folder they live in under
+ * content/research/. An unknown name stops the build with the list of what is
+ * there: a machine quietly losing the project it was built for is the kind of
+ * mistake nobody notices until someone asks about it in person.
+ */
+export async function projectsByFolder(
+  names: string[],
+  where: string,
+): Promise<{ label: string; href: string }[]> {
+  const projects = new Map((await getResearch()).map((entry) => [entry.id, entry.data]));
+
+  return names.map((name) => {
+    const found = projects.get(name);
+    if (!found) {
+      throw new Error(
+        `${where} lists project "${name}", which is not a folder in content/research/.\n` +
+          `Available: ${[...projects.keys()].join(", ")}\n`,
+      );
+    }
+    return { label: found.acronym ?? found.title, href: url(`/research/${name}`) };
+  });
+}
+
 // -- projects ----------------------------------------------------------------
 
 const byRef = new Map(publications.map((entry) => [entry.ref.toUpperCase(), entry]));

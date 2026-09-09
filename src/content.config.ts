@@ -141,6 +141,44 @@ const team = defineCollection({
     }),
 });
 
+/**
+ * The robots the lab flies and drives.
+ *
+ * Deliberately not a datasheet. `role` says what a machine is to the lab and
+ * `summary` how it is used; `specs` carries only the two or three numbers a
+ * reader would actually ask about. Anything more belongs in the body, or in
+ * the paper the machine was built for - hardware dates, the reason it was
+ * built does not.
+ */
+const fleet = defineCollection({
+  loader: posts("./content/fleet"),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      /** What it is to the lab, e.g. "Fixed-wing testbed". */
+      role: z.string(),
+      /** Which block of the fleet page it belongs in. */
+      group: z.enum(["fixed-wing", "rotorcraft", "rover", "ground", "retired"]),
+      order: z.number().default(100),
+      summary: z.string(),
+      /** How many there are. A swarm is worth counting; a one-off is not. */
+      count: z.number().int().positive().optional(),
+      /**
+       * The few numbers worth showing, in the order written. Free text on both
+       * sides, so "Endurance" / "45 min" reads the way it would be said.
+       */
+      specs: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
+      /** Optional: the first picture in the folder is used otherwise. */
+      photo: image().optional(),
+      /** Retired only: when it flew, or what took its place. */
+      note: z.string().optional(),
+      /** Projects it works on, by folder name in content/research/. */
+      projects: z.array(z.string()).default([]),
+      links: z.array(link).default([]),
+      draft: z.boolean().default(false),
+    }),
+});
+
 const pages = defineCollection({
   loader: posts("./content/pages"),
   schema: z.object({
@@ -149,4 +187,4 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { news, research, team, pages };
+export const collections = { news, research, team, fleet, pages };

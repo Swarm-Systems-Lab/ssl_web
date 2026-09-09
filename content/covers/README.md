@@ -10,6 +10,7 @@ content/covers/
   research.jpg      /research
   publications.jpg  /publications
   team.jpg          /team
+  fleet.jpg         /fleet
   join-us.jpg       /join-us
   positions.jpg     /join-us/positions
   projects.jpg      /join-us/projects
