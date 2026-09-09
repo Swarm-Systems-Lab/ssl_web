@@ -48,8 +48,8 @@ in. It already holds `index.md` with every field explained, and a `media.yaml`
 for the times a picture needs framing. A leading underscore is what keeps the
 template itself off the site.
 
-Media files are picked up automatically. Name them `YYYY-MM-DD_short-caption.jpg`
-and the date and caption come from the file name. Keep GIFs and clips small, and
+Media files are picked up automatically. Name them after their date -
+`YYYY-MM-DD.jpg` - and write the caption in `content/media/media.yaml`. Keep GIFs and clips small, and
 put long videos on [our YouTube channel](https://www.youtube.com/@SwarmSystemsLab)
 instead. There is a worked example for every kind of picture (gallery, news,
 research, people) in

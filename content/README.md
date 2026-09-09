@@ -138,10 +138,16 @@ content/news/2026-09-03-time-to-go-home/
 ```
 
 That is the whole job. The first picture becomes the big one at the top of the
-post and the thumbnail in the news list; the rest become a carousel at the end,
-with captions taken from the file names - `02-university-of-hunan.jpg` reads as
-*"University of hunan"*. A file named like `IMG_4231.jpg` gets no caption,
-because the name says nothing worth showing.
+post and the thumbnail in the news list; the rest become a carousel at the end.
+They have no captions unless you write them, in a `media.yaml` next to them:
+
+```yaml
+02-university-of-hunan.jpg:
+  caption: Héctor at the University of Hunan
+```
+
+The words in a file name are for you, looking at the folder. They are never
+shown, because a caption read off a file name could not be translated.
 
 To pick a different picture for the top, name it:
 
@@ -182,30 +188,36 @@ pictures look best.
 
 ### 3. A photo in the gallery
 
-Drop the file in `media/`. Name it `YYYY-MM-DD_a-short-caption.jpg` and the date
-and caption are read from the name:
+Two steps. Drop the file in `media/`, named after its date, then say what it is
+in [`media/media.yaml`](media/media.yaml):
 
 ```
-content/media/2026-04-17_group-photo-in-granada.jpg
+content/media/2026-04-17.jpg
 ```
-
-shows on the media page as **"Group photo in granada"**, dated 17 April 2026, in
-the right place in the timeline.
-
-GIFs and short clips work exactly the same way - same folder, same naming:
-
-```
-content/media/2026-07-27_four-flying-wings-in-formation.gif
-content/media/2025-08-12_rendezvous-at-18-m-s.mp4
-```
-
-If the caption from the file name reads badly, override it in `media.yaml`
-without renaming the file:
 
 ```yaml
-captions:
-  "2026-04-17_group-photo-in-granada.jpg": "Group photo, Granada, April 2026"
+2026-04-17.jpg:
+  caption: Group photo, Granada, April 2026
 ```
+
+Two things from the same day take a number - `2026-04-17-1.jpg`,
+`2026-04-17-2.jpg`.
+
+It then shows on the media page with that caption, dated 17 April 2026, in the
+right place in the timeline.
+
+GIFs and short clips work exactly the same way - same folder, same naming, same
+line in the sheet:
+
+```
+content/media/2026-07-27.gif
+content/media/2025-08-12.mp4
+```
+
+**Every file on the media page needs its caption in that sheet**, and the build
+stops naming any that is missing. The words in the file name are for you,
+looking at the folder; they are not shown, because a caption read off a file
+name could not be translated.
 
 ### 4. A thumbnail on a publication, an award, a position, or a project
 
@@ -314,7 +326,7 @@ fromTheField:
   heading: From the field
   items:
     - 55N0cbsjq08
-    - 2024-08-20_Taking-off-over-the-lake-of-Cubillas.mp4
+    - 2024-08-20.mp4
 ```
 
 They appear in the order written. A name that matches nothing stops the build,
@@ -345,7 +357,7 @@ IROS-2025.jpg:
 | --------- | --------------------------------------------------------------------- |
 | `focus`   | which part to keep when the picture is cropped                        |
 | `zoom`    | how close to crop in                                                  |
-| `caption` | the words under the picture, instead of the ones from the file name   |
+| `caption` | the words under the picture - the only place they can come from      |
 | `alt`     | what the picture shows, for screen readers and when it fails to load  |
 
 `focus` takes `top`, `bottom`, `left`, `right`, `center`, a pair like

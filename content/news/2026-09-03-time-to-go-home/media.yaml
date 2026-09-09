@@ -1,0 +1,14 @@
+# What each picture in this folder is. Captions are only ever written here: a
+# caption taken from a file name could not be translated, so a file with none
+# below simply has no caption, rather than showing its own name.
+
+SJTU_Jesus.jpg:
+  caption: Jesús at Shanghai Jiao Tong University
+hunan_University_Hector.jpg:
+  caption: Héctor at the University of Hunan
+hunan_University_Jesus.jpg:
+  caption: Jesús at the University of Hunan
+IFAC_WC_26_Jesus.jpg:
+  caption: Jesús at the 2026 IFAC World Congress, Busan
+IFAC_WC_26_Jingyi.jpg:
+  caption: Jingyi at the 2026 IFAC World Congress, Busan

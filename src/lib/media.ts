@@ -1,6 +1,6 @@
 import { site } from "./data";
 import { describeFile } from "./filenames";
-import { videosIn, displayFor } from "./display";
+import { videosIn, displayFor, displayForPath } from "./display";
 import { youtubeRef } from "./video";
 import { photoEntries, assetEntries, type Media } from "./images";
 import { kindOf, type MediaKind } from "./media-item";
@@ -9,12 +9,17 @@ import { kindOf, type MediaKind } from "./media-item";
  * The media gallery is built by scanning content/media/ at build time.
  * Dropping a file into that folder is enough to publish it - no list to edit.
  *
- * Filename convention: YYYY-MM-DD_short-caption.jpg
+ * Filename convention: YYYY-MM-DD_anything.jpg
  *   - the date prefix sets the ordering (newest first) and the shown date
- *   - the rest becomes the caption, unless overridden in content/media.yaml
+ *   - the rest is for whoever is looking at the folder, and is not shown
  * A file without a date prefix still works; it just sorts last. A file whose
  * name starts with "_" is kept out of the gallery - use that for pictures the
- * site needs but should not list, such as the front-page cover.
+ * site needs but should not list, such as a clip's poster frame.
+ *
+ * What each item says comes from content/media/media.yaml and nowhere else. A
+ * caption read off a file name cannot be translated, and would quietly leave
+ * one language's words on a page in another - so a file with no caption in the
+ * sheet stops the build instead.
  */
 
 const FOLDER = "/content/media/";
@@ -29,16 +34,31 @@ export type MediaItem = {
 };
 
 function describe(path: string) {
-  const { file, date, caption } = describeFile(path);
-  return { file, date, caption: caption ?? file };
+  const { file, date } = describeFile(path);
+  const caption = displayForPath(path)?.caption;
+
+  if (!caption) {
+    throw new Error(
+      `content/media/media.yaml has no caption for "${file}".\n` +
+        `Every picture and clip on the media page needs one: the file name is ` +
+        `not used for it, so that the page can be translated.\n`,
+    );
+  }
+
+  return { file, date, caption };
 }
 
 /** The YouTube videos this folder declares, alongside the files in it. */
 const declared = videosIn(FOLDER).map((video) => {
   const said = displayFor(video.src);
+  if (!said?.caption) {
+    throw new Error(
+      `content/media/media.yaml declares the video "${video.src}" with no caption.\n`,
+    );
+  }
   return {
     file: video.src,
-    caption: said?.caption ?? said?.alt ?? "Video",
+    caption: said.caption,
     date: video.date,
     kind: "video" as const,
     src: video.src as Media,

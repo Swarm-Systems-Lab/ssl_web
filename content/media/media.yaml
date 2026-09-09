@@ -1,16 +1,41 @@
+# What each picture and clip in this folder is, and how it is framed.
 #
+# Every item on the media page takes its caption from here. The file name sets
+# the date and the order, and nothing else: a caption read off a file name
+# could not be translated, and a folder of files named in English is not a
+# thing a second language can be added to.
+#
+# So a file with no caption below stops the build, naming it. Adding a picture
+# is still a drag into this folder, plus the line that says what it is.
+
+2026-06-09.jpg:
+  caption: Interview with Héctor for Canal Sur's "Con Ciencia"
+
 2025-10-14.png:
   caption: "RC Flight Club - Ciudad de la Alhambra. Our testbed for autonomous flight of drones in outdoor environments"
+
 2025-09-15.png:
   caption: "Diego performing flight checks on our fleet of Sonic fixed-wing drones before heading out to fly"
   focus: 0% 10%
+
+2025-01-31-1.png:
+  caption: Collecting data from our air-to-air network for the relative localization
+
+2025-01-31-2.png:
+  caption: Jesús launching a Sonic
+
 2025-01-31.jpg:
   caption: "Jesús and José at the RC Flight Club"
   focus: 0% 30%
+
 2024-11-24.jpg:
   caption: "Héctor's plenary talk at the Autonomous Robotic Technology Seminar (ARTS 2024), Shenzhen, China"
+
 2024-10-02.jpg:
   caption: "Sonic fixed-wing drone under center-of-mass configuration"
+
+2024-08-20.mp4:
+  caption: Taking off over the lake of Cubillas
 
 # Videos that live on YouTube. They are part of this folder's media just as the
 # files are, and appear on the media page beside the clips of our own, newest

@@ -15,7 +15,7 @@ src/
   lib/data.ts       loads and validates the YAML in content/, pages.yaml included
   lib/images.ts     resolves picture paths written in YAML
   lib/inline-markdown.ts  links and emphasis inside YAML text
-  lib/filenames.ts  file name -> caption and date, shared by both galleries
+  lib/filenames.ts  file name -> date; the caption comes from the folder sheet
   lib/folder-pictures.ts  pictures found next to a post or a person
   lib/summary.ts    the fallback summary, derived from a post's own text
   lib/covers.ts     the picture at the top of a page, from content/covers/
@@ -227,12 +227,16 @@ clip against (an `aspect-*`, `size-*` or `h-*` class); where the picture is
 shown whole nothing is cropped, so the zoom is ignored rather than collapsing
 the layout.
 
-`caption` and `alt` come out of the same file. `describeFile()` prefers the
-sheet over the file name, and over the `captions:` map in `media.yaml` - the
-file sitting next to the picture is the more specific statement about it.
-`Carousel` also falls back to the sheet for any slide with no caption of its
-own, which is the only way the awards pictures and the Granada photos can have
-one: both are listed in YAML, which carries no captions.
+`caption` and `alt` come out of the same file, and the sheet is the only place
+either can come from. `describeFile()` reads the date out of a file name and
+nothing else: a caption taken from a name could not be translated, and would
+leave one language's words on a page written in another. A picture with no
+caption in its folder's sheet simply has none - except on the media page, where
+every item needs one and the build stops naming any that is missing.
+
+`Carousel` falls back to the sheet for any slide with no caption of its own,
+which is the only way the awards pictures and the Granada photos can have one:
+both are listed in YAML, which carries no captions.
 
 Keys that name a missing file, unknown settings, and malformed `focus` values
 all stop the build with the file and field named.

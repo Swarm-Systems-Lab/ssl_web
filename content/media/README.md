@@ -6,12 +6,18 @@ YouTube videos listed in `media.yaml` beside them.
 ## Files
 
 Drop photos, GIFs, and short clips in and they appear automatically. Name them
+after their date:
 
-    YYYY-MM-DD_short-caption.jpg
+    YYYY-MM-DD.jpg
 
-for example `2026-04-17_group-photo-in-granada.jpg`, which shows as "Group
-photo in granada" dated 2026-04-17. A name that is only a date works too - use
-`media.yaml` for the caption in that case.
+for example `2026-04-17.jpg`, which shows dated 2026-04-17, newest first. Two
+things from the same day take a number - `2026-04-17-1.jpg`, `2026-04-17-2.jpg`
+- and anything after the date is ignored, so a longer name is only ever a note
+to yourself.
+
+Then say what it is in [`media.yaml`](media.yaml). Every file here needs a
+caption there, and the build stops naming any that is missing: a caption read
+off a file name could not be translated.
 
 Accepted: `.jpg .jpeg .png .webp .avif .gif .mp4 .webm`
 

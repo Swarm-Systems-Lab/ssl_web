@@ -55,7 +55,7 @@ const block = z.union(
   ],
   // Without this, a mistyped kind reports only "Invalid input", which says
   // nothing about what was allowed instead.
-  { error: "must be one of: heading, note, prose" },
+  { errorMap: () => ({ message: "must be one of: heading, note, prose" }) },
 );
 
 export type Block = z.infer<typeof block>;
