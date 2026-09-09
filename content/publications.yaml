@@ -62,6 +62,12 @@ preprint:
 
 # Journal papers
 journal:
+  - ref: J28
+    authors: "Y. Xu"
+    title: "Asymmetric Delay-Induced Translation in Displacement Formations"
+    venue: "IEEE Control Systems Letters"
+    year: 2026
+    doi: https://ieeexplore.ieee.org/abstract/document/11644719
   - ref: J27
     authors: "G. Wang, HG de Marina, M. Fu, G. Wen, L. Chen"
     title: "Angle-based leaderless formation maneuvering with global convergence"
@@ -576,6 +582,7 @@ technote:
     authors: "J. Bautista, HG de Marina"
     title: "SO(3) attitude controllers and the alignment of robots with non-constant 3D vector fields"
     venue: "arXiv"
+    note: "In constant development as part of the research on geometric control of robot swarms"
     pdf: https://arxiv.org/pdf/2406.14998
     doi: https://doi.org/10.48550/arxiv.2406.14998
   - ref: T1
