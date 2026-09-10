@@ -62,7 +62,7 @@ repos:
     href: https://github.com/Swarm-Systems-Lab/gvf_so3
     role: >-
       A worked end-to-end example, and the simulation code behind the
-      singularity-free path following paper.
+      singularity-free SO(3) path following paper.
     needs: ["ssl_simulator", "ssl_simulator_vista", "lieplusplus_py"]
 
 links:
@@ -100,7 +100,7 @@ where Lie group operations are needed, which is why it sits behind the engine's
 ## Starting something new
 
 Every Python project here is generated from `ssl_py_template`, developed through
-`ssl_pydev`, and tested and built by `ssl_ci`. That is deliberate: the build, 
+`ssl_pydev`, and tested and deployed by `ssl_ci`. That is deliberate: the build, 
 publish and docs logic exists once, in `ssl_pydev`, and both a laptop and a CI runner
 execute that same code rather than two copies that start identical and drift.
 
