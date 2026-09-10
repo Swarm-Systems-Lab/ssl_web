@@ -1,6 +1,6 @@
 ---
 
-name: "Crazyfly"
+name: "Crazyflie"
 role: "Indoor swarm testbed"
 group: rotorcraft
 order: 0
