@@ -391,6 +391,19 @@ slide, so galleries need nothing. The media grid is the one place where the
 trigger is the link itself: it keeps `href` to the full size file, and the
 lightbox takes the click when its script has run.
 
+Once open, the picture zooms: the wheel, two fingers, or the `+` `-` `0` keys,
+and it drags when it is larger than the screen. All of it is one
+`translate() scale()` on the `<img>`, so nothing reflows.
+
+Three things in there are less obvious than they look. Every pointer goes
+through Pointer Events rather than a wheel handler beside a separate touch one,
+so a single gesture cannot be counted twice; `touch-action: none` on the image
+is what stops the browser claiming the two-finger gesture for its own page zoom
+before the script sees it; and `contain()` bounds the offset to however much the
+scaled picture overhangs the viewport, because a picture panned off the edge
+leaves nothing to take hold of. A drag that ends outside the picture also sets
+`dragged`, so the click that follows is not read as a click away.
+
 ### In the press
 
 `content/press.yaml` holds coverage by newspapers, TV, and institutional news

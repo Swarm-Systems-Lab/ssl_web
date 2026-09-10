@@ -9,6 +9,11 @@
  *
  * A native <dialog> does the work: it traps focus, closes on Escape, and
  * paints its own backdrop, none of which is worth reimplementing.
+ *
+ * The picture zooms: the wheel on a desktop, two fingers on a phone, and the
+ * + - 0 keys for anyone on neither. Zoomed in, it drags. All of it is one
+ * transform on the <img>, so nothing reflows and the picture keeps its place
+ * in the layout.
  */
 ---
 
@@ -19,10 +24,14 @@
 >
   <div class="flex h-full w-full items-center justify-center p-4 sm:p-10">
     <figure class="flex max-h-full flex-col items-center gap-4" data-figure>
+      {
+        /* touch-action:none, or the browser takes the two-finger gesture for
+          its own page zoom before the script ever sees it. */
+      }
       <img
         data-image
         alt=""
-        class="max-h-[80dvh] w-auto max-w-full border border-white/15 object-contain"
+        class="max-h-[80dvh] w-auto max-w-full touch-none border border-white/15 object-contain"
       />
       {
         /* The backdrop is dark whichever theme the page is in, so this chrome
@@ -47,6 +56,76 @@
   const caption = dialog?.querySelector<HTMLElement>("[data-caption]");
 
   if (dialog && image && caption) {
+    /*
+     * Zoom state. `scale` is the magnification and `tx`/`ty` the offset in
+     * screen pixels, applied together as one transform. Nothing here changes
+     * layout, so the picture keeps the size the stylesheet gave it and the
+     * dialog's `overflow-hidden` does the clipping.
+     */
+    const MIN = 1;
+    const MAX = 8;
+    let scale = MIN;
+    let tx = 0;
+    let ty = 0;
+
+    /*
+     * Keep the picture over the screen. Panning is otherwise unbounded, and a
+     * picture pushed off the edge leaves nothing to take hold of to bring it
+     * back. The offset is allowed to run to however much the scaled picture
+     * overhangs the viewport, and no further - so at natural size it cannot
+     * move at all, and zoomed in it stops at its own edges.
+     */
+    const contain = () => {
+      const slackX = Math.max(0, (image.offsetWidth * scale - innerWidth) / 2);
+      const slackY = Math.max(0, (image.offsetHeight * scale - innerHeight) / 2);
+      tx = Math.min(slackX, Math.max(-slackX, tx));
+      ty = Math.min(slackY, Math.max(-slackY, ty));
+    };
+
+    const apply = () => {
+      contain();
+      image.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+      image.style.cursor = scale > MIN ? "grab" : "";
+    };
+
+    const reset = () => {
+      scale = MIN;
+      tx = 0;
+      ty = 0;
+      apply();
+    };
+
+    /*
+     * Zoom about a point, so what is under the cursor - or between the two
+     * fingers - stays under it.
+     *
+     * The transform is `translate(t) scale(s)` about the centre, so the
+     * picture's centre on screen is its laid-out centre plus t. A point d away
+     * from that centre sits at d/s in the picture; after scaling by `ratio` it
+     * would land at d * ratio, so the centre has to move back by d * (1 - ratio)
+     * to leave it where it was.
+     */
+    const zoomAt = (ratio: number, cx: number, cy: number) => {
+      const next = Math.min(MAX, Math.max(MIN, scale * ratio));
+      if (next === scale) return;
+
+      const box = image.getBoundingClientRect();
+      const dx = cx - (box.left + box.width / 2);
+      const dy = cy - (box.top + box.height / 2);
+      const applied = next / scale;
+
+      tx += dx * (1 - applied);
+      ty += dy * (1 - applied);
+      scale = next;
+      // Back at natural size there is nowhere to pan to, so drop the offset
+      // rather than leave the picture parked off-centre.
+      if (scale === MIN) {
+        tx = 0;
+        ty = 0;
+      }
+      apply();
+    };
+
     const triggerFor = (node: EventTarget | null) =>
       node instanceof Element ? node.closest<HTMLElement>("[data-zoom]") : null;
 
@@ -62,6 +141,8 @@
       image.alt = text;
       caption.textContent = text;
       caption.hidden = text === "";
+
+      reset();
 
       // showModal() leaves the page behind free to scroll.
       document.body.style.overflow = "hidden";
@@ -87,9 +168,83 @@
       open(trigger);
     });
 
+    /*
+     * One path for every pointer, mouse and finger alike: two down is a pinch,
+     * one down is a drag. Doing it with Pointer Events rather than a wheel
+     * handler plus a separate touch handler means the two cannot both fire for
+     * the same gesture, which is where this usually goes wrong.
+     */
+    const pointers = new Map<number, { x: number; y: number }>();
+    let spread = 0;
+    let dragged = false;
+
+    image.addEventListener("pointerdown", (event) => {
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      image.setPointerCapture(event.pointerId);
+      dragged = false;
+    });
+
+    image.addEventListener("pointermove", (event) => {
+      const last = pointers.get(event.pointerId);
+      if (!last) return;
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+      const points = [...pointers.values()];
+      if (points.length >= 2) {
+        const [a, b] = points;
+        const apart = Math.hypot(a.x - b.x, a.y - b.y);
+        // The first move of a pinch only establishes the distance to compare
+        // against; there is no ratio to apply yet.
+        if (spread > 0) zoomAt(apart / spread, (a.x + b.x) / 2, (a.y + b.y) / 2);
+        spread = apart;
+        dragged = true;
+      } else if (scale > MIN) {
+        tx += event.clientX - last.x;
+        ty += event.clientY - last.y;
+        apply();
+        dragged = true;
+      }
+    });
+
+    const lift = (event: PointerEvent) => {
+      pointers.delete(event.pointerId);
+      // Lifting one finger of a pinch: the next move starts a fresh
+      // measurement rather than jumping by the gap between the two.
+      if (pointers.size < 2) spread = 0;
+    };
+    image.addEventListener("pointerup", lift);
+    image.addEventListener("pointercancel", lift);
+
+    // Anchored on the cursor, and non-passive because it has to stop the page
+    // behind from scrolling.
+    dialog.addEventListener(
+      "wheel",
+      (event) => {
+        event.preventDefault();
+        zoomAt(Math.exp(-event.deltaY * 0.0015), event.clientX, event.clientY);
+      },
+      { passive: false },
+    );
+
+    // The same, for anyone without a wheel or a touchscreen.
+    dialog.addEventListener("keydown", (event) => {
+      const middle = { x: innerWidth / 2, y: innerHeight / 2 };
+      if (event.key === "+" || event.key === "=") zoomAt(1.25, middle.x, middle.y);
+      else if (event.key === "-") zoomAt(0.8, middle.x, middle.y);
+      else if (event.key === "0") reset();
+      else return;
+      event.preventDefault();
+    });
+
     // Anywhere but the picture closes, which covers the backdrop, the margins,
     // and the close button.
     dialog.addEventListener("click", (event) => {
+      // A pan that ran past the edge of the picture still ends in a click, and
+      // closing on it would throw away the gesture the reader just made.
+      if (dragged) {
+        dragged = false;
+        return;
+      }
       const node = event.target;
       if (!(node instanceof Element) || !node.closest("[data-figure]")) dialog.close();
     });
@@ -98,6 +253,7 @@
       document.body.style.overflow = "";
       // Drop the picture so a large one is not left decoded in the background.
       image.removeAttribute("src");
+      reset();
     });
   }
 </script>
