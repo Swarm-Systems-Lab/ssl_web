@@ -100,8 +100,8 @@ where Lie group operations are needed, which is why it sits behind the engine's
 ## Starting something new
 
 Every Python project here is generated from `ssl_py_template`, developed through
-`ssl_pydev`, and tested by `ssl_ci`. That is deliberate: the build, publish and
-docs logic exists once, in `ssl_pydev`, and both a laptop and a CI runner
+`ssl_pydev`, and tested and built by `ssl_ci`. That is deliberate: the build, 
+publish and docs logic exists once, in `ssl_pydev`, and both a laptop and a CI runner
 execute that same code rather than two copies that start identical and drift.
 
 `gvf_so3` is the end-to-end example. It is a real paper's simulation code, and
