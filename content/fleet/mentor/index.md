@@ -17,7 +17,7 @@ specs:
   - label: Computer
     value: Jetson Orin Nano
   - label: Autopilot
-    value: Paparazzi
+    value: "[Palomo](/projects/palomo)"
 
 research: ["aerosense"] 
 

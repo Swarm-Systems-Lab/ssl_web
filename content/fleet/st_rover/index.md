@@ -10,7 +10,7 @@ research: ["iSwarm", "aerosense"]
 
 specs:
   - label: Autopilot
-    value: Paparazzi
+    value: "[Palomo](/projects/palomo)"
 ---
 
 <!-- Anything written here becomes the machine's own page: how it came to be, what

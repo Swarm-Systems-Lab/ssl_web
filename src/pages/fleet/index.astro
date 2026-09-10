@@ -3,6 +3,7 @@ import Page from "@/layouts/Page.astro";
 import { pageText, label } from "@/lib/data";
 import Rule from "@/components/Rule.astro";
 import Picture from "@/components/Picture.astro";
+import Text from "@/components/Text.astro";
 import { getFleet, FLEET_GROUPS } from "@/lib/collections";
 import { url } from "@/lib/url";
 
@@ -123,7 +124,13 @@ const text = pageText("fleet");
                             <dt class="font-display text-[10px] tracking-widest text-muted uppercase">
                               {spec.label}
                             </dt>
-                            <dd class="text-right text-muted-foreground">{spec.value}</dd>
+                            <dd class="text-right text-muted-foreground">
+                              {/* Only the links are lifted, not the whole row:
+                                  the card's stretched overlay still takes a
+                                  click on the spec itself, so the card as a
+                                  whole keeps working as one target. */}
+                              <Text as="span" text={spec.value} class="[&_a]:relative" />
+                            </dd>
                           </div>
                         ))}
                       </dl>

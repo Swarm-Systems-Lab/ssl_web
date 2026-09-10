@@ -21,7 +21,7 @@ specs:
   - label: Print time
     value: 80h, one printer
   - label: Autopilot
-    value: Paparazzi
+    value: "[Palomo](/projects/palomo)"
 
 research: ["aerosense"] 
 

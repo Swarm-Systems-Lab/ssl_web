@@ -7,6 +7,8 @@
  * headings belongs in a Markdown file instead.
  */
 
+import { url } from "./url";
+
 const ESCAPES: Record<string, string> = {
   "&": "&amp;",
   "<": "&lt;",
@@ -30,8 +32,12 @@ export function inlineMarkdown(text: string): string {
     const target = safeHref(href);
     if (!target) return whole;
     const external = target.startsWith("http");
+    // A link written as "/projects/palomo" has to gain the base path, or it
+    // breaks the moment the site is served from anywhere but the domain root -
+    // the github.io deploy, for one.
+    const address = target.startsWith("/") ? url(target) : target;
     const attrs = external ? ' rel="noopener"' : "";
-    return `<a href="${target}"${attrs}>${label}</a>`;
+    return `<a href="${address}"${attrs}>${label}</a>`;
   });
 
   html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");

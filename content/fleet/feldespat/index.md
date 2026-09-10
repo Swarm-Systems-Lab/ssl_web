@@ -9,7 +9,7 @@ count: 1
 
 specs:
   - label: Autopilot
-    value: Paparazzi
+    value: "[Palomo](/projects/palomo)"
 
 research: ["iSwarm","aerosense"] 
 

@@ -13,7 +13,7 @@ specs:
   - label: Endurance
     value: 25 min*
   - label: Autopilot
-    value: Paparazzi
+    value: "[Palomo](/projects/palomo)"
 
 research: ["iSwarm"] 
 

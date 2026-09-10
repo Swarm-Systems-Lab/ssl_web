@@ -30,8 +30,8 @@ items:
     image: images/student-projects/pprz.png
     summary: >-
       Coordinating different aerial vehicles through guiding vector fields,
-      within the open-source Paparazzi project. Depending on the candidate this
-      is offered as a bachelor's or a master's project.
+      within [Palomo](/projects/palomo), our autopilot. Depending on the
+      candidate this is offered as a bachelor's or a master's project.
     requirements:
       - C and/or C++ for embedded systems - the solution must run onboard.
       - Good skills in differential equations, geometry, and physics.
@@ -42,8 +42,7 @@ items:
     summary: >-
       Front-end development for the data analysis of our experiments and flights
       with robot swarms. We generate a lot of data and need automated tools to
-      represent and interact with it. You would contribute to pprz-py-plotter
-      within the open-source Paparazzi project.
+      represent and interact with it.
     requirements:
       - Python (Matplotlib, Qt), focusing on the front end.
 

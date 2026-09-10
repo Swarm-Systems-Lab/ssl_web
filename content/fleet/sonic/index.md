@@ -15,7 +15,7 @@ specs:
   - label: Payload
     value: 100g
   - label: Autopilot
-    value: Paparazzi
+    value: "[Palomo](/projects/palomo)"
 
 research: ["iSwarm","aerosense"] 
 

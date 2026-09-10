@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import Base from "@/layouts/Base.astro";
 import Picture from "@/components/Picture.astro";
+import Text from "@/components/Text.astro";
 import Carousel from "@/components/Carousel.astro";
 import PeopleList from "@/components/PeopleList.astro";
 import { getFleet, projectsByFolder } from "@/lib/collections";
@@ -103,7 +104,9 @@ const rest = folderMedia("fleet", slug, entry.data.name).filter(
               <dt class="font-display text-[10px] tracking-widest text-muted uppercase">
                 {spec.label}
               </dt>
-              <dd class="text-right text-sm text-muted-foreground">{spec.value}</dd>
+              <dd class="text-right text-sm text-muted-foreground">
+                <Text as="span" text={spec.value} />
+              </dd>
             </div>
           ))}
         </dl>
