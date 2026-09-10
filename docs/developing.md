@@ -38,6 +38,12 @@ Two mechanisms, chosen by whether an item needs its own page:
   keeps something out of the site, and the glob skips it whether it is a file
   or a folder - which is what `_template/` relies on.
 
+  That glob is applied when a collection is first loaded, and _not_ when the dev
+  server re-adds a watched file that has changed: editing `_template/index.md`
+  made the template appear as an entry titled "Name of the project" until the
+  server was restarted. `visible()` in `lib/collections.ts` drops any id with an
+  underscored path segment for that reason, so the rule holds in both places.
+
   An entry is either one file (`a-post.md`) or a folder holding `index.md`
   beside its pictures (`a-post/index.md`). A custom `generateId` strips the
   trailing `/index`, so both land on the same address and the folder move did
@@ -70,6 +76,24 @@ names the file and field, so bad content cannot reach production.
 
 `draft: true` hides an entry from `bun run build` while keeping it visible in
 `bun run dev`.
+
+### The bookshelf
+
+`content/projects/` is the fleet collection again, with one difference that
+shapes it: an entry is a _project_, not a repository. The Python simulation
+environment is eight repos and one entry; a tutorial is a PDF and no repo;
+Palomo is a project whose code is not public. So `repos:` is a list with a
+`role` against each, `needs:` names others in that same list so the dependency
+chain is written once, and every field about where code lives is optional.
+
+`works:` resolves against `publications.yaml` through `worksByRef`, the same
+call the research pages use, so a project that implements a paper shows it in
+full without repeating the citation.
+
+The rule the section is worth holding to: the page says what a project is and
+how its parts fit; installing and using it stays in the repository. That copy
+sits next to the code and cannot go stale, and only two of the eight repos here
+publish a docs site, so for the rest this is the only orientation that exists.
 
 ### The fleet
 
@@ -613,14 +637,14 @@ Three decisions worth keeping:
   reported and skipped, because a wrong DOI is worse than a missing one.
 
 It backs off and retries on HTTP 429, and reports separately on papers it could
-not recognise at all versus papers that simply have no open copy — the second
+not recognise at all versus papers that simply have no open copy - the second
 being the normal state of a paywalled paper, not a problem to fix.
 
 `--dry-run` prints what it would do and writes nothing. `--verify` checks the
 DOIs already in the file against Crossref and reports three things separately:
 entries whose DOI disagrees with the one registered for that title (one of the
 two is a different paper), entries with no DOI where Crossref knows one, and
-entries holding a publisher address rather than a DOI — the last being a
+entries holding a publisher address rather than a DOI - the last being a
 tidiness matter, not a fault.
 
 That check earned its keep immediately: two 2010 papers about sea demining, one

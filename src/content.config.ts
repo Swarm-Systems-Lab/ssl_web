@@ -172,9 +172,70 @@ const fleet = defineCollection({
       photo: image().optional(),
       /** Retired only: when it flew, or what took its place. */
       note: z.string().optional(),
-      /** Projects it works on, by folder name in content/research/. */
-      projects: z.array(z.string()).default([]),
+      /**
+       * The funded projects it works on, by folder name in content/research/.
+       * Named `research` rather than `projects` because content/projects/ is a
+       * different thing - the software, tutorials and hardware bookshelf.
+       */
+      research: z.array(z.string()).default([]),
       links: z.array(link).default([]),
+      draft: z.boolean().default(false),
+    }),
+});
+
+/**
+ * The bookshelf: the things the lab has built and their documentation.
+ *
+ * An entry is a *project*, not a repository. The Python simulation environment
+ * is one project made of half a dozen repos; a tutorial is a PDF and no repo at
+ * all; the autopilot is a project whose code is not public yet. So `repos` is a
+ * list with a role against each, and everything about where the code lives is
+ * optional - what a project is does not depend on having one.
+ *
+ * The body is where the documentation goes: how the pieces fit, why it exists,
+ * what it replaced. Reference and install steps belong in the repo, which is
+ * the only copy that cannot go stale.
+ */
+const projects = defineCollection({
+  loader: posts("./content/projects"),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      /** What it is in a few words, e.g. "Simulation and analysis stack". */
+      role: z.string(),
+      /** Which shelf it sits on. */
+      group: z.enum(["software", "hardware", "tutorial"]),
+      order: z.number().default(100),
+      summary: z.string(),
+      /**
+       * Where it stands, when that is worth saying: "Not public yet", "Work in
+       * progress". Left out for anything simply finished and available.
+       */
+      status: z.string().optional(),
+      /** The repositories it is made of, each with what it does. */
+      repos: z
+        .array(
+          z.object({
+            name: z.string(),
+            href: z.string(),
+            role: z.string(),
+            /**
+             * Which part of the project it is. The same idea as a robot's
+             * `group:`, one level down: what someone reads first, what holds
+             * the pipeline together, and what is there to be copied from.
+             */
+            group: z.enum(["core", "tooling", "example"]).default("core"),
+            /** What it needs, by `name` above. Drawn as the dependency list. */
+            needs: z.array(z.string()).default([]),
+          }),
+        )
+        .default([]),
+      /** Documentation sites, PDFs, anything else worth pointing at. */
+      links: z.array(link).default([]),
+      /** Papers it implements, by their reference in publications.yaml. */
+      works: z.array(z.string()).default([]),
+      image: image().optional(),
+      imageAlt: z.string().optional(),
       draft: z.boolean().default(false),
     }),
 });
@@ -187,4 +248,4 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { news, research, team, fleet, pages };
+export const collections = { news, research, team, fleet, projects, pages };

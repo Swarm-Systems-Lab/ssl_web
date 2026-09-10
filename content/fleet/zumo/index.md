@@ -6,7 +6,7 @@ group: rover
 order: 0
 summary: "The ground half of the indoor fleet: eight small rovers carrying a 2D lidar, running the same coordination and formation work as the Crazyflies. Driven and flown together, the two make for the experiments we care most about."
 count: 8
-projects: ["iSwarm", "aerosense"]
+research: ["iSwarm", "aerosense"]
 
 specs:
   - label: Firmware

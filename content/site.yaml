@@ -34,6 +34,8 @@ nav:
     href: /team
   - label: Fleet
     href: /fleet
+  - label: Projects
+    href: /projects
   - label: Join us
     href: /join-us
     children:

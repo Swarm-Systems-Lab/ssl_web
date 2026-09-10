@@ -21,7 +21,7 @@ const { entry, photo, slug } = robot;
 const { Content } = await render(entry);
 const hasText = Boolean(entry.body?.trim());
 
-const projects = await projectsByFolder(entry.data.projects, `content/fleet/${slug}/index.md`);
+const projects = await projectsByFolder(entry.data.research, `content/fleet/${slug}/index.md`);
 
 // Every other picture in the folder, shown under the text. The one already at
 // the top of the page is not repeated.

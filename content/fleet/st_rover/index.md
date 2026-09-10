@@ -6,7 +6,7 @@ group: rover
 order: 0
 summary: "Rugged RC rovers, used to test 2D guidance algorithms in difficult terrain before they are trusted to anything that flies."
 count: 3
-projects: ["iSwarm", "aerosense"]
+research: ["iSwarm", "aerosense"]
 
 specs:
   - label: Autopilot

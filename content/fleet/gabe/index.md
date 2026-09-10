@@ -19,7 +19,7 @@ specs:
   - label: Autopilot
     value: Paparazzi
 
-projects: ["aerosense"] 
+research: ["aerosense"] 
 
 ---
 

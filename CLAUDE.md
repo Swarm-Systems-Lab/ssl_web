@@ -32,6 +32,7 @@ mistakes there and nowhere else.
 | a project                                             | copy `content/research/_template/`                                             |
 | a person                                              | copy `content/team/_template/` into `members/`, `visitors/` or `alumni/`       |
 | a robot                                               | copy `content/fleet/_template/`                                                |
+| a project - software, a tutorial, hardware            | copy `content/projects/_template/`                                             |
 | a photo or clip                                       | drop in `content/media/`, add a caption to `content/media/media.yaml`          |
 | a paper                                               | top of `content/publications.yaml`                                             |
 | an opening, a TFM/TFG offer, an award, press coverage | `content/positions.yaml`, `student-projects.yaml`, `awards.yaml`, `press.yaml` |
@@ -123,6 +124,7 @@ kind of item, framed by the same per-folder `media.yaml` (`focus`, `zoom`,
 - Prose in comments and content uses `-`, not em dashes.
 - Dates are `YYYY-MM-DD`.
 - Drafts: `draft: true` hides an entry from the build but shows it in `dev`.
+- A leading `_` keeps a file or folder off the site. It is enforced twice - in the glob and again in `visible()` - because the dev server re-adds a changed file without re-applying the glob's ignore rules.
 - Deploy is automatic on push to `master`.
 
 ### Before saying a change is done
@@ -140,6 +142,7 @@ schemas were satisfied.
   to special-case the top-level one.
 - `content/fleet/st_rover/` is the one folder using an underscore, so its URL
   reads `/fleet/st_rover`.
+- `content/research/` holds _funded_ projects and `content/projects/` holds the software-and-tutorials bookshelf. Two things called projects; the fleet's field pointing at the first is named `research:` to keep them apart.
 - Fleet `order:` values collide - `orca`/`pico-talon` both 3, `zumo`/`st_rover`
   both 0 - so those pairs order by name rather than by intent.
 - `site.yaml` still holds translatable prose (the site description, the

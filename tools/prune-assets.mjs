@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
  *
  * Discovering covers, galleries, and folder photos means importing every
  * picture under content/ with `import.meta.glob`, and Vite emits a copy of
- * anything imported — whether or not it ends up on a page. That left every
+ * anything imported - whether or not it ends up on a page. That left every
  * full-size original in the output next to the resized variants actually used,
  * roughly doubling the size of the deploy.
  *

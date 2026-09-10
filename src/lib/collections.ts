@@ -6,8 +6,19 @@ import { publications, type Publication } from "./data";
 import { url } from "./url";
 import type { Media } from "./images";
 
-/** Drafts are visible while running `bun run dev` and dropped from builds. */
-const visible = ({ data }: { data: { draft?: boolean } }) => import.meta.env.DEV || !data.draft;
+/**
+ * What a listing shows: everything but the drafts, which are visible while
+ * running `bun run dev` and dropped from builds.
+ *
+ * A `_template/` folder is dropped always, and not only by the glob in
+ * content.config.ts. That pattern is applied when the collection is first
+ * loaded, but the dev server re-adds a watched file when it changes without
+ * re-applying it - so editing a template made it appear as a real entry,
+ * titled "Name of the project", until the server was restarted. This is the
+ * line that cannot be bypassed that way.
+ */
+const visible = ({ id, data }: { id: string; data: { draft?: boolean } }) =>
+  !id.split("/").some((part) => part.startsWith("_")) && (import.meta.env.DEV || !data.draft);
 
 // -- news and research -------------------------------------------------------
 
@@ -214,7 +225,55 @@ export async function projectsByFolder(
   });
 }
 
-// -- projects ----------------------------------------------------------------
+// -- the bookshelf -----------------------------------------------------------
+
+export const PROJECT_GROUPS = [
+  { key: "software", label: "Software" },
+  { key: "hardware", label: "Hardware" },
+  { key: "tutorial", label: "Tutorials" },
+] as const;
+
+export type ProjectGroup = (typeof PROJECT_GROUPS)[number]["key"];
+
+/** The blocks a project's repositories are listed in, in this order. */
+export const REPO_GROUPS = [
+  { key: "core", label: "Core" },
+  { key: "tooling", label: "Tooling" },
+  { key: "example", label: "Examples" },
+] as const;
+
+export type Project = {
+  entry: CollectionEntry<"projects">;
+  /** Folder name, and the address: /projects/<slug>. */
+  slug: string;
+  group: ProjectGroup;
+  /** Whether there is a page worth visiting, on the same rule as a person. */
+  hasPage: boolean;
+  cover?: Media;
+};
+
+export async function getProjects(): Promise<Project[]> {
+  const entries = await getCollection("projects", visible);
+
+  return entries
+    .map((entry) => {
+      const cover = entry.data.image ?? firstFolderFile("projects", entry.id);
+      return {
+        entry,
+        slug: entry.id.split("/").pop()!,
+        group: entry.data.group,
+        hasPage: Boolean(entry.body?.trim()) || Boolean(cover),
+        cover,
+      };
+    })
+    .sort(
+      (a, b) =>
+        a.entry.data.order - b.entry.data.order ||
+        a.entry.data.title.localeCompare(b.entry.data.title),
+    );
+}
+
+// -- publications by reference -----------------------------------------------
 
 const byRef = new Map(publications.map((entry) => [entry.ref.toUpperCase(), entry]));
 

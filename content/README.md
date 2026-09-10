@@ -7,6 +7,7 @@ Everything on the website is generated from this folder.
 | `news/`            | one folder per post                 | its own page           |
 | `research/`        | one folder per topic                | its own page           |
 | `team/`            | one folder per person, by category  | its own page           |
+| `projects/`        | one folder per project on the shelf | its own page           |
 | `fleet/`           | one folder per robot                | its own page           |
 | `media/`           | photos, GIFs, and short clips       | the media page         |
 | `covers/`          | the picture at the top of a page    | that page              |

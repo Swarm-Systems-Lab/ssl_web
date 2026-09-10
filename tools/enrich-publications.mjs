@@ -7,9 +7,9 @@ import { parseDocument } from "yaml";
  * Google Scholar has no API and its terms forbid scraping, so this uses the
  * open scholarly infrastructure instead:
  *
- *   OpenAlex  — finds the paper by title and gives its DOI, plus the best
+ *   OpenAlex  - finds the paper by title and gives its DOI, plus the best
  *               open-access copy it knows about. Free, no key, no login.
- *   arXiv     — asked only when OpenAlex knows of no open copy, which is the
+ *   arXiv     - asked only when OpenAlex knows of no open copy, which is the
  *               usual case for our own recent preprints.
  *
  * Run it by hand rather than during the build: a site that reached out to two

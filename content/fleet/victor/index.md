@@ -15,7 +15,7 @@ specs:
   - label: Autopilot
     value: Paparazzi
 
-projects: ["iSwarm"] 
+research: ["iSwarm"] 
 
 ---
 

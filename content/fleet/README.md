@@ -50,7 +50,7 @@ Empty blocks are left out of the page, so the fleet can start with one robot.
 
 - `count` - how many there are, shown as `x8`. Leave it out for a one-off.
 - `specs` - `label` / `value` pairs, shown in the order written.
-- `projects` - folder names from `content/research/`, which become links. A
+- `research` - folder names from `content/research/`, which become links. A
   name that is not a project folder stops the build.
 - `photo` - only needed when the folder holds several pictures and the first
   one is not the right cover.

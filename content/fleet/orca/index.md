@@ -23,7 +23,7 @@ specs:
   - label: Autopilot
     value: Paparazzi
 
-projects: ["iSwarm", "aerosense"] 
+research: ["iSwarm", "aerosense"] 
 
 links:
   - label: Design

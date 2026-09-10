@@ -104,6 +104,32 @@ fleet:
       Nothing here yet. Copy content/fleet/_template/, name the copy after a
       machine, and it appears.
 
+projects:
+  seo:
+    title: Projects
+    description: >-
+      The software, tutorials and hardware built at the Swarm Systems Lab, and
+      how the pieces fit together.
+  header:
+    eyebrow: What we build
+    title: THE LAB PROJECTS.
+    accent: PROJECTS.
+    intro: >-
+      Things we have built and their documentation: the simulation environment, the
+      autopilot, the tutorials, the hardware. Each one says what it is and how
+      its parts fit; how to install and use them stays in the repositories,
+      which are the only copy that cannot go stale.
+  labels:
+    back: All projects
+    parts: What it is made of
+    papers: Papers
+    needs: needs
+    repo: repository
+    repos: repositories
+    empty: >-
+      Nothing here yet. Copy content/projects/_template/, name the copy after a
+      project, and it appears.
+
 publications:
   seo:
     title: Publications

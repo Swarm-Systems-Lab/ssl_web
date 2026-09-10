@@ -30,7 +30,7 @@ summary: "One or two sentences: what we use it for, and why this one."
 #     value: 45 min
 #   - label: Autopilot
 #     value: Paparazzi
-# projects: ["aerosense"]        # folder names from content/research/
+# research: ["aerosense"]        # folder names from content/research/
 # photo: ./01-photo.jpg          # only needed if the folder has several pictures
 # note: "Flew 2019-2023"         # for anything in the retired block
 # links:

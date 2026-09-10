@@ -241,7 +241,7 @@ const publication = z.object({
    * full address; either way it is shown as a DOI link.
    */
   doi: z.string().optional(),
-  /** Openly readable full text — arXiv, a repository, a direct PDF. */
+  /** Openly readable full text - arXiv, a repository, a direct PDF. */
   pdf: z.string().optional(),
   /** Anything else worth linking: a video, the code, a dataset. */
   links: z.array(link).default([]),

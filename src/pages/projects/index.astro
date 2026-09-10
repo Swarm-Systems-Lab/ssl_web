@@ -1,0 +1,106 @@
+---
+import Page from "@/layouts/Page.astro";
+import Rule from "@/components/Rule.astro";
+import Picture from "@/components/Picture.astro";
+import { getProjects, PROJECT_GROUPS } from "@/lib/collections";
+import { pageText, label } from "@/lib/data";
+import { url } from "@/lib/url";
+
+const text = pageText("projects");
+const projects = await getProjects();
+const shelves = PROJECT_GROUPS.map((group) => ({
+  ...group,
+  projects: projects.filter((project) => project.group === group.key),
+})).filter((group) => group.projects.length > 0);
+
+/** The whole card is the click target - see the team page for the why. */
+const STRETCH = "after:absolute after:inset-0 after:content-['']";
+---
+
+<Page name="projects">
+  <div class="mx-auto max-w-7xl px-6 pb-16">
+    {
+      shelves.map((shelf) => (
+        <section class="mb-16">
+          <Rule label={shelf.label} />
+
+          <ul class="grid gap-px sm:grid-cols-2">
+            {shelf.projects.map(({ entry, slug, hasPage, cover }, index) => (
+              <li class="relative flex flex-col border border-border bg-surface/30 transition-colors hover:border-accent/50">
+                {cover && (
+                  <Picture
+                    src={cover}
+                    alt={entry.data.imageAlt ?? entry.data.title}
+                    widths={[600, 1200]}
+                    sizes="(min-width: 640px) 600px, 100vw"
+                    loading={index < 2 ? "eager" : "lazy"}
+                    class="aspect-[16/9] w-full border-b border-border object-cover"
+                  />
+                )}
+
+                <div class="flex flex-1 flex-col p-6">
+                  <div class="font-display text-[10px] tracking-widest text-accent uppercase">
+                    {entry.data.role}
+                  </div>
+
+                  <h3 class="mt-2 flex items-baseline gap-3 font-display text-lg font-bold tracking-tight">
+                    {hasPage ? (
+                      <a
+                        href={url(`/projects/${slug}`)}
+                        class:list={["transition-colors hover:text-accent", STRETCH]}
+                      >
+                        {entry.data.title}
+                      </a>
+                    ) : (
+                      entry.data.title
+                    )}
+                    {entry.data.status && (
+                      <span class="font-display text-[10px] tracking-widest text-muted uppercase">
+                        {entry.data.status}
+                      </span>
+                    )}
+                  </h3>
+
+                  <p class="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                    {entry.data.summary}
+                  </p>
+
+                  {entry.data.repos.length > 0 && (
+                    <p class="mt-5 border-t border-border pt-4 font-display text-[10px] tracking-widest text-muted uppercase">
+                      {entry.data.repos.length}{" "}
+                      {label(text, entry.data.repos.length === 1 ? "repo" : "repos", "projects")}
+                    </p>
+                  )}
+
+                  {entry.data.links.length > 0 && (
+                    /* `relative` lifts these above the stretched overlay. */
+                    /* `relative` lifts these above the stretched overlay. */
+                    <div class="relative mt-5 flex flex-wrap gap-3">
+                      {entry.data.links.map((l) => (
+                        <a
+                          href={l.href}
+                          rel="noopener"
+                          class="border border-accent/30 px-2 py-1 font-display text-[10px] tracking-widest text-accent uppercase transition-colors hover:bg-accent/10"
+                        >
+                          {l.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    {
+      projects.length === 0 && (
+        <p class="border border-border bg-surface/30 p-8 text-sm text-muted-foreground">
+          {label(text, "empty", "projects")}
+        </p>
+      )
+    }
+  </div>
+</Page>
