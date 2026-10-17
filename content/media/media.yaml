@@ -42,6 +42,9 @@
 # first. To put one on the front page, name it under `fromTheField` in
 # ../site.yaml.
 videos:
+  - youtube: RwpAXYvPU0E
+    caption: Autonomous circle rolling and cuban eight aerobatics
+    date: "2026-10-02"
   - youtube: 55N0cbsjq08
     caption: Fully autonomous Fixed-wing aerobatics (without GPS)
     date: "2026-08-01"
