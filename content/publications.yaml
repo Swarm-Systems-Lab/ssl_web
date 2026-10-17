@@ -62,6 +62,11 @@ preprint:
 
 # Journal papers
 journal:
+  - ref: J29
+    authors: "Y. Xu, HG de Marina"
+    title: "Leaderless Formation Motion over Minimal Periodic Directed Rings: A Structural Imbalance Approach"
+    venue: "IEEE Transactions on Signal and Information Processing over Networks"
+    year: 2026
   - ref: J28
     authors: "Y. Xu"
     title: "Asymmetric Delay-Induced Translation in Displacement Formations"
