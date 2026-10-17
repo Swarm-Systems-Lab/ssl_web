@@ -71,3 +71,7 @@ bun run dev      # http://localhost:4321
 `bun run build` produces the static site in `dist/`.
 
 Working on the code rather than the content? See [docs/developing.md](docs/developing.md).
+
+## TODO list
+- [ ] NEWS: Entries should be longer, almost all the text should fit there.
+- [ ] NEWS: The image should be a carrousel containing all the images inside the new. When clicked, it will zoom in instead of redirecting to the new's page.
