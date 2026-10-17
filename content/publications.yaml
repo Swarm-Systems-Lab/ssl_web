@@ -59,6 +59,8 @@ preprint:
     links:
       - label: Code
         href: https://github.com/Swarm-Systems-Lab/gvf_so3
+    doi: https://doi.org/10.48550/arxiv.2609.07269
+    pdf: https://arxiv.org/pdf/2609.07269
 
 # Journal papers
 journal:
@@ -78,6 +80,8 @@ journal:
     title: "Angle-based leaderless formation maneuvering with global convergence"
     venue: "Automatica"
     year: 2026
+    doi: https://doi.org/10.1016/j.automatica.2026.113300
+    pdf: https://www.sciencedirect.com/science/article/pii/S0005109826004814/pdf
   - ref: J26
     authors: "J. Bautista, A. Acuaviva, J. Hinojosa, W. Yao, J. Castellanos, HG de Marina"
     title: "Fully distributed and resilient source seeking for robot swarms"
@@ -258,6 +262,7 @@ journal:
       - label: ResearchGate
         href: https://www.researchgate.net/publication/231212280_Adaptive_UAV_attitude_estimation_employing_unscented_Kalman_Filter_FOAM_and_low-cost_MEMS_sensors
     doi: https://www.mdpi.com/1424-8220/12/7/9566
+    pdf: https://www.mdpi.com/1424-8220/12/7/9566/pdf?version=1403317885
   - ref: J1
     authors: "HG de Marina, FJ Pereda, JM Giron-Sierra, F Espinosa"
     title: "UAV attitude estimation using unscented Kalman filter and TRIAD"

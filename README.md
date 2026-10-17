@@ -70,6 +70,22 @@ bun run dev      # http://localhost:4321
 
 `bun run build` produces the static site in `dist/`.
 
+### Filling in DOIs and PDFs
+
+After adding papers to `content/publications.yaml`, let a script find their
+links instead of looking them up by hand:
+
+```sh
+bun run publications:enrich -- --dry-run   # show what it would fill in
+bun run publications:enrich                # write missing doi: and pdf: fields
+bun run publications:enrich -- --verify    # check existing DOIs against Crossref
+```
+
+It searches OpenAlex and arXiv by title, only fills fields that are empty, and
+lists any paper it could not match so you can add it by hand. It is never run
+by the build - run it yourself and review the diff before committing. Details
+in [docs/developing.md](docs/developing.md#filling-in-dois-and-pdfs).
+
 Working on the code rather than the content? See [docs/developing.md](docs/developing.md).
 
 ## TODO list
