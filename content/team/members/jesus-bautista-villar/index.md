@@ -8,7 +8,7 @@ links:
   - label: Google Scholar
     href: https://scholar.google.com/citations?user=1sjaAScAAAAJ
   - label: Website
-    href: https://sites.google.com/view/jbautista-research
+    href: https://jesusbv20.github.io/
   - label: GitHub
     href: https://github.com/JesusBV20
 ---
