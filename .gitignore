@@ -13,3 +13,6 @@ content/**/_poster.*
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Scratch folder for dropping files; never tracked.
+input/
