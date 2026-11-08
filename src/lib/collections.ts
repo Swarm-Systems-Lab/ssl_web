@@ -43,7 +43,7 @@ export async function getResearch(): Promise<CollectionEntry<"research">[]> {
  * stutter. A post that is only that one sentence has nothing left to preview,
  * and gets no summary at all rather than an echo.
  */
-export function newsSummary(entry: CollectionEntry<"news">): string {
+export function newsSummary(entry: CollectionEntry<"news">, max?: number): string {
   if (entry.data.summary) return entry.data.summary;
 
   const body = (entry.body ?? "").trimStart();
@@ -52,7 +52,7 @@ export function newsSummary(entry: CollectionEntry<"news">): string {
     ? body.slice(opening.length).replace(/^[\s.!?:,–—-]+/, "")
     : body;
 
-  return summarise(rest);
+  return summarise(rest, max);
 }
 
 export function newsMedia(entry: CollectionEntry<"news">): PostMedia {
