@@ -1,0 +1,10 @@
+01-chains.png:
+  zoom: 1
+  focus: 50% 50%
+  caption: "A polygonal chain in the plane (black), its conventional mollification (green) and its directional mollification (red), which passes through every vertex."
+  alt: "Four plots comparing a polygonal chain with its conventional and directional smoothings, and the error of each."
+02-curvature.png:
+  zoom: 1
+  focus: 50% 50%
+  caption: "A polygonal chain in 3D with both smoothings, and their curvature together with the closed-form curvature bounds."
+  alt: "A 3D polygonal chain inside a cube with its smoothed curves, next to a plot of curvature and its upper bounds."
