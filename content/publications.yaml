@@ -197,6 +197,8 @@ journal:
     year: 2021
     doi: https://ieeexplore.ieee.org/document/9312173
     pdf: https://research.rug.nl/files/177665719/Singularity_Free_Guiding_Vector_Field_for_Robot_Navigation_1_.pdf
+    explainer: interactive/singularity-free-gvf/explained.html
+    playground: interactive/singularity-free-gvf/playground.html
   - ref: J13
     authors: "L Chen, M Cao, HG de Marina"
     title: "Maneuvering formations of mobile agents using designed mismatched angles"
