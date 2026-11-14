@@ -81,6 +81,8 @@ journal:
     year: 2026
     doi: https://www.sciencedirect.com/science/article/pii/S0096300326004509
     pdf: https://arxiv.org/pdf/2603.21831
+    explainer: interactive/directional-mollification/explained.html
+    playground: interactive/directional-mollification/playground.html
   - ref: J29
     authors: "Y. Xu, HG de Marina"
     title: "Leaderless Formation Motion over Minimal Periodic Directed Rings: A Structural Imbalance Approach"
