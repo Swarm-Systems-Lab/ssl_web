@@ -269,6 +269,8 @@ journal:
     year: 2016
     doi: https://ieeexplore.ieee.org/document/7478657/
     pdf: http://arxiv.org/pdf/1604.07849v2
+    explainer: interactive/rigid-formation-maneuvering/explained.html
+    playground: interactive/rigid-formation-maneuvering/playground.html
   - ref: J3
     authors: "HG de Marina, M Cao, B Jayawardhana"
     title: "Controlling Rigid Formations of Mobile Agents Under Inconsistent Measurements"
