@@ -3192,7 +3192,7 @@ PLAY.wRace = (id) => {
   }
   function reset() { t = 0; for (const k of KIND) robots[k] = startState(k); }
   function updateCam() {
-    const all = flags.concat(...KIND.map((k) => paths[k].pts.filter((_, j) => j % 10 === 0).map((s) => s.g)));
+    const all = flags.concat(...KIND.filter((k) => S.show[k]).map((k) => paths[k].pts.filter((_, j) => j % 10 === 0).map((s) => s.g)));
     const [x0, x1, y0, y1] = H.bbox(all, 2.0);
     const sc = Math.min(cvs.W / (x1 - x0), cvs.H / (y1 - y0));
     cam = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, sc };
@@ -3244,6 +3244,12 @@ PLAY.wRace = (id) => {
       for (const f of flash) { if (!S.show[f.k]) continue; g.strokeStyle = col[f.k]; g.beginPath(); f.pts.forEach((q, i) => { const [X, Y] = toS(q); i ? g.lineTo(X, Y) : g.moveTo(X, Y); }); g.stroke(); }
       g.globalAlpha = 1; g.lineCap = "butt";
     }
+    // (off on the page; promo/record_gif.py turns it on) the convex hull of the flags, where part 1 keeps the orange path
+    if (S.hull) {
+      const hl = H.hull(flags);
+      g.fillStyle = col.conv; g.globalAlpha = 0.09; g.beginPath(); hl.forEach((q, i) => { const [X, Y] = toS(q); i ? g.lineTo(X, Y) : g.moveTo(X, Y); }); g.closePath(); g.fill();
+      g.globalAlpha = 0.7; g.strokeStyle = col.conv; g.lineWidth = 1.4; g.setLineDash([6, 4]); g.stroke(); g.setLineDash([]); g.globalAlpha = 1;
+    }
     // (off on the page; promo/record_gif.py turns it on) the stretches where blue bends: within ε of an inner corner
     if (S.zones && S.show.dir) {
       const e = paths.dir.eps, p = flags.length - 1;
@@ -3264,9 +3270,9 @@ PLAY.wRace = (id) => {
     // flags: a pole and a pennant; filled when the blue robot touched it in this lap
     flags.forEach((q, i) => {
       const [X, Y] = toS(q);
-      const rb = robots.dir, hit = rb && (rb.best[i] < TOUCH || (rb.lastBest && rb.lastBest[i] < TOUCH && rb.w < i));   // last lap's, until it comes round again
+      const rb = robots[S.pennantBy || "dir"], hit = rb && (rb.best[i] < TOUCH || (rb.lastBest && rb.lastBest[i] < TOUCH && rb.w < i));   // last lap's, until it comes round again
       g.strokeStyle = col.ink; g.lineWidth = 1.6; g.beginPath(); g.moveTo(X, Y); g.lineTo(X, Y - 20); g.stroke();
-      g.fillStyle = hit ? col.dir : col.bg; g.strokeStyle = col.ink; g.lineWidth = 1.2;
+      g.fillStyle = hit ? col[S.pennantBy || "dir"] : col.bg; g.strokeStyle = col.ink; g.lineWidth = 1.2;
       g.beginPath(); g.moveTo(X, Y - 20); g.lineTo(X + 12, Y - 15.5); g.lineTo(X, Y - 11); g.closePath(); g.fill(); g.stroke();
       g.beginPath(); g.arc(X, Y, 3.2, 0, 2 * Math.PI); g.fillStyle = col.ink; g.fill();
     });
@@ -3346,6 +3352,11 @@ PLAY.wRace = (id) => {
     setMode: (m) => { S.mode = m; selM.value = MODES[m]; plan(true); },
     setEps: (v, still) => { const c = cam; S.epsHand = v; sE.set(v); S.mode = 3; selM.value = MODES[3]; plan(!still); if (still) cam = c; },   // still: no flash, the view kept (a sweep)
     show: (k, on) => { S.show[k] = on; tog[k].classList.toggle("on", on); },
+    setFlags: (list) => { flags = list.map((q) => q.slice()); dragBase = null; frozen = 0; flash = []; plan(false); reset(); },
+    resize: (h) => {                                       // a taller arena (the GIF's square course)
+      const dpr = Math.min(2, globalThis.devicePixelRatio || 1);
+      cvs.H = h; cvs.cv.height = h * dpr; cvs.cv.style.aspectRatio = `${cvs.W} / ${h}`; cvs.g.setTransform(dpr, 0, 0, dpr, 0, 0); updateCam(); draw();
+    },
     reset,
   };
   plan(false); reset(); readout(); requestAnimationFrame(frame);
