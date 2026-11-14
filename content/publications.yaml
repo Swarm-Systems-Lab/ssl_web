@@ -60,6 +60,8 @@ preprint:
     year: 2026
     doi: https://doi.org/10.48550/arxiv.2611.10582
     pdf: https://arxiv.org/pdf/2611.10582
+    explainer: interactive/shifted-interaction-functions/explained.html
+    playground: interactive/shifted-interaction-functions/playground.html
   - ref: U1
     authors: "J. Bautista, HG de Marina"
     title: "Singularity-Free Guiding Vector Fields on SO(3) with Designer-Specified Progression Behavior"
