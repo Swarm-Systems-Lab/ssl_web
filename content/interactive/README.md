@@ -15,6 +15,9 @@ them.
 
 ## Adding them to a paper
 
+Only once the paper's authors have reviewed the two plain files and said they can go on the website: the pages are
+made and iterated on in the paper's repository first (`Workspace/papers/howto/interactive.md`, section 0).
+
 1. **Copy the two files** into a folder named after the paper:
 
    ```
