@@ -8,7 +8,7 @@ Some papers come with two pages of their own:
   paper's results by hand.
 
 They are made in the paper's repository, not here. The instructions for making
-them are in `Workspace/papers/interactive.md`. What arrives here are two
+them are in `Workspace/papers/howto/interactive.md`. What arrives here are two
 finished, self-contained HTML files, one each, which work on their own and know
 nothing about this site. The site puts its own header, tabs and footer around
 them.

@@ -118,7 +118,7 @@ between them has to be drawn in CSS rather than written.
 ### A paper's own pages
 
 A paper can bring an explainer and a playground: self-contained HTML files made
-in the paper's repository (instructions in `Workspace/papers/interactive.md`),
+in the paper's repository (instructions in `Workspace/papers/howto/interactive.md`),
 dropped in `content/interactive/<folder>/` and named by `explainer:` and
 `playground:` in `publications.yaml`. `src/lib/data.ts` checks the files and
 gives each paper its `views` and their buttons, placed after DOI and PDF.
