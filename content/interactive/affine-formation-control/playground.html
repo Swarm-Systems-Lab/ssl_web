@@ -2406,6 +2406,25 @@ function eigGeneral(A0) {
   const n = A0.length, a = A0.map((r) => r.slice());
   if (n === 0) return [];
   if (n === 1) return [[a[0][0], 0]];
+  // balanc: scale rows and columns by powers of 2 so that their norms match (the eigenvalues do not change)
+  for (let done = false; !done;) {
+    done = true;
+    for (let i = 0; i < n; i++) {
+      let r = 0, c = 0;
+      for (let j = 0; j < n; j++) if (j !== i) { c += Math.abs(a[j][i]); r += Math.abs(a[i][j]); }
+      if (c === 0 || r === 0) continue;
+      let f = 1, g = r / 2;
+      const sum = c + r;
+      while (c < g) { f *= 2; c *= 4; }
+      g = r * 2;
+      while (c > g) { f /= 2; c /= 4; }
+      if ((c + r) / f < 0.95 * sum) {
+        done = false;
+        for (let j = 0; j < n; j++) a[i][j] /= f;
+        for (let j = 0; j < n; j++) a[j][i] *= f;
+      }
+    }
+  }
   for (let m = 1; m < n - 1; m++) {                          // elmhes: Gaussian elimination with pivoting
     let x = 0, i = m;
     for (let j = m; j < n; j++) if (Math.abs(a[j][m - 1]) > Math.abs(x)) { x = a[j][m - 1]; i = j; }
@@ -2443,9 +2462,9 @@ function eigGeneral(A0) {
           } else { wr[nn - 1] = wr[nn] = xx + p; wi[nn - 1] = -(wi[nn] = z); }
           nn -= 2;
         } else {
-          if (its === 60) throw new Error("eigGeneral: too many iterations");
+          if (its === 300) throw new Error("eigGeneral: too many iterations");
           let xs = x, ys = y, ws = w;
-          if (its === 10 || its === 20) {
+          if (its > 0 && its % 10 === 0) {                   // an exceptional shift, to break a cycle
             t += xs; for (let i = 0; i <= nn; i++) a[i][i] -= xs;
             const s = Math.abs(a[nn][nn - 1]) + Math.abs(a[nn - 1][nn - 2]);
             ys = xs = 0.75 * s; ws = -0.4375 * s * s;
@@ -2952,8 +2971,10 @@ function makeTeam(name, ps, blocks, graph = "") {
   const pairOK = N.every((Ni, i) => Ni.some((a) => Ni.some((b) => { const za = C.sub(ps[i], ps[a]), zb = C.sub(ps[i], ps[b]); return Math.abs(za[0] * zb[1] - za[1] * zb[0]) > 1e-6 * C.abs(za) * C.abs(zb); })));
   const cen = ps.reduce((s, q) => C.add(s, C.scal(1 / n, q)), [0, 0]);
   const R = Math.max(...ps.map((q) => C.abs(C.sub(q, cen))));
+  let dmin = Infinity; for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++) dmin = Math.min(dmin, C.abs(C.sub(ps[a], ps[b])));
+  const kickSize = Math.min(R, dmin);                  // a kick scatters the team without throwing robots onto each other
   const ok = n >= 4 && nzero === 3 && !flat && pairOK;
-  return { name, ps, blocks, graph, n, N, L, ev, nzero, lamPlus: ok ? ev[3] : NaN, U: ok ? AF.complementS(ps) : null, edges, flat, pairOK, ok, R, cen };
+  return { name, ps, blocks, graph, n, N, L, ev, nzero, lamPlus: ok ? ev[3] : NaN, U: ok ? AF.complementS(ps) : null, edges, flat, pairOK, ok, R, cen, kickSize };
 }
 AFP.makeTeam = makeTeam;
 const jitter = (ps, a, seed) => { const r = new Rng(seed); return ps.map((q) => [q[0] + a * r.n(), q[1] + a * r.n()]); };
@@ -2997,7 +3018,7 @@ function Canvas(parent, W, H) {
 // ================================================================== 1. fly the formation
 AFP.wFly = (id) => {
   const root = ui.frame(id, "Fly the formation",
-    "Click the arena, then steer: W/S forward and back along the team's own axis, ↑/↓ sideways, A/D (or ←/→) turn, Q/E shrink and grow, R/F squeeze and stretch sideways, Z/X shear. The sliders set a command that the keys add to. Click a robot to make it fail (it stops running its program); shift-click to kick it. Turn the course on and fly through the gates.");
+    "Click the arena, then steer: W/S forward and back along the team's own axis, ↑/↓ sideways, A/D (or ←/→) turn, Q/E shrink and grow, R/F squeeze and stretch sideways, Z/X shear. The sliders set a command that the keys add to. Click a robot to make it fail (it stops running its program); shift-click to kick it. Turn the course on and fly through the gates. On a phone or a tablet, hold the buttons under the arena.");
   const ctl = ui.h("div", { class: "ex-ctl" }, root), ctl2 = ui.h("div", { class: "ex-ctl" }, root), ctl3 = ui.h("div", { class: "ex-ctl" }, root);
   const S = { base: [0, 0, 0, 0, 0, 0], kappa: 1, h: 3, nu: 0, delay: 0, course: false, arrows: true, trails: true, paused: false };
   teamSelect(ctl, () => reset());
@@ -3013,9 +3034,27 @@ AFP.wFly = (id) => {
   ui.button(ctl3, "reset", () => reset());
   const pb = ui.button(ctl3, "❚❚ pause", () => { S.paused = !S.paused; pb.textContent = S.paused ? "▶ run" : "❚❚ pause"; });
   const ar = ui.button(ctl3, "velocity arrows", () => { S.arrows = !S.arrows; ar.classList.toggle("on", S.arrows); }); ar.classList.add("on");
-  const cvs = Canvas(root, 940, 500), rd = ui.readout(root);
-  rd.style.columnCount = 2;
+  // the arena is drawn at the width it is shown, so text and robots keep their size; a phone gets a square one
+  const avail = Math.max(320, Math.min(940, root.clientWidth - 26));
+  const cvs = Canvas(root, avail, avail < 600 ? avail : Math.round(avail * 0.53));
   const keys = new Set();
+  // on a phone or a tablet there is no keyboard: buttons to hold, shown on touch screens (expl.css, .afp-pad)
+  const pad = ui.h("div", { class: "afp-pad" }, root);
+  for (const group of [[["◀ turn", "a"], ["▲ forward", "w"], ["turn ▶", "d"], ["▼ back", "s"]],
+                       [["⇡ sideways", "arrowup"], ["⇣ sideways", "arrowdown"]],
+                       [["squeeze", "r"], ["stretch", "f"], ["shrink", "q"], ["grow", "e"]]]) {
+    const row = ui.h("div", { class: "afp-pad-group" }, pad);
+    for (const [label, key] of group) {
+      const b = ui.h("button", { type: "button" }, row, label);
+      const up = () => { keys.delete(key); b.classList.remove("on"); };
+      b.addEventListener("pointerdown", (e) => { e.preventDefault(); b.setPointerCapture(e.pointerId); keys.add(key); b.classList.add("on"); });
+      b.addEventListener("pointerup", up); b.addEventListener("pointercancel", up); b.addEventListener("lostpointercapture", up);
+      b.addEventListener("contextmenu", (e) => e.preventDefault());
+    }
+  }
+  const touch = globalThis.matchMedia?.("(pointer: coarse)").matches;
+  const rd = ui.readout(root);
+  rd.style.columnCount = avail < 600 ? 1 : 2;
   cvs.wrap.addEventListener("keydown", (e) => { const k = e.key.toLowerCase(); if ("wasdqerfzx".includes(k) || k.startsWith("arrow")) { keys.add(k); e.preventDefault(); } });
   cvs.wrap.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
   cvs.wrap.addEventListener("blur", () => keys.clear());
@@ -3029,18 +3068,18 @@ AFP.wFly = (id) => {
     gates = [];
     if (S.course) {
       // [height of the opening's centre, its width], in units of the team's size R; a gate every 5R
-      const R = T.R, spec = [[0, 3.0], [1.2, 2.4], [-0.6, 1.2], [0.8, 2.0], [0, 0.8], [-1.5, 2.6]];
+      const R = T.R, spec = [[0, 3.0], [-0.8, 1.1], [1.0, 2.2], [0, 0.75], [-1.2, 1.6], [0.6, 2.4]];
       spec.forEach(([y, hgt], k) => gates.push({ x: T.cen[0] + R * (5 + 5 * k), y: T.cen[1] + R * y, hh: R * hgt, done: false, hit: false }));
     }
   }
-  function kick(a) { const T = AFP.team; p = p.map((q) => [q[0] + a * T.R * 0.4 * rng.n(), q[1] + a * T.R * 0.4 * rng.n()]); }
+  function kick(a) { const T = AFP.team; p = p.map((q) => [q[0] + a * T.kickSize * 0.4 * rng.n(), q[1] + a * T.kickSize * 0.4 * rng.n()]); }
   // pointer: click a robot to make it fail; shift-click to kick it
   cvs.cv.addEventListener("pointerdown", (e) => {
     cvs.wrap.focus();
     const r = cvs.cv.getBoundingClientRect(), sx = ((e.clientX - r.left) / r.width) * cvs.W, sy = ((e.clientY - r.top) / r.height) * cvs.H;
     const w = toWorld(sx, sy);
     let best = -1, bd = Infinity; p.forEach((q, i) => { const d = C.abs(C.sub(q, w)); if (d < bd) { bd = d; best = i; } });
-    if (best >= 0 && bd < (cam.W / cvs.W) * 14) { if (e.shiftKey) p[best] = [p[best][0] + AFP.team.R * 0.6 * rng.n(), p[best][1] + AFP.team.R * 0.6 * rng.n()]; else failed[best] = !failed[best]; }
+    if (best >= 0 && bd < (cam.W / cvs.W) * 14) { if (e.shiftKey) p[best] = [p[best][0] + AFP.team.kickSize * 0.6 * rng.n(), p[best][1] + AFP.team.kickSize * 0.6 * rng.n()]; else failed[best] = !failed[best]; }
   });
   const sc = () => cvs.W / cam.W;
   const toScreen = (q) => [cvs.W / 2 + (q[0] - cam.c[0]) * sc(), cvs.H / 2 - (q[1] - cam.c[1]) * sc()];
@@ -3152,13 +3191,20 @@ AFP.wFly = (id) => {
     g.strokeStyle = col.ink; g.lineWidth = 1.6;
     for (const [v, lab] of [[c[1], "x"], [c[2], "y"]]) { const E = toScreen(C.add(c[0], C.scal(0.8, v))); g.beginPath(); g.moveTo(O[0], O[1]); g.lineTo(E[0], E[1]); g.stroke(); g.fillStyle = col.ink; g.fillText(lab, E[0] + 3, E[1] - 3); }
     if (bad) { g.fillStyle = col.red; g.font = "15px sans-serif"; g.fillText("the team has blown up: lower κ or raise h, then reset", 20, 30); }
-    if (document.activeElement !== cvs.wrap && !S.external) { g.fillStyle = col.ink2; g.font = "13px sans-serif"; g.fillText("click here to steer with the keyboard", cvs.W - 250, cvs.H - 12); }
+    if (document.activeElement !== cvs.wrap && !S.external) {
+      g.fillStyle = col.ink2; g.font = "13px sans-serif";
+      const msg = touch ? "hold the buttons below to steer" : "click here to steer with the keyboard";
+      g.fillText(msg, cvs.W - g.measureText(msg).width - 14, cvs.H - 12);
+    }
   }
   function readout(cen, Rc, bad) {
     const T = AFP.team, dv = command(), mu = muFrom(B, dv), M = AF.mbt(mu);
     const [l1, l2] = AF.lpm(dv, S.kappa), dist = AF.distS(T.ps, p);
     let hl = NaN, hs = NaN;
-    if (T.ok && frameN % 32 === 0) { hl = AF.hl(T.L, M, S.kappa); hs = AF.hstar(T.ps, T.L, M, S.kappa, Math.max(1, 2 * hl), T.U); readout.cache = [hl, hs]; }
+    if (T.ok && frameN % 32 === 0) {
+      try { hl = AF.hl(T.L, M, S.kappa); hs = AF.hstar(T.ps, T.L, M, S.kappa, Math.max(1, 2 * hl), T.U); } catch { hl = hs = NaN; }
+      readout.cache = [hl, hs];
+    }
     else if (readout.cache) [hl, hs] = readout.cache;
     const c = AF.coords(T.ps, p), det = c[1][0] * c[2][1] - c[1][1] * c[2][0];
     const rows = [["command Δ_v (team frame)", dvRow(dv)], ["case", AF.trueCase(dv)], ["l₊, l₋", `${cfmt(l1, 2)}, ${cfmt(l2, 2)}`],
@@ -3287,8 +3333,9 @@ AFP.wStab = (id) => {
     const T = AFP.team;
     if (!T.ok) { if (gP) ui.clear(gP); ui.clear(gQ); ui.table(rd, [["this team", "does not hold a shape (see the designer): no threshold"]]); locus = null; return; }
     const M = AF.mbt(AF.muBlend(T.ps, T.N, dv, nu)), hl = AF.hl(T.L, M, kappa);
-    const hs = AF.hstar(T.ps, T.L, M, kappa, Math.max(hmax, 2 * hl), T.U);
-    locus = []; for (let k = 0; k <= 60; k++) { const hh = (hmax * k) / 60; locus.push([hh, AF.transversal(T.ps, T.L, M, hh, kappa, T.U)]); }
+    let hs = NaN;
+    try { hs = AF.hstar(T.ps, T.L, M, kappa, Math.max(hmax, 2 * hl), T.U); } catch { /* shown as not available */ }
+    locus = []; for (let k = 0; k <= 60; k++) { const hh = (hmax * k) / 60; try { locus.push([hh, AF.transversal(T.ps, T.L, M, hh, kappa, T.U)]); } catch { /* skip this h */ } }
     info = { M, hl, hs, norm: AF.specNorm(M) };
     draw();
   }
@@ -3300,7 +3347,9 @@ AFP.wStab = (id) => {
     remakeP(reMin - 0.05 * (reMax - reMin), reMax + 0.05 * (reMax - reMin), -1.15 * imM, 1.15 * imM);
     P.line(gP, [[0, -1.15 * imM], [0, 1.15 * imM]], { stroke: css("ink"), strokeWidth: 1 });
     locus.forEach(([hh, ev], k) => ev.forEach((e) => P.dot(gP, e, 2.2, { fill: `color-mix(in srgb, ${css("blue")} ${20 + (80 * k) / 60}%, ${css("panel")})` })));
-    const M = info.M, cur = AF.transversal(T.ps, T.L, M, h, kappa, T.U);
+    const M = info.M;
+    let cur = [];
+    try { cur = AF.transversal(T.ps, T.L, M, h, kappa, T.U); } catch { /* none drawn */ }
     cur.forEach((e) => P.dot(gP, e, 4.5, { fill: css("ink") }));
     // a run from a random start off S
     const r = new Rng(5), start = T.ps.map((q) => [q[0] + 0.5 * T.R * r.n(), q[1] + 0.5 * T.R * r.n()]);
@@ -3310,7 +3359,7 @@ AFP.wStab = (id) => {
     const slow = Math.max(...cur.map((e) => e[0]));
     Q.line(gQ, [[0, 0], [6, Math.max(-6, Math.min(2, (slow * 6) / Math.LN10))]], { stroke: css("ink"), strokeWidth: 1.2, strokeDasharray: "2 3" });
     ui.table(rd, [["team", `${T.name} (${T.n} robots)`], ["Δ_v, κ", `${dvRow(dv)}, ${fmt(kappa, 2)}`], ["λ⁺_min(L)", fmt(T.lamPlus, 4)], ["‖M Bᵀ‖₂", fmt(info.norm, 3)],
-      ["h_l = κ‖MBᵀ‖/λ⁺_min (Prop. 2, K = I)", fmt(info.hl, 3)], ["h*, the exact threshold", isFinite(info.hs) ? fmt(info.hs, 3) : "above the search range"],
+      ["h_l = κ‖MBᵀ‖/λ⁺_min (Prop. 2, K = I)", fmt(info.hl, 3)], ["h*, the exact threshold", Number.isNaN(info.hs) ? "not available" : isFinite(info.hs) ? fmt(info.hs, 3) : "above the search range"],
       ["h_l / h*", info.hs > 1e-9 ? fmt(info.hl / info.hs, 2) : "h* = 0: any h > 0 works"], ["h", fmt(h, 2), h > info.hs ? "ex-good" : "ex-bad"],
       ["slowest eigenvalue on the complement (dotted slope)", fmt(slow, 3)], ["motion on S: l₊, l₋", AF.lpm(dv, kappa).map((z) => cfmt(z, 2)).join(", ")]]);
   }
@@ -3460,6 +3509,13 @@ main.content { overflow-wrap: anywhere; }
 .afp-canvas:focus { border-color: var(--ex-blue); box-shadow: 0 0 0 2px var(--ex-blue-soft); }
 .afp-canvas canvas { display: block; touch-action: none; }
 .ex-read table td[colspan] { color: var(--ex-ink2); }
+
+.afp-pad { display: none; gap: 8px 14px; flex-wrap: wrap; margin: 4px 0 8px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.afp-pad-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.afp-pad button { min-width: 64px; min-height: 44px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--ex-border);
+background: var(--ex-panel); color: var(--ex-ink); font-size: 0.9rem; touch-action: none; }
+.afp-pad button.on { background: var(--ex-blue); border-color: var(--ex-blue); color: #fff; }
+@media (pointer: coarse) { .afp-pad { display: flex; } }
 </style>
 </head>
 
@@ -3693,7 +3749,7 @@ main.content { overflow-wrap: anywhere; }
 <section id="fly-the-formation" class="level1 page-columns page-full" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Fly the formation</h1>
 <p>The command is a velocity in the team’s own frame (the explanation, “the same thing, read as a motion of the frame”). So <em>forward</em> is along the team’s own first axis, and turning turns that axis. The team steers like a car, although every robot moves at its own velocity and none of them leads.</p>
-<p><strong>What to try.</strong> Fly the course, with clean gates and no wall hits. The gates sit at different heights (↑/↓ moves the team sideways), and the narrow ones need the team to squeeze (R) and then stretch back (F). Shear (Z/X) and then press forward: the team now moves at an angle, because its first axis has tilted. Make a robot fail: it stops and becomes an anchor. Watch what the others do with no command, and then with one. Kick the team and lower <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math> until the shape stops coming back. The readout gives the paper’s sufficient gain <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mi>l</mi></msub><annotation encoding="application/x-tex">h_l</annotation></semantics></math> and the exact threshold <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>h</mi><mo>*</mo></msup><annotation encoding="application/x-tex">h^*</annotation></semantics></math> for the current command. Add a command delay: every robot hears a new command after its own random delay, and the paper says this costs only some convergence <strong>[numerical]</strong>.</p>
+<p><strong>What to try.</strong> Fly the course, with clean gates and no wall hits (on a phone or a tablet, hold the buttons under the arena). The gates sit at different heights (↑/↓ moves the team sideways), and the narrow ones need the team to squeeze (R) and then stretch back (F). Shear (Z/X) and then press forward: the team now moves at an angle, because its first axis has tilted. Make a robot fail: it stops and becomes an anchor. Watch what the others do with no command, and then with one. Kick the team and lower <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math> until the shape stops coming back. The readout gives the paper’s sufficient gain <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mi>l</mi></msub><annotation encoding="application/x-tex">h_l</annotation></semantics></math> and the exact threshold <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>h</mi><mo>*</mo></msup><annotation encoding="application/x-tex">h^*</annotation></semantics></math> for the current command. Add a command delay: every robot hears a new command after its own random delay, and the paper says this costs only some convergence <strong>[numerical]</strong>.</p>
 <div id="ex-fly" class="column-body"></div><script>EX.afp.wFly("ex-fly")</script>
 </section>
 <section id="the-case-lab" class="level1 page-columns page-full" data-number="2">
