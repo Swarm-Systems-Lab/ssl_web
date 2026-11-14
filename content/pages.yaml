@@ -145,6 +145,11 @@ publications:
     more: papers
     in-review: In review
     tech-notes: Tech notes
+    # the buttons to a paper's own pages, and the bar above them
+    explainer: Explainer
+    playground: Playground
+    back-to-paper: The paper
+    open-alone: Open on its own
 
 awards:
   seo:

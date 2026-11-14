@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { parse } from "yaml";
 import { z } from "astro:content";
@@ -129,6 +129,10 @@ export function pageText(name: string): PageText {
  * rendering a blank where a word should be.
  */
 export function label(text: PageText, name: string, where: string): string {
+  return labelOf(text, name, where);
+}
+
+function labelOf(text: PageText, name: string, where: string): string {
   const found = text.labels[name];
   if (!found) {
     const had = Object.keys(text.labels).join(", ") || "(none)";
@@ -245,7 +249,21 @@ const publication = z.object({
   pdf: z.string().optional(),
   /** Anything else worth linking: a video, the code, a dataset. */
   links: z.array(link).default([]),
+  /**
+   * The paper's own pages: self-contained HTML files under content/interactive/,
+   * made with the paper (see content/interactive/README.md). Each one is shown
+   * at /publications/<slug>/<field>, inside the site's header and footer.
+   */
+  explainer: z.string().optional(),
+  playground: z.string().optional(),
 });
+
+/**
+ * The kinds of page a paper can bring of its own, in the order of their buttons.
+ * The words on the buttons come from the publications block of pages.yaml.
+ */
+const PAPER_VIEWS = ["explainer", "playground"] as const;
+export type PaperView = (typeof PAPER_VIEWS)[number];
 
 /**
  * Order matters: it is the order of the filter buttons, and of the three zones
@@ -275,7 +293,27 @@ export type Publication = z.infer<typeof publication> & {
   kind: PublicationKind;
   kindLabel: string;
   slug: string;
+  /** The paper's own pages, in button order: where the file is, and the site page that shows it. */
+  views: { view: PaperView; label: string; file: string; href: string }[];
 };
+
+/**
+ * A paper's own page must be an HTML file under content/interactive/ that is
+ * really there: a button leading to a 404 is the failure nobody notices.
+ */
+function paperView(ref: string, field: PaperView, path: string): string {
+  const clean = path.replace(/^\.?\//, "");
+  const where = `content/publications.yaml: ${ref}, ${field}`;
+  if (!clean.startsWith("interactive/") || !clean.endsWith(".html")) {
+    throw new Error(
+      `${where}: "${path}" must be an .html file under content/interactive/, e.g. interactive/<folder>/${field}.html\n`,
+    );
+  }
+  if (!existsSync(fileURLToPath(new URL(clean, contentDir)))) {
+    throw new Error(`${where}: there is no file content/${clean}\n`);
+  }
+  return `/${clean}`;
+}
 
 /** A bare DOI becomes a link; anything already a URL is left alone. */
 function doiUrl(doi: string): string {
@@ -308,12 +346,28 @@ export const publications: Publication[] = (() => {
       const extra = [...entry.links].sort((a, b) =>
         a.label.localeCompare(b.label, "en", { sensitivity: "base" }),
       );
+      // The paper's own pages come right after them: they are ours, and they
+      // are the reason to visit rather than download.
+      const words = pageText("publications");
+      const views = PAPER_VIEWS.flatMap((view) => {
+        const path = entry[view];
+        if (!path) return [];
+        return [
+          {
+            view,
+            label: labelOf(words, view, "publications"),
+            file: paperView(entry.ref, view, path),
+            href: `/publications/${slug}/${view}`,
+          },
+        ];
+      });
       const links = [
         ...(entry.doi ? [{ label: "DOI", href: doiUrl(entry.doi) }] : []),
         ...(entry.pdf ? [{ label: "PDF", href: entry.pdf }] : []),
+        ...views.map(({ label, href }) => ({ label, href })),
         ...extra,
       ];
-      return { ...entry, links, kind: key, kindLabel: label, slug };
+      return { ...entry, links, views, kind: key, kindLabel: label, slug };
     }),
   );
 })();

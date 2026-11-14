@@ -28,14 +28,17 @@
 #     links:                               # anything else: a video, code, data
 #       - label: Video
 #         href: https://...
+#     explainer: interactive/j28/explained.html    # the paper's own pages, if it has them:
+#     playground: interactive/j28/playground.html  # see content/interactive/README.md
 #     bibtex: |
 #       @article{author2026title,
 #         title = {The title of the paper},
 #       }
 #
 # `doi` and `pdf` are the two nearly every paper has, so they get their own
-# fields and are always shown first, in that order. Everything else goes under
-# `links` and is listed alphabetically after them.
+# fields and are always shown first, in that order. `explainer` and
+# `playground` come next, when the paper has pages of its own. Everything else
+# goes under `links` and is listed alphabetically after them.
 #
 # You do not have to find them by hand. Run
 #
@@ -118,6 +121,8 @@ journal:
     links:
       - label: Code
         href: https://github.com/Swarm-Systems-Lab/paper-affine-formation-control
+    explainer: interactive/affine-formation-control/explained.html
+    playground: interactive/affine-formation-control/playground.html
   - ref: J24
     authors: "J. Chen, J. Bautista, B. Jayawardhana, HG de Marina"
     title: "Dispersion Formation Control: from Geometry to Distribution"

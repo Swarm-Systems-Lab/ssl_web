@@ -35,6 +35,7 @@ mistakes there and nowhere else.
 | a project - software, a tutorial, hardware            | copy `content/projects/_template/`                                             |
 | a photo or clip                                       | drop in `content/media/`, add a caption to `content/media/media.yaml`          |
 | a paper                                               | top of `content/publications.yaml`                                             |
+| a paper's explainer or playground (HTML)              | `content/interactive/<folder>/` + `explainer:`/`playground:` in publications.yaml; read `content/interactive/README.md` |
 | an opening, a TFM/TFG offer, an award, press coverage | `content/positions.yaml`, `student-projects.yaml`, `awards.yaml`, `press.yaml` |
 | the words on any page                                 | `content/pages.yaml`                                                           |
 | tabs, footer, affiliations, front-page strip          | `content/site.yaml`                                                            |

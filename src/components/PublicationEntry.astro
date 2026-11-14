@@ -40,7 +40,11 @@ const thumb = optionalPicture(pub.image);
       <span class="border border-border px-2 py-0.5 text-muted">{pub.kindLabel}</span>
       {
         pub.links.map((l) => (
-          <a href={l.href} rel="noopener" class="text-accent">
+          <a
+            href={url(l.href)}
+            rel={l.href.startsWith("http") ? "noopener" : undefined}
+            class="text-accent"
+          >
             {l.label}
           </a>
         ))

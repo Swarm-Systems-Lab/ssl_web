@@ -115,6 +115,20 @@ build - the same rule `works:` follows. The list renders through `PeopleList`,
 because a project link and a person link are the same shape and the comma
 between them has to be drawn in CSS rather than written.
 
+### A paper's own pages
+
+A paper can bring an explainer and a playground: self-contained HTML files made
+in the paper's repository (instructions in `Workspace/papers/interactive.md`),
+dropped in `content/interactive/<folder>/` and named by `explainer:` and
+`playground:` in `publications.yaml`. `src/lib/data.ts` checks the files and
+gives each paper its `views` and their buttons, placed after DOI and PDF.
+`tools/interactive.mjs` serves the files verbatim at `/interactive/` (copied in
+the build, served from `content/` in dev). `src/pages/publications/[slug]/[view].astro`
+shows each one in a frame under the site's header, with a bar back to the paper
+and between its pages; its script carries the site's theme into the frame and
+rewrites the frame's links. The editor's side is in
+`content/interactive/README.md`.
+
 ### Page text
 
 Every page is `<Page name="…">` wrapping its own content. `layouts/Page.astro`

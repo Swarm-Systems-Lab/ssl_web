@@ -15,6 +15,7 @@ the site rebuilds and republishes itself within a couple of minutes.
 | a robot               | copy `_template/` in [`content/fleet/`](content/fleet)                                          |
 | a photo, GIF, or clip | drop the file in [`content/media/`](content/media)                                              |
 | a paper               | add it at the top of [`content/publications.yaml`](content/publications.yaml)                   |
+| a paper's explainer or playground | see [`content/interactive/README.md`](content/interactive/README.md)                   |
 | an open position      | add it to [`content/positions.yaml`](content/positions.yaml)                                    |
 | a TFM/TFG project     | add it to [`content/student-projects.yaml`](content/student-projects.yaml)                      |
 | a cover for a page    | drop it in [`content/covers/`](content/covers), named after the page                            |

@@ -1,0 +1,215 @@
+---
+import Base from "@/layouts/Base.astro";
+import { publications, pageText, label, type Publication, type PaperView } from "@/lib/data";
+import { optionalPicture } from "@/lib/images";
+import { socialImage } from "@/lib/social-image";
+import { url } from "@/lib/url";
+
+/**
+ * A paper's own page - its explainer or its playground - inside the site.
+ *
+ * The page itself is a self-contained HTML file under content/interactive/,
+ * made with the paper and usable anywhere on its own. Here it runs in a frame
+ * under the site's header, with a bar back to the paper and between its pages,
+ * so a reader can keep navigating the site. The frame fills the window below
+ * the bar and scrolls by itself, which keeps the page's own table of contents
+ * and keyboard controls working as they do when it is opened alone.
+ *
+ * The script below does four small jobs that a frame needs:
+ *  - it follows the site's light/dark theme into the page (a Quarto page is
+ *    switched with its own toggleColorMode; any other page gets a message
+ *    { type: "ssl-theme", theme } it may listen for);
+ *  - it hides a Quarto page's own theme switch, since the site's now drives it;
+ *  - it opens links between the paper's pages as site pages, and every other
+ *    link in the whole window rather than in the frame;
+ *  - it scrolls the frame alone to an anchor, and keeps the anchor (#section)
+ *    in the address bar, so a deep link can be shared.
+ *
+ * How to add a paper's pages: content/interactive/README.md.
+ */
+
+export function getStaticPaths() {
+  return publications.flatMap((pub) =>
+    pub.views.map(({ view }) => ({ params: { slug: pub.slug, view }, props: { pub, view } })),
+  );
+}
+
+const { pub, view } = Astro.props as { pub: Publication; view: PaperView };
+const text = pageText("publications");
+const here = pub.views.find((v) => v.view === view)!;
+const image = optionalPicture(pub.image);
+const views = pub.views.map((v) => ({ file: url(v.file), page: url(v.href) }));
+---
+
+<Base
+  title={`${here.label}: ${pub.title}`}
+  description={`${here.label} of "${pub.title}". ${pub.authors}. ${pub.venue}${pub.year ? `, ${pub.year}` : ""}.`}
+  image={await socialImage(image)}
+>
+  <div class="border-b border-border bg-background/85 backdrop-blur">
+    <div
+      class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-6 py-3 font-display text-[10px] tracking-widest uppercase"
+    >
+      <a href={url(`/publications/${pub.slug}`)} class="text-accent whitespace-nowrap">
+        ← {label(text, "back-to-paper", "publications")}
+      </a>
+      <span
+        class="hidden min-w-0 flex-1 truncate font-sans text-xs tracking-normal text-muted-foreground normal-case md:block"
+        title={pub.title}
+      >
+        {pub.title}
+      </span>
+      <nav class="flex gap-2" aria-label={pub.title}>
+        {
+          pub.views.map((v) => (
+            <a
+              href={url(v.href)}
+              aria-current={v.view === view ? "page" : undefined}
+              class:list={[
+                "border px-3 py-1.5 transition-colors",
+                v.view === view
+                  ? "border-accent text-accent"
+                  : "border-border text-muted-foreground hover:border-accent hover:text-accent",
+              ]}
+            >
+              {v.label}
+            </a>
+          ))
+        }
+      </nav>
+      <a
+        href={url(here.file)}
+        target="_blank"
+        rel="noopener"
+        class="ml-auto whitespace-nowrap text-muted-foreground transition-colors hover:text-accent md:ml-0"
+      >
+        {label(text, "open-alone", "publications")} ↗
+      </a>
+    </div>
+  </div>
+
+  <iframe
+    src={url(here.file)}
+    title={`${here.label}: ${pub.title}`}
+    data-paper-view
+    data-views={JSON.stringify(views)}
+    class="block w-full border-0 bg-background"
+    style="height: calc(100dvh - 8rem)"></iframe>
+
+  <script is:inline>
+    (() => {
+      const frame = document.querySelector("[data-paper-view]");
+      if (!frame) return;
+      const views = JSON.parse(frame.dataset.views);
+      const root = document.documentElement;
+
+      // The frame fills the window from its top edge down.
+      const fit = () => {
+        const top = frame.getBoundingClientRect().top + window.scrollY;
+        frame.style.height = `${Math.max(420, window.innerHeight - top)}px`;
+      };
+      fit();
+      addEventListener("resize", fit);
+
+      // Anchors inside the frame scroll the frame alone. Left to the browser, a
+      // jump to a section also scrolls this window, and the bar and the top of
+      // the frame slide away under the header.
+      const jump = (id) => {
+        try {
+          const w = frame.contentWindow;
+          const target = id && frame.contentDocument.getElementById(decodeURIComponent(id));
+          if (!target) return false;
+          w.scrollTo({ top: target.getBoundingClientRect().top + w.scrollY - 12 });
+          w.history.replaceState(null, "", `#${id}`);
+          history.replaceState(null, "", `#${id}`);
+          return true;
+        } catch {
+          return false;
+        }
+      };
+      const anchors = () => {
+        try {
+          frame.contentDocument.addEventListener(
+            "click",
+            (event) => {
+              const a = event.target.closest?.('a[href^="#"]');
+              if (a && jump(a.getAttribute("href").slice(1))) event.preventDefault();
+            },
+            true,
+          );
+        } catch {
+          /* a page from elsewhere */
+        }
+      };
+
+      const theme = () => {
+        const dark = root.dataset.theme === "dark";
+        let w;
+        try {
+          w = frame.contentWindow;
+          const doc = frame.contentDocument;
+          if (!w || !doc) return;
+          // A Quarto page carries a light and a dark stylesheet; the "alternate" one is switched on top.
+          const alt = doc.querySelector("link#quarto-bootstrap.quarto-color-alternate");
+          if (alt && typeof w.eval === "function") {
+            const altIsDark = alt.getAttribute("data-mode") === "dark";
+            w.eval(
+              `typeof toggleColorMode === "function" && toggleColorMode(${dark === altIsDark})`,
+            );
+          }
+        } catch {
+          /* a page from elsewhere: only the message below reaches it */
+        }
+        w?.postMessage({ type: "ssl-theme", theme: dark ? "dark" : "light" }, "*");
+      };
+
+      const links = () => {
+        let doc;
+        try {
+          doc = frame.contentDocument;
+        } catch {
+          return;
+        }
+        if (!doc) return;
+        const bySource = new Map(views.map((v) => [new URL(v.file, location.href).href, v.page]));
+        for (const a of doc.querySelectorAll("a[href]")) {
+          const raw = a.getAttribute("href") ?? "";
+          if (raw.startsWith("#") || raw.startsWith("javascript:")) continue;
+          const [bare, hash] = a.href.split("#");
+          const page = bySource.get(bare);
+          if (page) a.href = page + (hash ? `#${hash}` : "");
+          a.target = "_top";
+        }
+      };
+
+      // Inside the site its theme switch is the only one: a page's own toggle would fall out of step with it.
+      const quiet = () => {
+        try {
+          const doc = frame.contentDocument;
+          if (!doc || doc.getElementById("ssl-framed")) return;
+          const style = doc.createElement("style");
+          style.id = "ssl-framed";
+          style.textContent = ".quarto-color-scheme-toggle { display: none !important; }";
+          doc.head.appendChild(style);
+        } catch {
+          /* a page from elsewhere */
+        }
+      };
+
+      let first = true;
+      frame.addEventListener("load", () => {
+        quiet();
+        theme();
+        links();
+        anchors();
+        // A shared deep link (#section) opens the page at that section.
+        if (first && location.hash) setTimeout(() => jump(location.hash.slice(1)), 50);
+        first = false;
+      });
+      new MutationObserver(theme).observe(root, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
+    })();
+  </script>
+</Base>
