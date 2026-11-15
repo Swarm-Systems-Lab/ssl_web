@@ -163,6 +163,8 @@ journal:
     year: 2023
     doi: https://ieeexplore.ieee.org/document/9969449
     pdf: http://arxiv.org/pdf/2209.09478v4
+    explainer: interactive/coordinating-gvf/explained.html
+    playground: interactive/coordinating-gvf/playground.html
   - ref: J19
     authors: "H. Wu, B. Jayawardhana, H.G. de Marina, D. Xu"
     title: "Distributed formation control for manipulator end-effectors"
