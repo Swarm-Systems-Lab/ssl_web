@@ -3018,7 +3018,7 @@ FIGS.wFly = (id) => {
     curL = plots.map((Pp) => Pp.layer());
     let err = 0; if (ib >= 0) for (let i = ib; i < run.length; i++) err = Math.max(err, Math.abs(run[i][4] - pred[i - ib][1]));
     ui.table(rd, [["enters Ω_b at t_b", isFinite(tb) ? fmt(tb, 2) + " s, with φ = " + fmt(run[ib][4], 3) : "never (in 80 s)"],
-      ["largest |φ − predicted| after t_b", isFinite(tb) ? fmt(err, 4) : "—"], ["ω commanded at the first 10 ms tick in Ω_b", isFinite(tb) ? fmt(full[Math.round(tb / dt)][5], 2) + " rad/s (unbounded as the tick shrinks: What the checks found, item 1)" : "—"],
+      ["largest |φ − predicted| after t_b", isFinite(tb) ? fmt(err, 4) : "—"], ["ω commanded at the first 10 ms tick in Ω_b", isFinite(tb) ? fmt(full[Math.round(tb / dt)][5], 2) + " rad/s (unbounded as the tick shrinks: Corrections to the published version, item 1)" : "—"],
       ["largest |ω| from t_b + 1 s on", isFinite(tb) ? fmt(omLate, 3) + " rad/s (a bank of " + fmt(CORE.bank(omLate, 15), 0) + "° at 15 m/s)" : "—"],
       ["ω at the end, and −v/r on the circle", fmt(run.at(-1)[5], 4) + (P.kind === "circle" ? ", " + fmt(-15 / P.r, 4) : "")]]);
     drawCur();
