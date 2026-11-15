@@ -284,6 +284,8 @@ journal:
     year: 2015
     doi: https://ieeexplore.ieee.org/document/6979244/
     pdf: http://arxiv.org/pdf/1609.06435v1
+    explainer: interactive/inconsistent-measurements/explained.html
+    playground: interactive/inconsistent-measurements/playground.html
   - ref: J2
     authors: "HG de Marina, F Espinosa, C Santos"
     title: "Adaptive UAV attitude estimation employing unscented kalman filter, FOAM and low-cost MEMS sensors"
