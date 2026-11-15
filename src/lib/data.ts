@@ -169,6 +169,16 @@ const siteSchema = z.object({
   institution: z.string(),
   email: z.string(),
   /**
+   * The site's code on GoatCounter (https://<code>.goatcounter.com), which
+   * counts visits without cookies. Only the build for the lab's own domain
+   * counts; `bun run dev` and staging copies do not. Leave it out to count
+   * nothing.
+   */
+  goatcounter: z
+    .string()
+    .regex(/^[a-z0-9-]+$/, "just the code, e.g. swarmsystemslab - not the full URL")
+    .optional(),
+  /**
    * Captions for the pictures in content/covers/, keyed by page -
    * "home", "news", "join-us", and so on. Optional; the picture shows either way.
    */

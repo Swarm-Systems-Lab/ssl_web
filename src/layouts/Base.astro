@@ -25,6 +25,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
  */
 const staging = !Astro.site?.host.endsWith("swarmsystemslab.eu");
 const preview = image ? new URL(image, Astro.site).href : undefined;
+// Visits are counted on the real site only: not in `bun run dev`, not on staging.
+const counter = import.meta.env.PROD && !staging ? site.goatcounter : undefined;
 ---
 
 <!doctype html>
@@ -96,6 +98,21 @@ const preview = image ? new URL(image, Astro.site).href : undefined;
     <meta property="og:url" content={canonical} />
     {preview && <meta property="og:image" content={preview} />}
     <meta name="twitter:card" content={preview ? "summary_large_image" : "summary"} />
+
+    {
+      /* Visit statistics, cookie-free. The interactive paper pages sit in an
+        iframe inside this layout, so they are counted here, once. */
+    }
+    {
+      counter && (
+        <script
+          is:inline
+          data-goatcounter={`https://${counter}.goatcounter.com/count`}
+          async
+          src="//gc.zgo.at/count.js"
+        />
+      )
+    }
 
     <link rel="sitemap" href={url("/sitemap-index.xml")} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

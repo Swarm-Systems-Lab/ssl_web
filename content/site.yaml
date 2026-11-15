@@ -12,6 +12,10 @@ description: >-
 institution: University of Granada
 email: swarmsystemslab@gmail.com
 
+# Visit statistics: https://swarmsystemslab.goatcounter.com
+# Only the live site counts, never `bun run dev`. Delete the line to stop counting.
+goatcounter: swarmsystemslab
+
 # Every page can have a picture across the top. Drop a file in content/covers/
 # named after the page - home.png, news.jpg, team.jpg, join-us.jpg - and it
 # appears. Captions are optional; without one the picture still shows.
