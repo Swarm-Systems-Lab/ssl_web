@@ -111,6 +111,8 @@ journal:
     doi: https://ieeexplore.ieee.org/abstract/document/11664370
     pdf: https://arxiv.org/pdf/2410.15921
     image: images/publications/ss.png
+    explainer: interactive/resilient-source-seeking/explained.html
+    playground: interactive/resilient-source-seeking/playground.html
     links:
       - label: Code
         href: https://github.com/Swarm-Systems-Lab/source_seeking
@@ -355,6 +357,8 @@ conference:
     image: images/publications/gvfik.png
     pdf: https://arxiv.org/pdf/2502.17313
     doi: https://ieeexplore.ieee.org/abstract/document/11127300
+    explainer: interactive/inverse-kinematics-gvf/explained.html
+    playground: interactive/inverse-kinematics-gvf/playground.html
     links:
       - label: Code
         href: https://github.com/Swarm-Systems-Lab/gvf_ik
