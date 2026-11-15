@@ -342,6 +342,8 @@ conference:
     image: images/publications/gvfik_osc.png
     pdf: https://arxiv.org/pdf/2507.16458
     doi: https://ieeexplore.ieee.org/abstract/document/11246740
+    explainer: interactive/distributed-oscillatory-guidance/explained.html
+    playground: interactive/distributed-oscillatory-guidance/playground.html
   - ref: C37
     authors: "Y. Lu, S. Luo, P. Zhu, W. Yao, HG de Marina, X. Zhang, and X. Xu"
     title: "Versatile Distributed Maneuvering With Generalized Formations Using Guiding Vector Fields"
