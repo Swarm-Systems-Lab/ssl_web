@@ -4,8 +4,8 @@ name: "Feldespat"
 role: "High-acceleration testbed"
 group: rotorcraft
 order: 1
-summary: "Our racing prototype, and the first rotorcraft we built ourselves. It is where we put guiding vector field path following through accelerations nothing else in the fleet can reach."
-count: 1
+summary: "Our racing prototype, and the first rotorcraft we built ourselves. We have four racing drones, flown outdoors and mostly without GPS. It is where we put guiding vector field path following through accelerations nothing else in the fleet can reach."
+count: 4
 
 specs:
   - label: Autopilot
