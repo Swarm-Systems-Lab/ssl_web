@@ -1,6 +1,6 @@
 ---
 
-name: "Feldespat"
+name: "Outdoor racing drones"
 role: "High-acceleration testbed"
 group: rotorcraft
 order: 1
