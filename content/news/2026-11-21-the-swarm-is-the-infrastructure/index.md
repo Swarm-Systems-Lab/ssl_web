@@ -2,6 +2,8 @@
 title: "The swarm is the infrastructure: drone positioning without GPS"
 date: 2026-11-21
 summary: "Four racing drones flew within our line of sight to validate Aerosense, the network where the swarm builds its own localization and communication at up to 100 Hz."
+image: ./01-thumbnail.jpg
+imageAlt: "Four racing drones flying during the Aerosense validation flight"
 ---
 The swarm is the infrastructure. That is the idea behind [Aerosense](/research/aerosense), our ERC Proof of Concept at the Swarm Systems Lab.
 
