@@ -42,6 +42,9 @@
 # first. To put one on the front page, name it under `fromTheField` in
 # ../site.yaml.
 videos:
+  - youtube: mDE8NW4isH0
+    caption: "The swarm is the infrastructure: drone positioning without GPS (Aerosense)"
+    date: "2026-11-21"
   - youtube: RwpAXYvPU0E
     caption: Autonomous circle rolling and cuban eight aerobatics
     date: "2026-10-02"
