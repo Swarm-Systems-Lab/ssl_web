@@ -1,0 +1,3 @@
+# Show the whole thumbnail instead of cropping it to the frame.
+01-thumbnail.jpg:
+  zoom: 0.99
